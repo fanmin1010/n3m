@@ -9,8 +9,6 @@ env:
 install: 
   - pip install --egg -r requirements.txt
   - python manage.py create_db
-  - python manage.py db upgrade
-  - python manage.py db migrate 
 # command to run tests
 script: 
   - python test.py
