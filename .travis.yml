@@ -1,12 +1,14 @@
 language: python
 python:
   - "2.7"
+env:
+  - WEBDIR=static
 # command to install dependencies
 install: 
-  - cd static && npm install && cd ..
-  - pip install -r requirements.txt
+  - pip install --egg -r requirements.txt
+  - cd $WEBDIR && npm install
 # command to run tests
 script: 
   - python test.py
-  - cd static && npm run-script test && cd ..
+  - cd $WEBDIR && npm run-script test
 
