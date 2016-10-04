@@ -6,9 +6,7 @@ env:
 # command to install dependencies
 install: 
   - pip install --egg -r requirements.txt
-  - cd $WEBDIR && npm install
 # command to run tests
 script: 
   - python test.py
-  - cd $WEBDIR && npm run-script test
 
