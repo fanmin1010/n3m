@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/team-n3m/n3m.png?branch=master)](https://travis-ci.org/team-n3m/n3m)
+
 # n3m
 The repo for the n3m team app. It is awesome!
 
@@ -34,8 +36,6 @@ You should then be able to access the web interface of the app from your local d
 
 ### Checkout out the docs for more information:
 [Documentation](docs/HowTo.md)
-
-
 
 ### Next Steps
 coming soon.
