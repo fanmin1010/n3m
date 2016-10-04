@@ -2,7 +2,11 @@ language: python
 python:
   - "2.7"
 # command to install dependencies
-install: "pip install --user -r requirements.txt"
+install: 
+  - cd static && npm install && cd ..
+  - pip install -r requirements.txt
 # command to run tests
-script: python test.py
+script: 
+  - python test.py
+  - cd static && npm run-script test && cd ..
 
