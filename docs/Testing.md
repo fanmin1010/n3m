@@ -40,7 +40,29 @@ Additionally, we use ESLint for static analysis of the front end javascript code
 
 ### Running Front-end Tests
 ```
-npm run-script test
+n3m@linux-n3m ~/git/n3m/static (master) $ npm run-script test                                                                                                                                             
+
+> n3m@1.0.0 test /home/n3m/git/n3m/static
+> karma start
+
+Hash: f4683f5fa2953dc3a97c
+Version: webpack 1.13.2
+Time: 9ms
+webpack: bundle is now VALID.
+webpack: bundle is now INVALID.
+Hash: 8f7bdb590b6a706a2572
+Version: webpack 1.13.2
+Time: 6906ms
+                       Asset     Size  Chunks             Chunk Names
+test/example/example.spec.js  41.2 kB       0  [emitted]  test/example/example.spec.js
+chunk    {0} test/example/example.spec.js (test/example/example.spec.js) 38.1 kB [rendered]
+webpack: bundle is now VALID.
+04 10 2016 18:53:51.360:INFO [karma]: Karma v1.3.0 server started at http://localhost:9876/
+04 10 2016 18:53:51.362:INFO [launcher]: Launching browser PhantomJS with unlimited concurrency
+04 10 2016 18:53:51.412:INFO [launcher]: Starting browser PhantomJS
+04 10 2016 18:53:51.963:INFO [PhantomJS 2.1.1 (Linux 0.0.0)]: Connected on socket /#FLjqy1YPmILy0J7hAAAA with id 96130731
+.
+PhantomJS 2.1.1 (Linux 0.0.0): Executed 1 of 1 SUCCESS (0.041 secs / 0 secs)
 ```
 
 ### Static analysis
