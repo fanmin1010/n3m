@@ -4,10 +4,10 @@ import auth from './auth';
 import data from './data';
 
 const rootReducer = combineReducers({
-    routing: routerReducer,
+  routing: routerReducer,
     /* your reducers */
-    auth,
-    data,
+  auth,
+  data,
 });
 
 export default rootReducer;

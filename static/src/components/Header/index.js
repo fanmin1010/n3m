@@ -11,59 +11,59 @@ import Divider from 'material-ui/Divider';
 import * as actionCreators from '../../actions/auth';
 
 function mapStateToProps(state) {
-    return {
-        token: state.auth.token,
-        userName: state.auth.userName,
-        isAuthenticated: state.auth.isAuthenticated,
-    };
+  return {
+    token: state.auth.token,
+    userName: state.auth.userName,
+    isAuthenticated: state.auth.isAuthenticated,
+  };
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators(actionCreators, dispatch);
+  return bindActionCreators(actionCreators, dispatch);
 }
 
 @connect(mapStateToProps, mapDispatchToProps)
 export class Header extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            open: false,
-        };
+  constructor(props) {
+    super(props);
+    this.state = {
+      open: false,
+    };
 
-    }
+  }
 
-    dispatchNewRoute(route) {
-        browserHistory.push(route);
-        this.setState({
-            open: false,
-        });
+  dispatchNewRoute(route) {
+    browserHistory.push(route);
+    this.setState({
+      open: false,
+    });
 
-    }
-
-
-    handleClickOutside() {
-        this.setState({
-            open: false,
-        });
-    }
+  }
 
 
-    logout(e) {
-        e.preventDefault();
-        this.props.logoutAndRedirect();
-        this.setState({
-            open: false,
-        });
-    }
+  handleClickOutside() {
+    this.setState({
+      open: false,
+    });
+  }
 
-    openNav() {
-        this.setState({
-            open: true,
-        });
-    }
 
-    render() {
-        return (
+  logout(e) {
+    e.preventDefault();
+    this.props.logoutAndRedirect();
+    this.setState({
+      open: false,
+    });
+  }
+
+  openNav() {
+    this.setState({
+      open: true,
+    });
+  }
+
+  render() {
+    return (
             <header>
                 <LeftNav open={this.state.open}>
                     {
@@ -102,10 +102,10 @@ export class Header extends Component {
             </header>
 
         );
-    }
+  }
 }
 
 Header.propTypes = {
-    logoutAndRedirect: React.PropTypes.func,
-    isAuthenticated: React.PropTypes.bool,
+  logoutAndRedirect: React.PropTypes.func,
+  isAuthenticated: React.PropTypes.bool,
 };

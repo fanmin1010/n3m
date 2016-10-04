@@ -12,109 +12,109 @@ import * as actionCreators from '../actions/auth';
 import { validateEmail } from '../utils/misc';
 
 function mapStateToProps(state) {
-    return {
-        isRegistering: state.auth.isRegistering,
-        registerStatusText: state.auth.registerStatusText,
-    };
+  return {
+    isRegistering: state.auth.isRegistering,
+    registerStatusText: state.auth.registerStatusText,
+  };
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators(actionCreators, dispatch);
+  return bindActionCreators(actionCreators, dispatch);
 }
 
 const style = {
-    marginTop: 50,
-    paddingBottom: 50,
-    paddingTop: 25,
-    width: '100%',
-    textAlign: 'center',
-    display: 'inline-block',
+  marginTop: 50,
+  paddingBottom: 50,
+  paddingTop: 25,
+  width: '100%',
+  textAlign: 'center',
+  display: 'inline-block',
 };
 
 @connect(mapStateToProps, mapDispatchToProps)
 export default class RegisterView extends React.Component {
 
-    constructor(props) {
-        super(props);
-        const redirectRoute = '/login';
-        this.state = {
-            email: '',
-            password: '',
-            email_error_text: null,
-            password_error_text: null,
-            redirectTo: redirectRoute,
-            disabled: true,
-        };
+  constructor(props) {
+    super(props);
+    const redirectRoute = '/login';
+    this.state = {
+      email: '',
+      password: '',
+      email_error_text: null,
+      password_error_text: null,
+      redirectTo: redirectRoute,
+      disabled: true,
+    };
+  }
+
+  isDisabled() {
+    let email_is_valid = false;
+    let password_is_valid = false;
+
+    if (this.state.email === '') {
+      this.setState({
+        email_error_text: null,
+      });
+    } else if (validateEmail(this.state.email)) {
+      email_is_valid = true;
+      this.setState({
+        email_error_text: null,
+      });
+
+    } else {
+      this.setState({
+        email_error_text: 'Sorry, this is not a valid email',
+      });
     }
 
-    isDisabled() {
-        let email_is_valid = false;
-        let password_is_valid = false;
-
-        if (this.state.email === '') {
-            this.setState({
-                email_error_text: null,
-            });
-        } else if (validateEmail(this.state.email)) {
-            email_is_valid = true;
-            this.setState({
-                email_error_text: null,
-            });
-
-        } else {
-            this.setState({
-                email_error_text: 'Sorry, this is not a valid email',
-            });
-        }
-
-        if (this.state.password === '' || !this.state.password) {
-            this.setState({
-                password_error_text: null,
-            });
-        } else if (this.state.password.length >= 6) {
-            password_is_valid = true;
-            this.setState({
-                password_error_text: null,
-            });
-        } else {
-            this.setState({
-                password_error_text: 'Your password must be at least 6 characters',
-            });
-
-        }
-
-        if (email_is_valid && password_is_valid) {
-            this.setState({
-                disabled: false,
-            });
-        }
+    if (this.state.password === '' || !this.state.password) {
+      this.setState({
+        password_error_text: null,
+      });
+    } else if (this.state.password.length >= 6) {
+      password_is_valid = true;
+      this.setState({
+        password_error_text: null,
+      });
+    } else {
+      this.setState({
+        password_error_text: 'Your password must be at least 6 characters',
+      });
 
     }
 
-    changeValue(e, type) {
-        const value = e.target.value;
-        const next_state = {};
-        next_state[type] = value;
-        this.setState(next_state, () => {
-            this.isDisabled();
-        });
+    if (email_is_valid && password_is_valid) {
+      this.setState({
+        disabled: false,
+      });
     }
 
-    _handleKeyPress(e) {
-        if (e.key === 'Enter') {
-            if (!this.state.disabled) {
-                this.login(e);
-            }
-        }
-    }
+  }
 
-    login(e) {
-        e.preventDefault();
-        this.props.registerUser(this.state.email, this.state.password, this.state.redirectTo);
-    }
+  changeValue(e, type) {
+    const value = e.target.value;
+    const next_state = {};
+    next_state[type] = value;
+    this.setState(next_state, () => {
+      this.isDisabled();
+    });
+  }
 
-    render() {
-        return (
+  _handleKeyPress(e) {
+    if (e.key === 'Enter') {
+      if (!this.state.disabled) {
+        this.login(e);
+      }
+    }
+  }
+
+  login(e) {
+    e.preventDefault();
+    this.props.registerUser(this.state.email, this.state.password, this.state.redirectTo);
+  }
+
+  render() {
+    return (
             <div className="col-md-6 col-md-offset-3" onKeyPress={(e) => this._handleKeyPress(e)}>
                 <Paper style={style}>
                     <div className="text-center">
@@ -158,10 +158,10 @@ export default class RegisterView extends React.Component {
             </div>
         );
 
-    }
+  }
 }
 
 RegisterView.propTypes = {
-    registerUser: React.PropTypes.func,
-    registerStatusText: React.PropTypes.string,
+  registerUser: React.PropTypes.func,
+  registerStatusText: React.PropTypes.string,
 };

@@ -11,12 +11,12 @@ import { Footer } from '../../components/Footer';
 import './styles/app.scss';
 
 class App extends React.Component { // eslint-disable-line react/prefer-stateless-function
-    static propTypes = {
-        children: React.PropTypes.node,
-    };
+  static propTypes = {
+    children: React.PropTypes.node,
+  };
 
-    render() {
-        return (
+  render() {
+    return (
             <MuiThemeProvider muiTheme={getMuiTheme()}>
                 <section>
                     <Header />
@@ -32,7 +32,7 @@ class App extends React.Component { // eslint-disable-line react/prefer-stateles
                 </section>
             </MuiThemeProvider>
         );
-    }
+  }
 }
 
 export { App };
