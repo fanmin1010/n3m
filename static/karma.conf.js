@@ -4,7 +4,7 @@ module.exports = function (config) {
         singleRun: true,
         frameworks: ['mocha'],
         reporters: ['dots'],
-        browsers: ['Chrome'],
+        browsers: ['PhantomJS'],
         files: [
             'test/**/*.spec.js',
         ],

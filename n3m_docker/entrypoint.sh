@@ -21,6 +21,8 @@ if [ ! -d "./n3m" ]; then
   python manage.py db migrate 
   cd static
   npm install
+  cd ../
+  sh bin/install_phantomjs.sh
 else
   cd n3m
   . venv/bin/activate 
