@@ -1,4 +1,4 @@
-from __future__ import with_statement
+from __future__ import with_statement 
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 from logging.config import fileConfig
@@ -37,7 +37,7 @@ def run_migrations_offline():
 
     """
     url = config.get_main_option("sqlalchemy.url")
-    context.configure(url=url)
+    context.configure(url=url, transaction_per_migration=True)
 
     with context.begin_transaction():
         context.run_migrations()

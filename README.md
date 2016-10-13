@@ -35,7 +35,7 @@ sh web.sh &
 You should then be able to access the web interface of the app from your local dev machine at http://localhost:5000. Note that you cannot have a running process on your host machine at port 5000.. 
 
 ### Checkout out the docs for more information:
-[Documentation](docs/HowTo.md)
+[Documentation](docs/Documentation.md)
 
 ### Next Steps
 coming soon.
