@@ -1,5 +1,4 @@
 /* eslint camelcase: 0 */
-
 import axios from 'axios';
 
 const tokenConfig = (token) => ({
@@ -21,10 +20,12 @@ export function get_github_access() {
     );
 }
 
-export function create_user(email, password) {
+export function create_user(username, email, password, pgp_key) {
   return axios.post('api/create_user', {
+    username,
     email,
     password,
+    pgp_key
   });
 }
 

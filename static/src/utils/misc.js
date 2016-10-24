@@ -27,3 +27,25 @@ export function validateEmail(email) {
   const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(email);
 }
+
+
+/*
+ * Only one special char (._-) allowed and it must not be at the extremas of the string
+ * The first character cannot be a number
+ * All the other characters allowed are letters and numbers
+ * The total length should be between 3 and 20 chars
+ */
+export function validateUsername(username) {
+  const re = /(?=^.{3,20}$)^[a-zA-Z][a-zA-Z0-9]*[._-]?[a-zA-Z0-9]+$/;
+  function usernameAlreadyUsed(usename){
+    return false;
+  }
+  if(usernameAlreadyUsed(username)) {
+    return false;
+  }
+  return re.test(username);;
+}
+
+
+
+

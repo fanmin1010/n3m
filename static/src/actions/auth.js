@@ -65,6 +65,8 @@ export function redirectToRoute(route) {
 export function loginUser(email, password) {
   return function (dispatch) {
     dispatch(loginUserRequest());
+    console.log(email);
+    console.log(password);
     return get_token(email, password)
             .then(parseJSON)
             .then(response => {
@@ -115,10 +117,10 @@ export function registerUserFailure(error) {
   };
 }
 
-export function registerUser(email, password) {
+export function registerUser(username, email, password, pgp_key) {
   return function (dispatch) {
     dispatch(registerUserRequest());
-    return create_user(email, password)
+    return create_user(username, email, password, pgp_key)
             .then(parseJSON)
             .then(response => {
               try {

@@ -9,7 +9,7 @@ import Paper from 'material-ui/Paper';
 
 import * as actionCreators from '../actions/auth';
 
-import { validateEmail } from '../utils/misc';
+import { validateEmail, validateUsername } from '../utils/misc';
 
 function mapStateToProps(state) {
   return {
@@ -38,9 +38,12 @@ export default class RegisterView extends React.Component {
     super(props);
     const redirectRoute = '/login';
     this.state = {
+      username: '',
       email: '',
       password: '',
+      pgp_key: '',
       email_error_text: null,
+      username_error_text: null,
       password_error_text: null,
       redirectTo: redirectRoute,
       disabled: true,
@@ -50,6 +53,23 @@ export default class RegisterView extends React.Component {
   isDisabled() {
     let email_is_valid = false;
     let password_is_valid = false;
+    let username_is_valid = false;
+
+    if (this.state.username === '') {
+      this.setState({
+        username_error_text: null,
+      });
+    } else if (validateUsername(this.state.username)) {
+      email_is_valid = true;
+      this.setState({
+        username_error_text: null,
+      });
+
+    } else {
+      this.setState({
+        username_error_text: 'Sorry, this is not a valid username',
+      });
+    }
 
     if (this.state.email === '') {
       this.setState({
@@ -110,7 +130,7 @@ export default class RegisterView extends React.Component {
 
   login(e) {
     e.preventDefault();
-    this.props.registerUser(this.state.email, this.state.password, this.state.redirectTo);
+    this.props.registerUser(this.state.username, this.state.email, this.state.password, this.state.pgp_key, this.state.redirectTo);
   }
 
   render() {
@@ -128,6 +148,15 @@ export default class RegisterView extends React.Component {
 
                         <div className="col-md-12">
                             <TextField
+                              hintText="Username"
+                              floatingLabelText="Username"
+                              type="username"
+                              errorText={this.state.username_error_text}
+                              onChange={(e) => this.changeValue(e, 'username')}
+                            />
+                        </div>
+                        <div className="col-md-12">
+                            <TextField
                               hintText="Email"
                               floatingLabelText="Email"
                               type="email"
@@ -142,6 +171,13 @@ export default class RegisterView extends React.Component {
                               type="password"
                               errorText={this.state.password_error_text}
                               onChange={(e) => this.changeValue(e, 'password')}
+                            />
+                        </div>
+                        <div className="col-md-12">
+                            <TextField
+                              floatingLabelText="PGP Public Key"
+                              type="text"
+                              onChange={(e) => this.changeValue(e, 'pgp_key')}
                             />
                         </div>
 

@@ -3,13 +3,17 @@ from index import db, bcrypt
 
 class User(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
+    username = db.Column(db.String(255), unique=True)
     email = db.Column(db.String(255), unique=True)
     password = db.Column(db.String(255))
+    pgp_key = db.Column(db.String(255), unique=True)
 
-    def __init__(self, email, password):
+    def __init__(self, username, email, password, pgp_key):
         self.email = email
         self.active = True
         self.password = User.hashed_password(password)
+        self.username = username
+        self.pgp_key = pgp_key
 
     @staticmethod
     def hashed_password(password):

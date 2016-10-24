@@ -25,8 +25,10 @@ def get_user():
 def create_user():
     incoming = request.get_json()
     user = User(
+        username=incoming["username"],
         email=incoming["email"],
-        password=incoming["password"]
+        password=incoming["password"],
+        pgp_key=incoming["pgp_key"]
     )
     db.session.add(user)
 
