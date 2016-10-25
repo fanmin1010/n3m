@@ -2,6 +2,15 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from '../actions/data';
+import { Chat } from '../components/Chat';
+
+
+const containerStyle = {
+  display: 'flex',
+  width: '100%',
+  height: '100%',
+};
+
 
 function mapStateToProps(state) {
   return {
@@ -29,15 +38,21 @@ export default class ProtectedView extends React.Component {
     this.props.fetchProtectedData(token);
   }
 
+//  render() {
+//    return (
+//      <Chat />    
+//    );
+//  }
   render() {
     return (
-            <div>
+            <div style={containerStyle}>
                 {!this.props.loaded
                     ? <h1>Loading data...</h1>
                     :
                     <div>
-                        <h1>Welcome back,</h1>
-                        <h1>Are you ready to party?</h1>
+											<Chat 
+                        style={{width:'70%', minWidth: '250px', margin: 'auto'}}
+                      />
                     </div>
                 }
             </div>

@@ -3,33 +3,57 @@ import { browserHistory } from 'react-router';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import AppBar from 'material-ui/AppBar';
+import Avatar from 'material-ui/Avatar';
 import LeftNav from 'material-ui/Drawer';
+import {List, ListItem} from 'material-ui/List';
+import Subheader from 'material-ui/Subheader';
 import MenuItem from 'material-ui/MenuItem';
 import FlatButton from 'material-ui/FlatButton';
+import Menu from 'material-ui/svg-icons/navigation/menu';
+import Restore from 'material-ui/svg-icons/action/restore';
+import People  from 'material-ui/svg-icons/social/people';
+import PersonAdd  from 'material-ui/svg-icons/social/person-add';
+import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
+import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigation';
 import Divider from 'material-ui/Divider';
+import {grey500} from 'material-ui/styles/colors';
 
 import * as actionCreators from '../../actions/auth';
+
 
 function mapStateToProps(state) {
   return {
     token: state.auth.token,
     userName: state.auth.userName,
-    isAuthenticated: state.auth.isAuthenticated,
+    isAuthenticated: state.auth.isAuthenticated
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(actionCreators, dispatch);
 }
+  
 
 @connect(mapStateToProps, mapDispatchToProps)
 export class Header extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      open: false,
+      open: true,
+      friendlist: [
+        {name: 'Charles Burns', avatar: 'dist/images/avatar.png'},
+        {name: 'Bruce Wayne', avatar: 'dist/images/avatar2.png'},
+        {name: 'Clark Kent', avatar: 'dist/images/avatar3.png'},
+        {name: 'Mr. Robot', avatar: 'dist/images/avatar4.png'},
+      ],
+			selectedIndex: 0,
     };
 
+    this.btnStyle = {
+      margin: 12,
+    };
+
+		this.select = (index) => this.setState({selectedIndex: index});
   }
 
   dispatchNewRoute(route) {
@@ -62,6 +86,13 @@ export class Header extends Component {
     });
   }
 
+
+  closeNav() {
+    this.setState({
+      open: false,
+    });
+  }
+
   render() {
     return (
             <header>
@@ -78,27 +109,62 @@ export class Header extends Component {
                             </div>
                             :
                             <div>
-                                <MenuItem onClick={() => this.dispatchNewRoute('/about')}>
-                                    About
-                                </MenuItem>
+                                <AppBar
+                                  iconElementLeft={<div></div>}
+                                  iconElementRight={<FlatButton icon={<Menu />} onClick= {() => this.closeNav()} />}
+                                  onRightIconButtonTouchTap={() => this.closeNav()}
+                                />
                                 <MenuItem onClick={() => this.dispatchNewRoute('/profile')}>
                                     Profile
                                 </MenuItem>
-                                <Divider />
-
                                 <MenuItem onClick={(e) => this.logout(e)}>
                                     Logout
                                 </MenuItem>
+                                <Divider />
+															  <List>
+																	<Subheader>Friends({this.state.friendlist.length}) {<PersonAdd color={grey500} style={{margin: '15px', float: 'right'}}/>}</Subheader>
+																	{this.state.friendlist.map(function(friend){
+																		return <ListItem
+																			primaryText={friend.name}
+																			leftAvatar={<Avatar src={friend.avatar} />}
+																			rightIcon={<CommunicationChatBubble />}
+																		/>
+          												})}
+																</List>
+                                <BottomNavigation 
+																	selectedIndex={this.state.selectedIndex}
+																	style={{position:'absolute', bottom: '2px'}}
+																>
+																	<BottomNavigationItem
+																		label="Friends"
+																		icon={<People />}
+																		onTouchTap={() => this.select(0)}
+																	/>
+																	<BottomNavigationItem
+																		label="Recents"
+																		icon={<Restore />}
+																		onTouchTap={() => this.select(1)}
+																	/>
+																</BottomNavigation>
                             </div>
                     }
                 </LeftNav>
-                <AppBar
-                  title="Party.io"
-                  onLeftIconButtonTouchTap={() => this.openNav()}
-                  iconElementRight={
-                      <FlatButton label="Home" onClick={() => this.dispatchNewRoute('/')} />
-                    }
-                />
+                {
+                  !this.props.isAuthenticated ?
+                  <AppBar
+                    title="Party.io"
+                    onLeftIconButtonTouchTap={() => this.openNav()}
+                    iconElementRight={
+                        <FlatButton label="Home" onClick={() => this.dispatchNewRoute('/')} />
+                      }
+                  />
+                  :
+                  <FlatButton 
+                    icon={<Menu />}
+                    onClick={() => this.openNav()} 
+                    style={this.btnStyle}
+                  />
+                }
             </header>
 
         );

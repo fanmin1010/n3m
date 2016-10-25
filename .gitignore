@@ -6,3 +6,4 @@ n3m_docker/dotfiles/.vim/
 dist/
 htmlcov/
 npm-debug.log
+.DS_Store
