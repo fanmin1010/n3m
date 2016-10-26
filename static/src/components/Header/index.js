@@ -9,7 +9,8 @@ import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import MenuItem from 'material-ui/MenuItem';
 import FlatButton from 'material-ui/FlatButton';
-import Menu from 'material-ui/svg-icons/navigation/menu';
+import ChevronLeft from 'material-ui/svg-icons/navigation/chevron-left';
+import MoreVert from 'material-ui/svg-icons/navigation/more-vert';
 import Restore from 'material-ui/svg-icons/action/restore';
 import People  from 'material-ui/svg-icons/social/people';
 import PersonAdd  from 'material-ui/svg-icons/social/person-add';
@@ -51,6 +52,7 @@ export class Header extends Component {
 
     this.btnStyle = {
       margin: 12,
+			width: '20px'
     };
 
 		this.select = (index) => this.setState({selectedIndex: index});
@@ -58,17 +60,10 @@ export class Header extends Component {
 
   dispatchNewRoute(route) {
     browserHistory.push(route);
-    this.setState({
-      open: false,
-    });
+  //  this.setState({
+  //    open: false,
+  //  });
 
-  }
-
-
-  handleClickOutside() {
-    this.setState({
-      open: false,
-    });
   }
 
 
@@ -110,9 +105,8 @@ export class Header extends Component {
                             :
                             <div>
                                 <AppBar
+																	title="Party.io"
                                   iconElementLeft={<div></div>}
-                                  iconElementRight={<FlatButton icon={<Menu />} onClick= {() => this.closeNav()} />}
-                                  onRightIconButtonTouchTap={() => this.closeNav()}
                                 />
                                 <MenuItem onClick={() => this.dispatchNewRoute('/profile')}>
                                     Profile
@@ -159,11 +153,7 @@ export class Header extends Component {
                       }
                   />
                   :
-                  <FlatButton 
-                    icon={<Menu />}
-                    onClick={() => this.openNav()} 
-                    style={this.btnStyle}
-                  />
+                  <div></div>
                 }
             </header>
 

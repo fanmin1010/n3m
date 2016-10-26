@@ -3,12 +3,10 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as actionCreators from '../actions/data';
 import { Chat } from '../components/Chat';
+import { Party } from '../components/Party';
 
 
 const containerStyle = {
-  display: 'flex',
-  width: '100%',
-  height: '100%',
 };
 
 
@@ -38,11 +36,6 @@ export default class ProtectedView extends React.Component {
     this.props.fetchProtectedData(token);
   }
 
-//  render() {
-//    return (
-//      <Chat />    
-//    );
-//  }
   render() {
     return (
             <div style={containerStyle}>
@@ -50,9 +43,8 @@ export default class ProtectedView extends React.Component {
                     ? <h1>Loading data...</h1>
                     :
                     <div>
-											<Chat 
-                        style={{width:'70%', minWidth: '250px', margin: 'auto'}}
-                      />
+										  <Chat />
+                      <Party />
                     </div>
                 }
             </div>
