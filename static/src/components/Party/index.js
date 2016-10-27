@@ -37,8 +37,8 @@ function mapDispatchToProps(dispatch) {
       this.state = {
         open: true,
         partylist: [
-        {name: 'Superheros', avatar: 'dist/images/teamavatar1.png'},
-        {name: 'ASE Team', avatar: 'dist/images/teamavatar2.png'},
+        {name: 'Superheros', avatar: 'dist/images/team01.png'},
+        {name: 'ASE Team', avatar: 'dist/images/team02.png'},
         ],
         selectedIndex: 0,
       };

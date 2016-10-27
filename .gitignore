@@ -3,7 +3,7 @@ node_modules
 venv
 git/
 n3m_docker/dotfiles/.vim/
-dist/
+static/dist/out/
 htmlcov/
 npm-debug.log
 .DS_Store

@@ -42,10 +42,10 @@ export class Header extends Component {
     this.state = {
       open: true,
       friendlist: [
-        {name: 'Charles Burns', avatar: 'dist/images/avatar.png'},
-        {name: 'Bruce Wayne', avatar: 'dist/images/avatar2.png'},
-        {name: 'Clark Kent', avatar: 'dist/images/avatar3.png'},
-        {name: 'Mr. Robot', avatar: 'dist/images/avatar4.png'},
+        {name: 'Charles Burns', avatar: 'dist/images/avatar01.png'},
+        {name: 'Bruce Wayne', avatar: 'dist/images/avatar02.png'},
+        {name: 'Clark Kent', avatar: 'dist/images/avatar03.png'},
+        {name: 'Mr. Robot', avatar: 'dist/images/avatar04.png'},
       ],
 			selectedIndex: 0,
     };
@@ -105,7 +105,9 @@ export class Header extends Component {
                             :
                             <div>
                                 <AppBar
-																	title="Party.io"
+																	title={
+                                    <span style={{fontSize: '30px', letterSpacing: '3px'}}>PARTY.io</span>
+                                  }
                                   iconElementLeft={<div></div>}
                                 />
                                 <MenuItem onClick={() => this.dispatchNewRoute('/profile')}>

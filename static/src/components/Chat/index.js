@@ -28,7 +28,6 @@ function mapDispatchToProps(dispatch) {
 
 const style = {
   height: '95%',
-	margin: '15px 0 0px',
 	overflow: 'hidden',
 };
   
@@ -40,13 +39,14 @@ export class Chat extends Component {
     this.state = {
       party: {name: 'Clark Kent'},
       messages: [
-        {username: 'Clark Kent', avatar: 'dist/images/avatar3.png',  text: 'example message 1', time: '12:10:25p'},
-        {username: 'Me', avatar: 'dist/images/avatar5.png',  text: 'example message 2', time: '12:10:35p'},
-        {username: 'Clark Kent', avatar: 'dist/images/avatar3.png',  text: 'example message 3', time: '12:11:11p'},
-        {username: 'Me', avatar: 'dist/images/avatar5.png',  text: 'example message 4', time: '12:11:36p'},
-        {username: 'Clark Kent', avatar: 'dist/images/avatar3.png',  text: 'example message 5', time: '12:11:59p'},
-        {username: 'Me', avatar: 'dist/images/avatar5.png',  text: 'example message 6', time: '12:15:17p'},
-      ]
+        {username: 'Clark Kent', avatar: 'dist/images/avatar03.png',  text: 'example message 1', time: '12:10:25p'},
+        {username: 'Me', avatar: 'dist/images/default_avatar.png',  text: 'example message 2', time: '12:10:35p'},
+        {username: 'Clark Kent', avatar: 'dist/images/avatar03.png',  text: 'example message 3', time: '12:11:11p'},
+        {username: 'Me', avatar: 'dist/images/default_avatar.png',  text: 'example message 4', time: '12:11:36p'},
+        {username: 'Clark Kent', avatar: 'dist/images/avatar03.png',  text: 'example message 5', time: '12:11:59p'},
+        {username: 'Me', avatar: 'dist/images/default_avatar.png',  text: 'example message 6', time: '12:15:17p'},
+      ],
+      userName: props.userName,
     };
 
   }
@@ -57,30 +57,31 @@ export class Chat extends Component {
 							<Paper style={style} zDepth={5} rounded={false} >
                 <Subheader>{this.state.party.name}</Subheader>
                 <Divider />
-                <List  style={{zIndex: '1', position: 'absolute', height: '85%', width: '100%', overflow: 'scroll', }} >
+                <List  style={{zIndex: '1', height: '85%', width: '98%', left: '1%', position: 'relative', overflow: 'scroll', }} >
 								{this.state.messages.map(function(msg){
-									return <div>
-													<ListItem
+									return <ListItem
 														leftAvatar={(msg.username === 'Me') ? null : <Avatar src={msg.avatar} />}
 														rightAvatar={(msg.username === 'Me') ? <Avatar src={msg.avatar} /> : null}
-														primaryText={msg.username}
-														secondaryText={
+														primaryText={
+                              <h5>
+															  <span style={{fontSize: '10pt', color: darkBlack}}>{msg.time} </span>-- 
+                                {msg.username}
+                              </h5>
+                            }
+                              secondaryText={
 															<p>
-																<span style={{color: darkBlack}}>{msg.time}</span> --
 																{msg.text} 
 															</p>
 														}
 														secondaryTextLines={2}
-														style={(msg.username === 'Me') ? {textAlign: 'right', margin: '0 35px',} : {}}
+														style={(msg.username === 'Me') ? {textAlign: 'right',} : {}}
 													/>
-													<Divider />
-													</div>
 								})}
                 </List>
 
 								<TextField
 									hintText="Chat message"
-									style={{width: '94%', position: 'absolute', bottom: '0', left: '19px', zIndex: '2',}}
+									style={{width: '98%', left: '1%', position: 'relative', backgroundColor: 'white', bottom: '5px', zIndex: '2',}}
 								/>	
 							</Paper>
 						</div>
