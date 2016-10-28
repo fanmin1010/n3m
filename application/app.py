@@ -24,17 +24,21 @@ def get_user():
 @app.route("/api/create_user", methods=["POST"])
 def create_user():
     incoming = request.get_json()
+    print incoming
     user = User(
         username=incoming["username"],
         email=incoming["email"],
         password=incoming["password"],
-        pgp_key=incoming["pgp_key"]
+        pgp_key=incoming["pgp_key"],
+        avatar="placehold"  # waiting for Front-end pass-in
     )
     db.session.add(user)
+    print user
 
     try:
         db.session.commit()
     except IntegrityError:
+        print 'error'
         return jsonify(message="User with that email already exists"), 409
 
     new_user = User.query.filter_by(email=incoming["email"]).first()

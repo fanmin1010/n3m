@@ -7,13 +7,15 @@ class User(db.Model):
     email = db.Column(db.String(255), unique=True)
     password = db.Column(db.String(255))
     pgp_key = db.Column(db.String(255), unique=True)
+    avatar = db.Column(db.String(128), unique=False)
 
-    def __init__(self, username, email, password, pgp_key):
+    def __init__(self, username, email, password, pgp_key, avatar):
         self.email = email
         self.active = True
         self.password = User.hashed_password(password)
         self.username = username
         self.pgp_key = pgp_key
+        self.avatar = avatar
 
     @staticmethod
     def hashed_password(password):
