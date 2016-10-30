@@ -1,7 +1,7 @@
 from flask import request, render_template, jsonify, url_for, redirect, g
-from .models import User
+from .models import User, Friendship
 from index import app, db
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from .utils.auth import generate_token, requires_auth, verify_token
 
 
@@ -21,10 +21,9 @@ def get_user():
     return jsonify(result=g.current_user)
 
 
-@app.route("/api/create_user", methods=["POST"])
+@app.route("/api/create_user_original", methods=["POST"])
 def create_user():
     incoming = request.get_json()
-    print incoming
     user = User(
         username=incoming["username"],
         email=incoming["email"],
@@ -33,20 +32,43 @@ def create_user():
         avatar="placehold"  # waiting for Front-end pass-in
     )
     db.session.add(user)
-    print user
-
     try:
         db.session.commit()
     except IntegrityError:
-        print 'error'
         return jsonify(message="User with that email already exists"), 409
-
     new_user = User.query.filter_by(email=incoming["email"]).first()
-
     return jsonify(
         id=user.id,
         token=generate_token(new_user)
     )
+
+@app.route("/api/user_add_friend", methods = ["POST"])
+@requires_auth
+def add_friendship():
+    incoming = request.get_json()
+    # friendemail refers to the email to be added email->friendemail
+    friendee = User.query.filter_by(email=incoming["email"]).first()
+
+    current_user = g.current_user
+    if friendee == None:
+        return jsonify(message="User with that email does not exist"), 409
+    else:
+        friender_email = current_user.email
+        friender_id = current_user.id
+
+        friendee_email = friendee.email
+        friendee_id = friendee.id
+        friendee_avatar = friendee.avatar
+        newfriendship = Friendship(friender_id, friendee_id)
+
+        db.session.add(newfriendship)
+        try:
+            db.session.commit()
+        except SQLAlchemyError:
+            return jsonify(message="That friendship already exits"), 410
+
+        return jsonify(error = False, id = friendee_id, email = friendee_email, avatar = friendee_avatar)
+
 
 
 @app.route("/api/get_token", methods=["POST"])

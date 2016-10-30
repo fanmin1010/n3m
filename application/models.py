@@ -1,5 +1,5 @@
 from index import db, bcrypt
-
+from datetime import datetime
 
 class User(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
@@ -28,3 +28,16 @@ class User(db.Model):
             return user
         else:
             return None
+
+class Friendship(db.Model):
+    fs_id = db.Column(db.Integer(), primary_key = True, nullable=False)
+    friender = db.Column(db.Integer(), db.ForeignKey('user.id'))
+    friendee = db.Column(db.Integer(), db.ForeignKey('user.id'))
+    est_time = db.Column(db.DateTime(), nullable = False, server_default=db.func.now())
+    db.UniqueConstraint('friender', 'friendee')
+
+    def __init__(self, friender, friendee):
+        self.friender = friender
+        self.friendee = friendee
+    def __repr__(self):
+        return '<Friendship between %r and %r>' % (self.friender, self.friendee)
