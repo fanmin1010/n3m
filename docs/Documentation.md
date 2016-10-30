@@ -11,3 +11,7 @@
  * [Documentation for Alembic (database migration tool)](http://alembic.zzzcomputing.com/en/latest/)
  * [Documentation for SqlAlchemy (used in writing migrations)](http://docs.sqlalchemy.org/en/latest/)
  * [Performing migrations](DBStuff.md#performing-migrations)
+
+### flask socketio
+https://flask-socketio.readthedocs.io/en/latest/
+https://github.com/miguelgrinberg/Flask-SocketIO
