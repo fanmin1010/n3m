@@ -21,7 +21,7 @@ def get_user():
     return jsonify(result=g.current_user)
 
 
-@app.route("/api/create_user_original", methods=["POST"])
+@app.route("/api/create_user", methods=["POST"])
 def create_user():
     incoming = request.get_json()
     user = User(
