@@ -71,6 +71,29 @@ def add_friendship():
 
 
 
+@app.route("/api/createParty", methods = ["POST"])
+@requires_auth
+def createParty():
+    incoming = request.get_json()
+    party = Party(
+        partyName=incoming["partyName"],
+        ownerID=incoming["ownerID"]
+    )
+    db.session.add(party)
+    try:
+        db.session.commit()
+    except IntegrityError:
+        return jsonify(message="Unable to create party"),409
+
+    new_party = Party.query.filter_by(partyName=incoming["partyName"]).first()
+    return jsonify(
+        partyID=party.partyID
+    )
+
+
+
+
+
 @app.route("/api/get_token", methods=["POST"])
 def get_token():
     incoming = request.get_json()
