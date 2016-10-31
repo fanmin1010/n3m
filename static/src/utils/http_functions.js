@@ -1,5 +1,6 @@
 /* eslint camelcase: 0 */
 import axios from 'axios';
+var socket = io.connect('http://0.0.0.0:5000', {});
 
 const tokenConfig = (token) => ({
   headers: {
@@ -43,3 +44,9 @@ export function has_github_token(token) {
 export function data_about_user(token) {
   return axios.get('api/user', tokenConfig(token));
 }
+
+export function socket_msg(msg, id, cb) {
+ socket.emit('chat message', {msgtext: msg, partyid: id}, cb);
+}
+
+

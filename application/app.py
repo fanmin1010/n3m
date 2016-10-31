@@ -1,4 +1,5 @@
 from flask import request, render_template, jsonify, url_for, redirect, g
+from flask_socketio import SocketIO, emit
 from .models import User, Friendship
 from index import app, db
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
@@ -113,3 +114,16 @@ def is_token_valid():
         return jsonify(token_is_valid=True)
     else:
         return jsonify(token_is_valid=False), 403
+
+
+
+socketio = SocketIO(app)
+
+
+@socketio.on('chat message')
+def chat_message(message):
+    print 'There was a message'
+    emit('my response', {'data': 'got it!'})
+
+
+

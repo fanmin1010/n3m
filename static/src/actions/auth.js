@@ -11,7 +11,7 @@ import {
 } from '../constants/index';
 
 import { parseJSON } from '../utils/misc';
-import { get_token, create_user } from '../utils/http_functions';
+import { get_token, create_user, socket_msg } from '../utils/http_functions';
 
 
 export function loginUserSuccess(token) {
@@ -140,3 +140,13 @@ export function registerUser(username, email, password, pgp_key) {
             });
   };
 }
+
+
+
+
+export function send_chat(msg, teamid) {
+  return function (dispatch) {
+    return socket_msg(msg, teamid, function(data) {console.log(data);})
+  };
+}
+

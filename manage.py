@@ -1,7 +1,7 @@
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 
-from application.app import app, db
+from application.app import app, db, socketio
 
 migrate = Migrate(app, db)
 manager = Manager(app)
@@ -17,4 +17,8 @@ def create_db():
 
 
 if __name__ == '__main__':
-    manager.run()
+    socketio.run(app,
+                host='0.0.0.0',
+                port=5000,
+                use_reloader=False)
+

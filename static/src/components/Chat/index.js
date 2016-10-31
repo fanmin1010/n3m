@@ -10,7 +10,6 @@ import Divider from 'material-ui/Divider';
 import { bindActionCreators } from 'redux';
 import {grey400, darkBlack, lightBlack} from 'material-ui/styles/colors';
 
-
 import * as actionCreators from '../../actions/auth';
 
 function mapStateToProps(state) {
@@ -50,14 +49,13 @@ export class Chat extends Component {
     };
 
   }
-
   render() {
     return (
-            <div className="col-md-8 col-md-offset-2" >
+            <div className="col-md-8 col-md-offset-2" onKeyPress={(e) => this._handleKeyPress(e)}>
 							<Paper style={style} zDepth={5} rounded={false} >
                 <Subheader>{this.state.party.name}</Subheader>
                 <Divider />
-                <List  style={{zIndex: '1', height: '85%', width: '98%', left: '1%', position: 'relative', overflow: 'scroll', }} >
+                <List  id="messagelist" style={{zIndex: '1', height: '85%', width: '98%', left: '1%', position: 'relative', overflow: 'scroll', }} >
 								{this.state.messages.map(function(msg){
 									return <ListItem
 														leftAvatar={(msg.username === 'Me') ? null : <Avatar src={msg.avatar} />}
@@ -81,16 +79,43 @@ export class Chat extends Component {
 
 								<TextField
 									hintText="Chat message"
+                  id='chatinput'
 									style={{width: '98%', left: '1%', position: 'relative', backgroundColor: 'white', bottom: '5px', zIndex: '2',}}
 								/>	
 							</Paper>
 						</div>
         );
   }
+
+  getMessage() {
+    var msg = document.getElementById('chatinput').value;
+    document.getElementById('chatinput').value = '';
+    return msg;
+  }
+
+  sendMessage(msg) {
+    console.log('send message: ' + msg);
+    this.props.send_chat(msg, this.state.party.name);
+    var messages = this.state.messages.slice();
+    var newelement = {username: 'Me', avatar: 'dist/images/default_avatar.png',  text: msg, time: new Date().toTimeString().split(' ')[0]};
+    messages.push(newelement);
+    this.setState({ messages: messages }, () => {
+      var m  = document.getElementById('messagelist');
+      m.scrollTop = 9999;
+    });
+  }
+
+  _handleKeyPress(e) {
+    if (e.key === 'Enter') {
+      var message = this.getMessage();
+      this.sendMessage(message);
+      debugger;
+    }
+  }
 }
 
 Chat.propTypes = {
-  logoutAndRedirect: React.PropTypes.func,
+  send_chat: React.PropTypes.func,
   isAuthenticated: React.PropTypes.bool,
 };
 
