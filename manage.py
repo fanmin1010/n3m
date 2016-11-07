@@ -15,10 +15,17 @@ def create_db():
     """Creates the db tables."""
     db.create_all()
 
-
-if __name__ == '__main__':
+@manager.command
+def start_app():
+    """run the app."""
     socketio.run(app,
                 host='0.0.0.0',
                 port=5000,
                 use_reloader=False)
+
+if __name__ == '__main__':
+    manager.run()
+
+
+
 

@@ -28,6 +28,14 @@ class User(db.Model):
             return user
         else:
             return None
+    
+    @staticmethod
+    def get_avatar_for_username(username):
+        user = User.query.filter_by(username=username).first()
+        if user:
+            return user.avatar
+        else:
+            return None
 
 class Friendship(db.Model):
     fs_id = db.Column(db.Integer(), primary_key = True, nullable=False)
@@ -55,7 +63,7 @@ class FriendMessage(db.Model):
         self.message = message
 
     @staticmethod
-    def getFriendMessages(senderID)
+    def getFriendMessages(senderID):
         friendMessages = FriendMessage.query.filter_by(senderID=senderID)
         return friendMessages
 
@@ -73,7 +81,7 @@ class Party(db.Model):
         parties = Party.query.filter_by(ownerID=ownerID)        
         return parties
 
-class PartyUser(db.model):
+class PartyUser(db.Model):
     puID = db.Column(db.Integer(), primary_key = True, nullable=False)
     partyID = db.Column(db.Integer(), db.ForeignKey('party.partyID'), nullable=False)
     userID = db.Column(db.Integer(), db.ForeignKey('user.id'), nullable=False)

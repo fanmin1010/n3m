@@ -11,7 +11,7 @@ import {
 } from '../constants/index';
 
 import { parseJSON } from '../utils/misc';
-import { get_token, create_user, socket_msg } from '../utils/http_functions';
+import { get_token, create_user } from '../utils/http_functions';
 
 
 export function loginUserSuccess(token) {
@@ -27,11 +27,12 @@ export function loginUserSuccess(token) {
 
 export function loginUserFailure(error) {
   localStorage.removeItem('token');
+  console.dir(error);
   return {
     type: LOGIN_USER_FAILURE,
     payload: {
-      status: error.status,
-      statusText: error.statusText,
+      status: error.response.status,
+      statusText: error.response.statusText,
     },
   };
 }
@@ -65,16 +66,15 @@ export function redirectToRoute(route) {
 export function loginUser(email, password) {
   return function (dispatch) {
     dispatch(loginUserRequest());
-    console.log(email);
-    console.log(password);
     return get_token(email, password)
             .then(parseJSON)
             .then(response => {
               try {
+                console.log(response);
+                console.log(' in loginuser function');
                 dispatch(loginUserSuccess(response.token));
                 browserHistory.push('/main');
               } catch (e) {
-                alert(e);
                 dispatch(loginUserFailure({
                   response: {
                     status: 403,
@@ -111,8 +111,8 @@ export function registerUserFailure(error) {
   return {
     type: REGISTER_USER_FAILURE,
     payload: {
-      status: error.status,
-      statusText: error.statusText,
+      status: error.response.status,
+      statusText: error.response.statusText,
     },
   };
 }
@@ -140,13 +140,3 @@ export function registerUser(username, email, password, pgp_key) {
             });
   };
 }
-
-
-
-
-export function send_chat(msg, teamid) {
-  return function (dispatch) {
-    return socket_msg(msg, teamid, function(data) {console.log(data);})
-  };
-}
-

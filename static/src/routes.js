@@ -20,23 +20,15 @@ import { requireNoAuthentication } from './components/notAuthenticatedComponent'
 import { requireAuthentication } from './components/AuthenticatedComponent';
 
 
-
-
-
 export default (
     <Route path="/" component={App}>
-        /* public routes */
         <Route path="login" component={requireNoAuthentication(LoginView)} />
         <Route path="register" component={requireNoAuthentication(RegisterView)} />
         <Route path="home" component={requireNoAuthentication(HomeContainer)} />
-
-        /* private routes */
         <Route path="main" component={requireAuthentication(ProtectedView)} />
         <Route path="profile" component={requireAuthentication(ProfileView)} />
         <Route path="about" component={requireAuthentication(About)} />
         <Route path="chat" component={requireAuthentication(Chat)} />
-
-        /* catch all */
         <Route path="*" component={DetermineAuth(NotFound)} />
     </Route>
 );

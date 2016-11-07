@@ -1,10 +1,11 @@
+from __future__ import print_function
 from flask import request, render_template, jsonify, url_for, redirect, g
 from flask_socketio import SocketIO, emit
 from .models import User, Friendship
 from index import app, db
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from .utils.auth import generate_token, requires_auth, verify_token
-
+import sys
 
 @app.route('/', methods=['GET'])
 def index():
@@ -30,7 +31,7 @@ def create_user():
         email=incoming["email"],
         password=incoming["password"],
         pgp_key=incoming["pgp_key"],
-        avatar="placehold"  # waiting for Front-end pass-in
+        avatar="dist/images/default_avatar.png"  # waiting for Front-end pass-in
     )
     db.session.add(user)
     try:
@@ -120,10 +121,11 @@ def is_token_valid():
 socketio = SocketIO(app)
 
 
-@socketio.on('chat message')
+@socketio.on('servermessage')
 def chat_message(message):
-    print 'There was a message'
-    emit('my response', {'data': 'got it!'})
+    print('There was a message: ' + str(message), file=sys.stderr)
+    avatar = User.get_avatar_for_username(message['username'])
+    socketio.emit(message['partyname'], {'username': message['username'], 'msg': message['msgtext'], 'avatar': avatar})
 
 
 

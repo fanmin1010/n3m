@@ -5,19 +5,19 @@ import { bindActionCreators } from 'redux';
 import AppBar from 'material-ui/AppBar';
 import Avatar from 'material-ui/Avatar';
 import LeftNav from 'material-ui/Drawer';
-import {List, ListItem} from 'material-ui/List';
+import { List, ListItem } from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import MenuItem from 'material-ui/MenuItem';
 import FlatButton from 'material-ui/FlatButton';
 import ChevronLeft from 'material-ui/svg-icons/navigation/chevron-left';
 import MoreVert from 'material-ui/svg-icons/navigation/more-vert';
 import Restore from 'material-ui/svg-icons/action/restore';
-import People  from 'material-ui/svg-icons/social/people';
-import PersonAdd  from 'material-ui/svg-icons/social/person-add';
+import People from 'material-ui/svg-icons/social/people';
+import PersonAdd from 'material-ui/svg-icons/social/person-add';
 import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
-import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigation';
+import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
 import Divider from 'material-ui/Divider';
-import {grey500} from 'material-ui/styles/colors';
+import { grey500 } from 'material-ui/styles/colors';
 
 import * as actionCreators from '../../actions/auth';
 
@@ -26,14 +26,14 @@ function mapStateToProps(state) {
   return {
     token: state.auth.token,
     userName: state.auth.userName,
-    isAuthenticated: state.auth.isAuthenticated
+    isAuthenticated: state.auth.isAuthenticated,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(actionCreators, dispatch);
 }
-  
+
 
 @connect(mapStateToProps, mapDispatchToProps)
 export class Header extends Component {
@@ -42,20 +42,20 @@ export class Header extends Component {
     this.state = {
       open: true,
       friendlist: [
-        {name: 'Charles Burns', avatar: 'dist/images/avatar01.png'},
-        {name: 'Bruce Wayne', avatar: 'dist/images/avatar02.png'},
-        {name: 'Clark Kent', avatar: 'dist/images/avatar03.png'},
-        {name: 'Mr. Robot', avatar: 'dist/images/avatar04.png'},
+        { name: 'Charles Burns', avatar: 'dist/images/avatar01.png' },
+        { name: 'Bruce Wayne', avatar: 'dist/images/avatar02.png' },
+        { name: 'Clark Kent', avatar: 'dist/images/avatar03.png' },
+        { name: 'Mr. Robot', avatar: 'dist/images/avatar04.png' },
       ],
 			selectedIndex: 0,
     };
 
     this.btnStyle = {
       margin: 12,
-			width: '20px'
+			width: '20px',
     };
 
-		this.select = (index) => this.setState({selectedIndex: index});
+		this.select = (index) => this.setState({ selectedIndex: index });
   }
 
   dispatchNewRoute(route) {
@@ -105,10 +105,10 @@ export class Header extends Component {
                             :
                             <div>
                                 <AppBar
-																	title={
-                                    <span style={{fontSize: '30px', letterSpacing: '3px'}}>PARTY.io</span>
+                                  title={
+                                    <span style={{ fontSize: '30px', letterSpacing: '3px' }}>PARTY.io</span>
                                   }
-                                  iconElementLeft={<div></div>}
+                                  iconElementLeft={<div />}
                                 />
                                 <MenuItem onClick={() => this.dispatchNewRoute('/profile')}>
                                     Profile
@@ -118,28 +118,28 @@ export class Header extends Component {
                                 </MenuItem>
                                 <Divider />
 															  <List>
-																	<Subheader>Friends({this.state.friendlist.length}) {<PersonAdd color={grey500} style={{margin: '15px', float: 'right'}}/>}</Subheader>
-																	{this.state.friendlist.map(function(friend){
-																		return <ListItem
-																			primaryText={friend.name}
-																			leftAvatar={<Avatar src={friend.avatar} />}
-																			rightIcon={<CommunicationChatBubble />}
-																		/>
+																	<Subheader>Friends({this.state.friendlist.length}) {<PersonAdd color={grey500} style={{ margin: '15px', float: 'right' }} />}</Subheader>
+																	{this.state.friendlist.map((friend) => {
+																		return (<ListItem
+  primaryText={friend.name}
+  leftAvatar={<Avatar src={friend.avatar} />}
+  rightIcon={<CommunicationChatBubble />}
+																		/>);
           												})}
 																</List>
-                                <BottomNavigation 
-																	selectedIndex={this.state.selectedIndex}
-																	style={{position:'absolute', bottom: '2px'}}
-																>
+                                <BottomNavigation
+                                  selectedIndex={this.state.selectedIndex}
+                                  style={{ position: 'absolute', bottom: '2px' }}
+                                >
 																	<BottomNavigationItem
-																		label="Friends"
-																		icon={<People />}
-																		onTouchTap={() => this.select(0)}
+  label="Friends"
+  icon={<People />}
+  onTouchTap={() => this.select(0)}
 																	/>
 																	<BottomNavigationItem
-																		label="Recents"
-																		icon={<Restore />}
-																		onTouchTap={() => this.select(1)}
+  label="Recents"
+  icon={<Restore />}
+  onTouchTap={() => this.select(1)}
 																	/>
 																</BottomNavigation>
                             </div>
@@ -155,7 +155,7 @@ export class Header extends Component {
                       }
                   />
                   :
-                  <div></div>
+                  <div />
                 }
             </header>
 

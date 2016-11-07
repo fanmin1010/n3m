@@ -53,7 +53,7 @@ export default class RegisterView extends React.Component {
   isDisabled() {
     let email_is_valid = false;
     let password_is_valid = false;
-    let username_is_valid = false;
+    const username_is_valid = false;
 
     if (this.state.username === '') {
       this.setState({
