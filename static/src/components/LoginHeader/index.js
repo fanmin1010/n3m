@@ -36,17 +36,11 @@ function mapDispatchToProps(dispatch) {
 
 
 @connect(mapStateToProps, mapDispatchToProps)
-export class Header extends Component {
+export class LoginHeader extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      open: true,
-      friendlist: [
-        { name: 'Charles Burns', avatar: 'dist/images/avatar01.png' },
-        { name: 'Bruce Wayne', avatar: 'dist/images/avatar02.png' },
-        { name: 'Clark Kent', avatar: 'dist/images/avatar03.png' },
-        { name: 'Mr. Robot', avatar: 'dist/images/avatar04.png' },
-      ],
+      open: false,
 			selectedIndex: 0,
     };
 
@@ -71,7 +65,7 @@ export class Header extends Component {
     e.preventDefault();
     this.props.logoutAndRedirect();
     this.setState({
-      open: false,
+      open: true,
     });
   }
 
@@ -91,48 +85,30 @@ export class Header extends Component {
   render() {
     return (
             <header>
-              <LeftNav open={this.state.open}>
-                <div>
+                <LeftNav open={this.state.open}>
+                            <div>
+                                <MenuItem onClick={() => this.dispatchNewRoute('/login')}>
+                                    Login
+                                </MenuItem>
+                                <MenuItem onClick={() => this.dispatchNewRoute('/register')}>
+                                    Register
+                                </MenuItem>
+                            </div>
+                </LeftNav>
                   <AppBar
-                    title={
-                       <span style={{ fontSize: '30px', letterSpacing: '3px' }}>PARTY.io</span>
-                    }
-                    iconElementLeft={<div />}
+                    title="Party.io"
+                    onLeftIconButtonTouchTap={() => this.openNav()}
+                    iconElementRight={
+                        <FlatButton label="Home" onClick={() => this.dispatchNewRoute('/')} />
+                      }
                   />
-                  <MenuItem onClick={() => this.dispatchNewRoute('/profile')}> Profile </MenuItem>
-                  <MenuItem onClick={(e) => this.logout(e)}> Logout </MenuItem>
-                  <Divider />
-								  <List>
-									<Subheader>Friends({this.state.friendlist.length}) {<PersonAdd color={grey500} style={{ margin: '15px', float: 'right' }} />}</Subheader>
-									{this.state.friendlist.map((friend) => {
-									return (<ListItem
-                            primaryText={friend.name}
-                            leftAvatar={<Avatar src={friend.avatar} />}
-                            rightIcon={<CommunicationChatBubble />}
-													/>);
-          				})}
-									</List>
-                  <BottomNavigation
-                    selectedIndex={this.state.selectedIndex}
-                    style={{ position: 'absolute', bottom: '2px' }} >
-									  <BottomNavigationItem
-                      label="Friends"
-                      icon={<People />}
-                      onTouchTap={() => this.select(0)} />
-										<BottomNavigationItem
-                      label="Recents"
-                      icon={<Restore />}
-                      onTouchTap={() => this.select(1)} />
-									</BottomNavigation>
-               </div>
-              </LeftNav>
             </header>
-
         );
   }
 }
 
-Header.propTypes = {
+LoginHeader.propTypes = {
   logoutAndRedirect: React.PropTypes.func,
   isAuthenticated: React.PropTypes.bool,
 };
+

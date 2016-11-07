@@ -1,9 +1,12 @@
 import React from 'react';
-
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux'; 
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'; 
+import * as actionCreators from '../../actions/auth';
 
 /* application components */
+import { LoginHeader } from '../../components/LoginHeader';
 import { Header } from '../../components/Header';
 // import { Footer } from '../../components/Footer';
 
@@ -11,6 +14,20 @@ import { Header } from '../../components/Header';
 /* global styles for app */
 import './styles/app.scss';
 
+
+
+function mapStateToProps(state) {
+  return {
+    isAuthenticated: state.auth.isAuthenticated,
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(actionCreators, dispatch);
+}
+
+
+@connect(mapStateToProps, mapDispatchToProps)
 class App extends React.Component { // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
     children: React.PropTypes.node,
@@ -30,7 +47,12 @@ class App extends React.Component { // eslint-disable-line react/prefer-stateles
               },
             })}>
                 <section>
+                {
+                  !this.props.isAuthenticated ?
+                    <LoginHeader />
+                  :
                     <Header />
+                }
                     <div
                       className="container"
                     >
@@ -41,6 +63,8 @@ class App extends React.Component { // eslint-disable-line react/prefer-stateles
         );
   }
 }
-
+App.propTypes = {
+  isAuthenticated: React.PropTypes.bool,
+};
 export { App };
 
