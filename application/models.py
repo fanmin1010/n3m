@@ -79,7 +79,10 @@ class Party(db.Model):
     @staticmethod
     def getMyParties(ownerID):
         parties = Party.query.filter_by(ownerID=ownerID)        
-        return parties
+        if parties:
+            return parties
+        else:
+            return None
 
 class PartyUser(db.Model):
     puID = db.Column(db.Integer(), primary_key = True, nullable=False)
@@ -93,7 +96,10 @@ class PartyUser(db.Model):
     @staticmethod
     def getPartyUsers(partyID):
         partyUsers = PartyUser.query.filter_by(partyID=partyID)
-        return partyUsers
+        if partyUsers:
+            return partyUsers
+        else:
+            return None
 
 class PartyMessage(db.Model):
     pmID = db.Column(db.Integer(), primary_key = True, nullable=False)
@@ -110,5 +116,8 @@ class PartyMessage(db.Model):
     @staticmethod
     def getPartyMessages(partyID):
         partyMessages = PartyMessage.query.filter_by(partyID=partyID)
-        return partyMessages
+        if partyMessages:
+            return partyMessages
+        else:
+            return None
 
