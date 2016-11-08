@@ -28,7 +28,7 @@ class User(db.Model):
             return user
         else:
             return None
-    
+
     @staticmethod
     def get_avatar_for_username(username):
         user = User.query.filter_by(username=username).first()
@@ -42,7 +42,7 @@ class Friendship(db.Model):
     friender = db.Column(db.Integer(), db.ForeignKey('user.id'))
     friendee = db.Column(db.Integer(), db.ForeignKey('user.id'))
     est_time = db.Column(db.DateTime(), nullable = False, server_default=db.func.now())
-    db.UniqueConstraint('friender', 'friendee')
+    __table_args__ = (db.UniqueConstraint('friender', 'friendee', name = 'uix_1'), )
 
     def __init__(self, friender, friendee):
         self.friender = friender
@@ -78,7 +78,7 @@ class Party(db.Model):
 
     @staticmethod
     def getMyParties(ownerID):
-        parties = Party.query.filter_by(ownerID=ownerID)        
+        parties = Party.query.filter_by(ownerID=ownerID)
         if parties:
             return parties
         else:
@@ -120,4 +120,3 @@ class PartyMessage(db.Model):
             return partyMessages
         else:
             return None
-

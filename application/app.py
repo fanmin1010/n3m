@@ -49,14 +49,16 @@ def create_user():
 def add_friendship():
     incoming = request.get_json()
     # friendemail refers to the email to be added email->friendemail
+    db.session.commit()
     friendee = User.query.filter_by(email=incoming["email"]).first()
+    new_user = User.query.filter_by(email="starks@gmail.com").first()
 
     current_user = g.current_user
     if friendee == None:
         return jsonify(message="User with that email does not exist"), 409
     else:
-        friender_email = current_user.email
-        friender_id = current_user.id
+        friender_email = current_user["email"]
+        friender_id = current_user["id"]
 
         friendee_email = friendee.email
         friendee_id = friendee.id
@@ -66,12 +68,11 @@ def add_friendship():
         db.session.add(newfriendship)
         try:
             db.session.commit()
+            print("here")
         except SQLAlchemyError:
-            return jsonify(message="That friendship already exits"), 410
+            return jsonify(message="That friendship already exists"), 410
 
-        return jsonify(error = False, id = friendee_id, email = friendee_email, avatar = friendee_avatar)
-
-
+        return jsonify(error = False, id = friendee_id, email = friendee_email, avatar = friendee_avatar), 400
 
 @app.route("/api/createParty", methods = ["POST"])
 @requires_auth
@@ -126,6 +127,3 @@ def chat_message(message):
     print('There was a message: ' + str(message), file=sys.stderr)
     avatar = User.get_avatar_for_username(message['username'])
     socketio.emit(message['partyname'], {'username': message['username'], 'msg': message['msgtext'], 'avatar': avatar})
-
-
-
