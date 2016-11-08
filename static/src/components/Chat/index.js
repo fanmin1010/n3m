@@ -13,11 +13,14 @@ import { grey400, darkBlack, lightBlack } from 'material-ui/styles/colors';
 import * as actionCreators from '../../actions/chat';
 
 function mapStateToProps(state) {
+  console.log(state);
   return {
     token: state.auth.token,
     userName: state.auth.userName,
     avatar: state.auth.avatar,
     isAuthenticated: state.auth.isAuthenticated,
+    partyname: state.chat.partyname,
+    messages: state.chat.messages,
   };
 }
 
@@ -36,43 +39,24 @@ const style = {
 export class Chat extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      party: { name: 'Clark Kent' },
-      messages: [
-      ],
-      userName: props.userName,
-    };
-
   }
 
   componentDidMount() {
-    socket.on(this.state.party.name.replace(' ', ''), this.receiveMessage.bind(this));
+    this.props.setNewListener(this.props.partyname);
   }
-
-  receiveMessage(data) {
-      console.dir(data);
-      const messages = this.state.messages.slice();
-      const newelement = { username: data.username, avatar: data.avatar, text: data.msg, time: new Date().toTimeString().split(' ')[0] };
-      messages.push(newelement);
-      this.setState({ messages }, () => {
-        const m = document.getElementById('messagelist');
-        m.scrollTop = 9999;
-        document.getElementById('chatinput').value = '';
-      });
-    }
 
 
   render() {
     return (
             <div className="col-md-8 col-md-offset-2" onKeyPress={(e) => this._handleKeyPress(e)}>
 							<Paper style={style} zDepth={5} rounded={false} >
-                <Subheader>{this.state.party.name}</Subheader>
+                <Subheader>{this.props.partyname}</Subheader>
                 <Divider />
                 <List id="messagelist" style={{ zIndex: '1', height: '85%', width: '98%', left: '1%', position: 'relative', overflow: 'scroll' }} >
-								{this.state.messages.map((msg) => {
+								{this.props.messages.map((msg) => {
 									return (<ListItem
-  leftAvatar={(msg.username === this.state.userName) ? null : <Avatar src={msg.avatar} />}
-  rightAvatar={(msg.username === this.state.userName) ? <Avatar src={msg.avatar} /> : null}
+  leftAvatar={(msg.username === this.props.userName) ? null : <Avatar src={msg.avatar} />}
+  rightAvatar={(msg.username === this.props.userName) ? <Avatar src={msg.avatar} /> : null}
   primaryText={
                               <h5>
 															  <span style={{ fontSize: '10pt', color: darkBlack }}>{msg.time} </span>--
@@ -106,8 +90,7 @@ export class Chat extends Component {
   }
 
   sendMessage(msg) {
-    console.log(this.state);
-    this.props.send_chat(msg, this.state.party.name.replace(' ', ''), this.state.userName);
+    this.props.send_chat(msg, this.props.partyname.replace(' ', ''), this.props.userName);
   }
 
   _handleKeyPress(e) {
@@ -120,5 +103,7 @@ export class Chat extends Component {
 
 Chat.propTypes = {
   send_chat: React.PropTypes.func,
+  setNewListener: React.PropTypes.func,
+  addMessage: React.PropTypes.func,
   isAuthenticated: React.PropTypes.bool,
 };

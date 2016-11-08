@@ -20,18 +20,18 @@ import Divider from 'material-ui/Divider';
 import { grey500 } from 'material-ui/styles/colors';
 
 import * as actionCreators from '../../actions/auth';
+import * as chatActionCreators from '../../actions/chat';
 
 
 function mapStateToProps(state) {
   return {
-    token: state.auth.token,
     userName: state.auth.userName,
-    isAuthenticated: state.auth.isAuthenticated,
+    userId: state.auth.userId,
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators(actionCreators, dispatch);
+  return bindActionCreators(Object.assign({}, chatActionCreators, actionCreators), dispatch);
 }
 
 
@@ -40,12 +40,11 @@ export class Header extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      open: true,
       friendlist: [
-        { name: 'Charles Burns', avatar: 'dist/images/avatar01.png' },
-        { name: 'Bruce Wayne', avatar: 'dist/images/avatar02.png' },
-        { name: 'Clark Kent', avatar: 'dist/images/avatar03.png' },
-        { name: 'Mr. Robot', avatar: 'dist/images/avatar04.png' },
+        { id: 1, name: 'Charles Burns', avatar: 'dist/images/avatar01.png' },
+        { id: 2, name: 'Bruce Wayne', avatar: 'dist/images/avatar02.png' },
+        { id: 3, name: 'Clark Kent', avatar: 'dist/images/avatar03.png' },
+        { id: 4, name: 'Mr. Robot', avatar: 'dist/images/avatar04.png' },
       ],
 			selectedIndex: 0,
     };
@@ -55,43 +54,39 @@ export class Header extends Component {
 			width: '20px',
     };
 
-		this.select = (index) => this.setState({ selectedIndex: index });
+		this.select = (index) => {
+      console.log('inside of the select function');
+      this.setState({ selectedIndex: index });
+      this.props.callUber();
+      console.log('done calling uber');
+    }
   }
 
   dispatchNewRoute(route) {
     browserHistory.push(route);
-  //  this.setState({
-  //    open: false,
-  //  });
-
   }
 
 
   logout(e) {
     e.preventDefault();
     this.props.logoutAndRedirect();
-    this.setState({
-      open: false,
-    });
   }
 
-  openNav() {
-    this.setState({
-      open: true,
-    });
-  }
-
-
-  closeNav() {
-    this.setState({
-      open: false,
-    });
+  _onFriendSelected(friend) {
+    var partyname;
+    if(this.props.userId < friend.id) {
+      partyname = this.props.userName.replace(' ','') + '-' + friend.name.replace(' ','');
+    } else {
+      partyname = friend.name.replace(' ','') + '-' + this.props.userName.replace(' ','');
+    }
+    this.props.setChatWindow(partyname)
+    this.props.setNewListener(partyname)
   }
 
   render() {
     return (
             <header>
-              <LeftNav open={this.state.open}>
+              <LeftNav open={true}>
                 <div>
                   <AppBar
                     title={
@@ -109,6 +104,7 @@ export class Header extends Component {
                             primaryText={friend.name}
                             leftAvatar={<Avatar src={friend.avatar} />}
                             rightIcon={<CommunicationChatBubble />}
+                            onTouchTap={this._onFriendSelected.bind(this, friend)}
 													/>);
           				})}
 									</List>
@@ -134,5 +130,5 @@ export class Header extends Component {
 
 Header.propTypes = {
   logoutAndRedirect: React.PropTypes.func,
-  isAuthenticated: React.PropTypes.bool,
+  callUber: React.PropTypes.func,
 };

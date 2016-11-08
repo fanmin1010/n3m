@@ -5,6 +5,8 @@ from .models import User, Friendship
 from index import app, db
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from .utils.auth import generate_token, requires_auth, verify_token
+import requests
+import datetime, time
 import sys
 
 @app.route('/', methods=['GET'])
@@ -37,7 +39,7 @@ def create_user():
     try:
         db.session.commit()
     except IntegrityError:
-        return jsonify(message="User with that email already exists"), 409
+        return jsonify(message="User with that username or email already exists"), 409
     new_user = User.query.filter_by(email=incoming["email"]).first()
     return jsonify(
         id=user.id,
@@ -118,6 +120,17 @@ def is_token_valid():
 
 
 
+
+@app.route("/api/calluber", methods=["GET"])
+def call_uber():
+    url='https://api.uber.com/v1.2/estimates/price'
+    payload = {'start_latitude':'37.7752315', 'start_longitude':'-122.418075', 'end_latitude':'37.775241', 'end_longitude':'-122.518075'}
+    headers = {'Authorization': 'Token x4maHB7QT8tWJqKfkfPVyzWfpbp7g5QmehniOIf5', 'Content-Type': 'application/json', 'Accept-Language': 'en_US' }
+    r = requests.get(url, params=payload, headers=headers)
+    print(r.text)
+    return jsonify(r.text)
+
+
 socketio = SocketIO(app)
 
 
@@ -125,7 +138,9 @@ socketio = SocketIO(app)
 def chat_message(message):
     print('There was a message: ' + str(message), file=sys.stderr)
     avatar = User.get_avatar_for_username(message['username'])
-    socketio.emit(message['partyname'], {'username': message['username'], 'msg': message['msgtext'], 'avatar': avatar})
+    now = datetime.datetime.now().strftime('%H:%M:%S')
+    print('This is the time: ' + str(now), file=sys.stderr)
+    socketio.emit(message['partyname'], {'username': message['username'], 'text': message['msgtext'], 'avatar': avatar, 'time': now})
 
 
 
