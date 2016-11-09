@@ -75,7 +75,7 @@ export function setNewListener(partyname) {
     socket.removeAllListeners();
     socket.on(partyname, (data) => {
       dispatch(addMessage(partyname, data));
-
+      document.getElementById('messagelist').scrollTop = 9999;
     });
   };
 }

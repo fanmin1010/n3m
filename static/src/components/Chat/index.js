@@ -93,6 +93,7 @@ export class Chat extends Component {
 
   sendMessage(msg) {
     this.props.send_chat(msg, this.props.partyname.replace(' ', ''), this.props.userName);
+    document.getElementById('chatinput').value = '';
   }
 
   _handleKeyPress(e) {
