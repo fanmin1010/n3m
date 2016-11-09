@@ -1,5 +1,5 @@
 from testing_config import BaseTestConfig
-from application.models import User
+from application.models import User, Friendship, Party
 import json
 from application.utils import auth
 
@@ -22,6 +22,9 @@ class TestAPI(BaseTestConfig):
     }
     friendship2 = {
         "email": "999@gmail.com"
+    }
+    party1 = {
+        "partyName": "Awesome Fellas"
     }
 
     def test_get_spa_from_index(self):
@@ -145,3 +148,83 @@ class TestAPI(BaseTestConfig):
                 content_type='application/json'
         )
         self.assertEqual(res5.status_code, 410)
+    def test_create_party(self):
+
+        headers = {
+            'content_type':'application/json',
+            'Authorization': self.token
+        }
+        res = self.app.post(
+                "/api/createParty",
+                data=json.dumps(self.party1),
+                headers = headers,
+                content_type='application/json'
+        )
+        self.assertEqual(res.status_code, 400)
+        res2 = self.app.post(
+                "/api/createParty",
+                data=json.dumps(self.party1),
+                headers = headers,
+                content_type='application/json'
+        )
+        self.assertEqual(res2.status_code, 409)
+
+    def test_add_users_to_party(self):
+        headers = {
+            'content_type':'application/json',
+            'Authorization': self.token
+        }
+        res = self.app.post(
+            "/api/add_users_to_party",
+            data=json.dumps({
+                "partyName": "My Party",
+                "email": "default2@gmail.com"
+            }),
+            headers = headers,
+            content_type='application/json'
+        )
+        self.assertEqual(res.status_code, 400)
+
+        res3 = self.app.post(
+            "/api/add_users_to_party",
+            data=json.dumps({
+                "partyName": "My",
+                "email": "default2@gmail.com"
+            }),
+            headers = headers,
+            content_type='application/json'
+        )
+        self.assertEqual(res3.status_code, 420)
+        res4 = self.app.post(
+            "/api/add_users_to_party",
+            data=json.dumps({
+                "partyName": "My Party",
+                "email": "fake@gmail.com"
+            }),
+            headers = headers,
+            content_type='application/json'
+        )
+        self.assertEqual(res4.status_code, 421)
+        res2 = self.app.post(
+            "/api/add_users_to_party",
+            data=json.dumps({
+                "partyName": "My Party",
+                "email": "default2@gmail.com"
+            }),
+            headers = headers,
+            content_type='application/json'
+        )
+        self.assertEqual(res2.status_code, 422)
+
+    def test_get_friendlist(self):
+        headers = {
+            'content_type':'application/json',
+            'Authorization': self.token
+        }
+        res = self.app.get(
+                "/api/friendlist",
+                data=json.dumps({}),
+                headers = headers,
+                content_type='application/json'
+        )
+        self.assertEqual(res.status_code, 455)
