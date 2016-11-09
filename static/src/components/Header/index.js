@@ -20,78 +20,70 @@ import Divider from 'material-ui/Divider';
 import { grey500 } from 'material-ui/styles/colors';
 
 import * as actionCreators from '../../actions/auth';
+import * as chatActionCreators from '../../actions/chat';
 
 
 function mapStateToProps(state) {
   return {
-    token: state.auth.token,
     userName: state.auth.userName,
-    isAuthenticated: state.auth.isAuthenticated,
+    userId: state.auth.userId,
+    friendlist: state.chat.friendlist,
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators(actionCreators, dispatch);
+  return bindActionCreators(Object.assign({}, chatActionCreators, actionCreators), dispatch);
 }
 
-
+// { id: 1, name: 'Charles Burns', avatar: 'dist/images/avatar01.png' },
 @connect(mapStateToProps, mapDispatchToProps)
 export class Header extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      open: true,
-      friendlist: [
-        { name: 'Charles Burns', avatar: 'dist/images/avatar01.png' },
-        { name: 'Bruce Wayne', avatar: 'dist/images/avatar02.png' },
-        { name: 'Clark Kent', avatar: 'dist/images/avatar03.png' },
-        { name: 'Mr. Robot', avatar: 'dist/images/avatar04.png' },
-      ],
 			selectedIndex: 0,
     };
-
     this.btnStyle = {
       margin: 12,
 			width: '20px',
     };
 
-		this.select = (index) => this.setState({ selectedIndex: index });
+		this.select = (index) => {
+      console.log('inside of the select function');
+      this.setState({ selectedIndex: index });
+      this.props.callUber();
+      console.log('done calling uber');
+    }
+  }
+  componentWillMount() {
+    this.props.getFriendList(this.props.userName);
   }
 
   dispatchNewRoute(route) {
     browserHistory.push(route);
-  //  this.setState({
-  //    open: false,
-  //  });
-
   }
 
 
   logout(e) {
     e.preventDefault();
     this.props.logoutAndRedirect();
-    this.setState({
-      open: false,
-    });
   }
 
-  openNav() {
-    this.setState({
-      open: true,
-    });
-  }
-
-
-  closeNav() {
-    this.setState({
-      open: false,
-    });
+  _onFriendSelected(friend) {
+    var partyname;
+    if(this.props.userId < friend.id) {
+      partyname = this.props.userName.replace(' ','') + '-' + friend.username.replace(' ','');
+    } else {
+      partyname = friend.username.replace(' ','') + '-' + this.props.userName.replace(' ','');
+    }
+    this.props.setChatWindow(partyname)
+    this.props.setNewListener(partyname)
   }
 
   render() {
     return (
             <header>
-              <LeftNav open={this.state.open}>
+              <LeftNav open={true}>
                 <div>
                   <AppBar
                     title={
@@ -103,12 +95,13 @@ export class Header extends Component {
                   <MenuItem onClick={(e) => this.logout(e)}> Logout </MenuItem>
                   <Divider />
 								  <List>
-									<Subheader>Friends({this.state.friendlist.length}) {<PersonAdd color={grey500} style={{ margin: '15px', float: 'right' }} />}</Subheader>
-									{this.state.friendlist.map((friend) => {
+									<Subheader>Friends({this.props.friendlist.length}) {<PersonAdd color={grey500} style={{ margin: '15px', float: 'right' }} />}</Subheader>
+									{this.props.friendlist.map((friend) => {
 									return (<ListItem
-                            primaryText={friend.name}
+                            primaryText={friend.username}
                             leftAvatar={<Avatar src={friend.avatar} />}
                             rightIcon={<CommunicationChatBubble />}
+                            onTouchTap={this._onFriendSelected.bind(this, friend)}
 													/>);
           				})}
 									</List>
@@ -134,5 +127,6 @@ export class Header extends Component {
 
 Header.propTypes = {
   logoutAndRedirect: React.PropTypes.func,
-  isAuthenticated: React.PropTypes.bool,
+  callUber: React.PropTypes.func,
+  getFriendList: React.PropTypes.func,
 };
