@@ -1,12 +1,13 @@
 from __future__ import print_function
 from flask import request, render_template, jsonify, url_for, redirect, g
 from flask_socketio import SocketIO, emit
-from .models import User, Friendship
+from .models import User, Friendship, Party, PartyUser
 from index import app, db
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from .utils.auth import generate_token, requires_auth, verify_token
 import requests
 import datetime, time
+import json
 import sys
 
 @app.route('/', methods=['GET'])
@@ -24,6 +25,14 @@ def any_root_path(path):
 def get_user():
     return jsonify(result=g.current_user)
 
+@app.route("/api/friendlist", methods=["GET"])
+@requires_auth
+def get_friendlist():
+    current_user = g.current_user
+    result = db.engine.execute('select u.id, u.avatar, u.username from friendship f join "user" u  on f.friendee=u.id where f.friender = ' + str(current_user["id"]));
+    friends = json.dumps([dict(r) for r in result])
+    print(friends)
+    return friends, 455
 
 @app.route("/api/create_user", methods=["POST"])
 def create_user():
@@ -51,29 +60,34 @@ def create_user():
 def add_friendship():
     incoming = request.get_json()
     # friendemail refers to the email to be added email->friendemail
+    db.session.commit()
     friendee = User.query.filter_by(email=incoming["email"]).first()
+    new_user = User.query.filter_by(email="starks@gmail.com").first()
 
     current_user = g.current_user
     if friendee == None:
         return jsonify(message="User with that email does not exist"), 409
     else:
-        friender_email = current_user.email
-        friender_id = current_user.id
+        friender_email = current_user["email"]
+        friender_id = current_user["id"]
 
         friendee_email = friendee.email
         friendee_id = friendee.id
         friendee_avatar = friendee.avatar
         newfriendship = Friendship(friender_id, friendee_id)
+        # this is for early practice that friendship doesnt need to be requested
+        newfriendship2 = Friendship(friendee_id, friender_id)
 
         db.session.add(newfriendship)
         try:
             db.session.commit()
+            # again for early practice
+            db.session.add(newfriendship2)
+            db.session.commit()
         except SQLAlchemyError:
-            return jsonify(message="That friendship already exits"), 410
+            return jsonify(message="That friendship already exists"), 410
 
-        return jsonify(error = False, id = friendee_id, email = friendee_email, avatar = friendee_avatar)
-
-
+        return jsonify(error = False, id = friendee_id, email = friendee_email, avatar = friendee_avatar), 400
 
 @app.route("/api/createParty", methods = ["POST"])
 @requires_auth
@@ -81,7 +95,7 @@ def createParty():
     incoming = request.get_json()
     party = Party(
         partyName=incoming["partyName"],
-        ownerID=incoming["ownerID"]
+        ownerID=g.current_user["id"]
     )
     db.session.add(party)
     try:
@@ -90,13 +104,30 @@ def createParty():
         return jsonify(message="Unable to create party"),409
 
     new_party = Party.query.filter_by(partyName=incoming["partyName"]).first()
+    print(new_party)
     return jsonify(
-        partyID=party.partyID
-    )
+        partyID=new_party.partyID, partyName = new_party.partyName
+    ), 400
 
+@app.route("/api/add_users_to_party", methods = ["POST"])
+@requires_auth
+def add_to_party():
+    incoming = request.get_json()
+    party = Party.query.filter_by(ownerID=g.current_user["id"], partyName=incoming["partyName"]).first()
+    # print(party)
+    if not party:
+        return jsonify(message="Party does not exist."), 420
+    user = User.query.filter_by(email=incoming["email"]).first()
+    if not user:
+        return jsonify(message="User does not exist."), 421
+    pu = PartyUser(party.partyID, user.id)
+    db.session.add(pu)
+    try:
+        db.session.commit()
+    except IntegrityError:
+        return jsonify(message="Party user relation already exists."), 422
 
-
-
+    return jsonify(status = "success", avatar=user.avatar, email = user.email, name = user.username), 400
 
 @app.route("/api/get_token", methods=["POST"])
 def get_token():
@@ -141,6 +172,3 @@ def chat_message(message):
     now = datetime.datetime.now().strftime('%H:%M:%S')
     print('This is the time: ' + str(now), file=sys.stderr)
     socketio.emit(message['partyname'], {'username': message['username'], 'text': message['msgtext'], 'avatar': avatar, 'time': now})
-
-
-
