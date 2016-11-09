@@ -27,6 +27,7 @@ function mapStateToProps(state) {
   return {
     userName: state.auth.userName,
     userId: state.auth.userId,
+    friendlist: state.chat.friendlist,
   };
 }
 
@@ -34,21 +35,14 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators(Object.assign({}, chatActionCreators, actionCreators), dispatch);
 }
 
-
+// { id: 1, name: 'Charles Burns', avatar: 'dist/images/avatar01.png' },
 @connect(mapStateToProps, mapDispatchToProps)
 export class Header extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      friendlist: [
-        { id: 1, name: 'Charles Burns', avatar: 'dist/images/avatar01.png' },
-        { id: 2, name: 'Bruce Wayne', avatar: 'dist/images/avatar02.png' },
-        { id: 3, name: 'Clark Kent', avatar: 'dist/images/avatar03.png' },
-        { id: 4, name: 'Mr. Robot', avatar: 'dist/images/avatar04.png' },
-      ],
 			selectedIndex: 0,
     };
-
     this.btnStyle = {
       margin: 12,
 			width: '20px',
@@ -60,6 +54,9 @@ export class Header extends Component {
       this.props.callUber();
       console.log('done calling uber');
     }
+  }
+  componentWillMount() {
+    this.props.getFriendList(this.props.userName);
   }
 
   dispatchNewRoute(route) {
@@ -75,9 +72,9 @@ export class Header extends Component {
   _onFriendSelected(friend) {
     var partyname;
     if(this.props.userId < friend.id) {
-      partyname = this.props.userName.replace(' ','') + '-' + friend.name.replace(' ','');
+      partyname = this.props.userName.replace(' ','') + '-' + friend.username.replace(' ','');
     } else {
-      partyname = friend.name.replace(' ','') + '-' + this.props.userName.replace(' ','');
+      partyname = friend.username.replace(' ','') + '-' + this.props.userName.replace(' ','');
     }
     this.props.setChatWindow(partyname)
     this.props.setNewListener(partyname)
@@ -98,10 +95,10 @@ export class Header extends Component {
                   <MenuItem onClick={(e) => this.logout(e)}> Logout </MenuItem>
                   <Divider />
 								  <List>
-									<Subheader>Friends({this.state.friendlist.length}) {<PersonAdd color={grey500} style={{ margin: '15px', float: 'right' }} />}</Subheader>
-									{this.state.friendlist.map((friend) => {
+									<Subheader>Friends({this.props.friendlist.length}) {<PersonAdd color={grey500} style={{ margin: '15px', float: 'right' }} />}</Subheader>
+									{this.props.friendlist.map((friend) => {
 									return (<ListItem
-                            primaryText={friend.name}
+                            primaryText={friend.username}
                             leftAvatar={<Avatar src={friend.avatar} />}
                             rightIcon={<CommunicationChatBubble />}
                             onTouchTap={this._onFriendSelected.bind(this, friend)}
@@ -131,4 +128,5 @@ export class Header extends Component {
 Header.propTypes = {
   logoutAndRedirect: React.PropTypes.func,
   callUber: React.PropTypes.func,
+  getFriendList: React.PropTypes.func,
 };

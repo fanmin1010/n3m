@@ -7,6 +7,7 @@ from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from .utils.auth import generate_token, requires_auth, verify_token
 import requests
 import datetime, time
+import json
 import sys
 
 @app.route('/', methods=['GET'])
@@ -24,6 +25,14 @@ def any_root_path(path):
 def get_user():
     return jsonify(result=g.current_user)
 
+@app.route("/api/friendlist", methods=["GET"])
+@requires_auth
+def get_friendlist():
+    current_user = g.current_user
+    result = db.engine.execute('select u.id, u.avatar, u.username from friendship f join "user" u  on f.friendee=u.id where f.friender = ' + str(current_user["id"]));
+    friends = json.dumps([dict(r) for r in result])
+    print(friends)
+    return friends
 
 @app.route("/api/create_user", methods=["POST"])
 def create_user():

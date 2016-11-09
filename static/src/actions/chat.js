@@ -2,12 +2,15 @@ import {
     CHAT_MESSAGES_REQUEST,
     CHAT_MESSAGES_SUCCESS,
     CHAT_MESSAGES_FAILURE,
+    FRIEND_LIST_REQUEST,
+    FRIEND_LIST_SUCCESS,
+    FRIEND_LIST_FAILURE,
     NEW_CHAT_CHANNEL,
     ADD_MESSAGE,
 } from '../constants/index';
 
 import { parseJSON } from '../utils/misc';
-import { socket_msg, callUberCall } from '../utils/http_functions';
+import { socket_msg, callUberCall, friendlistCall } from '../utils/http_functions';
 
 
 export function chatMessagesRequest() {
@@ -87,6 +90,44 @@ export function setNewListener(partyname) {
 }
 
 
+
+export function friendListRequest() {
+  return {
+    type: FRIEND_LIST_REQUEST,
+  };
+}
+
+export function friendListSuccess(payload) {
+  return {
+    type: FRIEND_LIST_SUCCESS,
+    payload: payload
+  };
+}
+
+export function friendListFailure(error) {
+  return {
+    type: FRIEND_LIST_FAILURE,
+    payload: error,
+  };
+}
+
+export function getFriendList(uname) {
+  return function(dispatch){
+    console.log('inside getFriendList');
+    dispatch(friendListRequest());
+    var token = localStorage.getItem('token');
+    return friendlistCall(token, (data) => {
+      try {
+        dispatch(friendListSuccess(data));
+      } catch (e) {
+        console.log('There was an error while calling friendlist');
+        console.dir(e);
+        dispatch(friendListFailure());
+      }
+    });
+
+  }
+}
 
 export function callUber() {
   console.log('inside of the callUber function');

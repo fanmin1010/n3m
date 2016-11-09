@@ -34,6 +34,14 @@ export function data_about_user(token) {
   return axios.get('api/user', tokenConfig(token));
 }
 
+export function friendlistCall(token, cb) {
+  return axios.get('api/friendlist', tokenConfig(token))
+            .then(cb)
+            .catch(function (error) {
+              console.log(error);
+            });
+}
+
 /**
  * @param msg {string} message text of chat
  * @param pname {string} party name
