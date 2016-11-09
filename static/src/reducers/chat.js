@@ -17,6 +17,7 @@ const initialState = {
   friendlist: [],
   friendListStatusText: null,
   messages: [],
+  allMessages: {},
   messagesStatusText: null,
 };
 
@@ -31,7 +32,7 @@ export default createReducer(initialState, {
    console.dir(payload);
     return Object.assign({}, state, {
           messagesStatusText: 'messages retreived successfully.',
-        })},
+        }); },
   [CHAT_MESSAGES_FAILURE]: (state, payload) =>
         Object.assign({}, state, {
           messagesStatusText: 'error retreiving messages.',
@@ -46,25 +47,38 @@ export default createReducer(initialState, {
     return Object.assign({}, state, {
           friendListStatusText: 'friendlist retreived successfully.',
           friendlist: payload.data,
-        })},
+        }); },
   [FRIEND_LIST_FAILURE]: (state, payload) =>
         Object.assign({}, state, {
           friendListStatusText: 'error retreiving friendlist.',
         }),
   [NEW_CHAT_CHANNEL]: (state, payload) => {
-      return Object.assign({}, state, {
+      console.log('In NEW_CHAT_CHANNEL reducer');
+      //console.dir(payload);
+      var updatedAllMessages =  Object.assign({}, ({ [payload.partyname]: [] }), state.allMessages);
+      //console.log('allmessages: ');
+      //console.dir(updatedAllMessages);
+      var updatedMessages = updatedAllMessages[payload.partyname].slice();
+      //console.log('messages: ');
+      //console.dir(updatedMessages);
+      var newstate =  Object.assign({}, state, {
           partyname: payload.partyname,
-          messages: [],
+          allMessages: updatedAllMessages,
+          messages: updatedMessages,
           messagesStatusText: null,
-        })},
+        }); 
+      //console.log('----__------__');
+      //console.dir(newstate);
+    return newstate;
+  },
+
   [ADD_MESSAGE]: (state, payload) => {
-      console.log('----------------');
-      console.dir(payload);  
-      console.dir(state);
-      console.log(state.messages.slice().concat([payload]));
+    console.log('In ADD_MESSAGE reducer');
+    console.dir(payload);
     return Object.assign({}, state, {
-          messages: state.messages.slice().concat([payload]),
+          allMessages: Object.assign({}, state.allMessages, { [payload.partyname]: state.allMessages[payload.partyname].slice().concat([payload.message]) }),
+          messages: state.allMessages[payload.partyname].slice().concat([payload.message]),
           messagesStatusText: null,
-        })},
+        }); },
 });
 

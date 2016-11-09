@@ -35,7 +35,6 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators(Object.assign({}, chatActionCreators, actionCreators), dispatch);
 }
 
-// { id: 1, name: 'Charles Burns', avatar: 'dist/images/avatar01.png' },
 @connect(mapStateToProps, mapDispatchToProps)
 export class Header extends Component {
   constructor(props) {
@@ -53,7 +52,7 @@ export class Header extends Component {
       this.setState({ selectedIndex: index });
       this.props.callUber();
       console.log('done calling uber');
-    }
+    };
   }
   componentWillMount() {
     this.props.getFriendList(this.props.userName);
@@ -70,20 +69,20 @@ export class Header extends Component {
   }
 
   _onFriendSelected(friend) {
-    var partyname;
-    if(this.props.userId < friend.id) {
-      partyname = this.props.userName.replace(' ','') + '-' + friend.username.replace(' ','');
+    let partyname;
+    if (this.props.userId < friend.id) {
+      partyname = `${this.props.userName.replace(' ', '')}-${friend.username.replace(' ', '')}`;
     } else {
-      partyname = friend.username.replace(' ','') + '-' + this.props.userName.replace(' ','');
+      partyname = `${friend.username.replace(' ', '')}-${this.props.userName.replace(' ', '')}`;
     }
-    this.props.setChatWindow(partyname)
-    this.props.setNewListener(partyname)
+    this.props.setChatWindow(partyname);
+    this.props.setNewListener(partyname);
   }
 
   render() {
     return (
             <header>
-              <LeftNav open={true}>
+              <LeftNav open>
                 <div>
                   <AppBar
                     title={
@@ -98,24 +97,27 @@ export class Header extends Component {
 									<Subheader>Friends({this.props.friendlist.length}) {<PersonAdd color={grey500} style={{ margin: '15px', float: 'right' }} />}</Subheader>
 									{this.props.friendlist.map((friend) => {
 									return (<ListItem
-                            primaryText={friend.username}
-                            leftAvatar={<Avatar src={friend.avatar} />}
-                            rightIcon={<CommunicationChatBubble />}
-                            onTouchTap={this._onFriendSelected.bind(this, friend)}
-													/>);
+  primaryText={friend.username}
+  leftAvatar={<Avatar src={friend.avatar} />}
+  rightIcon={<CommunicationChatBubble />}
+  onTouchTap={this._onFriendSelected.bind(this, friend)}
+         />);
           				})}
 									</List>
                   <BottomNavigation
                     selectedIndex={this.state.selectedIndex}
-                    style={{ position: 'absolute', bottom: '2px' }} >
+                    style={{ position: 'absolute', bottom: '2px' }}
+                  >
 									  <BottomNavigationItem
-                      label="Friends"
-                      icon={<People />}
-                      onTouchTap={() => this.select(0)} />
+  label="Friends"
+  icon={<People />}
+  onTouchTap={() => this.select(0)}
+           />
 										<BottomNavigationItem
-                      label="Recents"
-                      icon={<Restore />}
-                      onTouchTap={() => this.select(1)} />
+  label="Recents"
+  icon={<Restore />}
+  onTouchTap={() => this.select(1)}
+          />
 									</BottomNavigation>
                </div>
               </LeftNav>
@@ -129,4 +131,7 @@ Header.propTypes = {
   logoutAndRedirect: React.PropTypes.func,
   callUber: React.PropTypes.func,
   getFriendList: React.PropTypes.func,
+  setChatWindow: React.PropTypes.func,
+  setNewListener: React.PropTypes.func,
 };
+

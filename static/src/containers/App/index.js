@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux'; 
+import { bindActionCreators } from 'redux';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'; 
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import * as actionCreators from '../../actions/auth';
 
 /* application components */
@@ -13,7 +13,6 @@ import { Header } from '../../components/Header';
 
 /* global styles for app */
 import './styles/app.scss';
-
 
 
 function mapStateToProps(state) {

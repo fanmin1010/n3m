@@ -53,42 +53,32 @@ export function setChatWindow(partyname) {
   return {
     type: NEW_CHAT_CHANNEL,
     payload: {
-      partyname: partyname,
-    }
+      partyname,
+    },
   };
 }
 
 
-export function addMessage(message) {
+export function addMessage(partyname, message) {
   return {
     type: ADD_MESSAGE,
-    payload: message
+    payload: {
+      message,
+      partyname,
+    },
   };
-}
-
-
-function _receiveMessage(data) {
-  console.log(data);
-  console.log('$$$$$$$$$$$$$$$$$$$$$$$$$$');
-  addMessage(data);
- // setTimeout(function(){const m = document.getElementById('messagelist');
- //   m.scrollTop = 9999;
- //   document.getElementById('chatinput').value = '';
- // }, 200);
 }
 
 
 export function setNewListener(partyname) {
-  return function(dispatch) {
-    console.log('Inside setNewListener');
-    console.log('partyname: ' + partyname);
+  return function (dispatch) {
     socket.removeAllListeners();
-    socket.on(partyname, function(data){
-      dispatch(addMessage(data));
-    }); 
-  }
-}
+    socket.on(partyname, (data) => {
+      dispatch(addMessage(partyname, data));
 
+    });
+  };
+}
 
 
 export function friendListRequest() {
@@ -100,7 +90,7 @@ export function friendListRequest() {
 export function friendListSuccess(payload) {
   return {
     type: FRIEND_LIST_SUCCESS,
-    payload: payload
+    payload,
   };
 }
 
@@ -112,10 +102,9 @@ export function friendListFailure(error) {
 }
 
 export function getFriendList(uname) {
-  return function(dispatch){
-    console.log('inside getFriendList');
+  return function (dispatch) {
     dispatch(friendListRequest());
-    var token = localStorage.getItem('token');
+    const token = localStorage.getItem('token');
     return friendlistCall(token, (data) => {
       try {
         dispatch(friendListSuccess(data));
@@ -126,17 +115,15 @@ export function getFriendList(uname) {
       }
     });
 
-  }
+  };
 }
 
 export function callUber() {
-  console.log('inside of the callUber function');
   return function (dispatch) {
     return callUberCall()
             .then(parseJSON)
             .then(response => {
               try {
-                console.log('Calll uber Call');
                 console.log(response);
               } catch (e) {
                 console.log(e);

@@ -37,7 +37,7 @@ export function data_about_user(token) {
 export function friendlistCall(token, cb) {
   return axios.get('api/friendlist', tokenConfig(token))
             .then(cb)
-            .catch(function (error) {
+            .catch((error) => {
               console.log(error);
             });
 }
@@ -56,7 +56,6 @@ export function socket_msg(msg, pname, uname, cb) {
   console.log(cb);
   socket.emit('servermessage', { msgtext: msg, partyname: pname, username: uname }, cb);
 }
-
 
 
 export function callUberCall() {

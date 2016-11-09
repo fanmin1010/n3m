@@ -21,6 +21,7 @@ function mapStateToProps(state) {
     isAuthenticated: state.auth.isAuthenticated,
     partyname: state.chat.partyname,
     messages: state.chat.messages,
+    allMessages: state.chat.allMessages,
   };
 }
 
@@ -28,12 +29,10 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators(actionCreators, dispatch);
 }
 
-
 const style = {
   height: '95%',
 	overflow: 'hidden',
 };
-
 
 @connect(mapStateToProps, mapDispatchToProps)
 export class Chat extends Component {
@@ -42,9 +41,12 @@ export class Chat extends Component {
   }
 
   componentDidMount() {
-    this.props.setNewListener(this.props.partyname);
   }
 
+  componentWillMount() {
+    this.props.setChatWindow(this.props.partyname);
+    this.props.setNewListener(this.props.partyname);
+  }
 
   render() {
     return (
@@ -53,25 +55,25 @@ export class Chat extends Component {
                 <Subheader>{this.props.partyname}</Subheader>
                 <Divider />
                 <List id="messagelist" style={{ zIndex: '1', height: '85%', width: '98%', left: '1%', position: 'relative', overflow: 'scroll' }} >
-								{this.props.messages.map((msg) => {
-									return (<ListItem
-  leftAvatar={(msg.username === this.props.userName) ? null : <Avatar src={msg.avatar} />}
-  rightAvatar={(msg.username === this.props.userName) ? <Avatar src={msg.avatar} /> : null}
-  primaryText={
-                              <h5>
-															  <span style={{ fontSize: '10pt', color: darkBlack }}>{msg.time} </span>--
-                                {msg.username}
-                              </h5>
-                            }
-  secondaryText={
-															<p>
-																{msg.text}
-															</p>
-														}
-  secondaryTextLines={2}
-  style={(msg.username === 'Me') ? { textAlign: 'right' } : {}}
-         />);
-								})}
+                {this.props.messages.map((msg) => {
+                    return (<ListItem
+                      leftAvatar={(msg.username === this.props.userName) ? null : <Avatar src={msg.avatar} />}
+                      rightAvatar={(msg.username === this.props.userName) ? <Avatar src={msg.avatar} /> : null}
+                      primaryText={
+                          <h5>
+                            <span style={{ fontSize: '10pt', color: darkBlack }}>{msg.time} </span>--
+                            {msg.username}
+                          </h5>
+                        }
+                      secondaryText={
+                          <p>
+                          {msg.text}
+                          </p>
+                        }
+                      secondaryTextLines={2}
+                      style={(msg.username === 'Me') ? { textAlign: 'right' } : {}}
+                    />);
+                  })}
                 </List>
 
 								<TextField
@@ -103,6 +105,7 @@ export class Chat extends Component {
 
 Chat.propTypes = {
   send_chat: React.PropTypes.func,
+  setChatWindow: React.PropTypes.func,
   setNewListener: React.PropTypes.func,
   addMessage: React.PropTypes.func,
   isAuthenticated: React.PropTypes.bool,

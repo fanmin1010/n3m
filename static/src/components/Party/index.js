@@ -19,16 +19,17 @@ import Divider from 'material-ui/Divider';
 import { grey500 } from 'material-ui/styles/colors';
 
 import * as actionCreators from '../../actions/auth';
+import * as chatActionCreators from '../../actions/chat';
 
 
 function mapStateToProps(state) {
   return { };
 }
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators(actionCreators, dispatch);
-}
 
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(Object.assign({}, chatActionCreators, actionCreators), dispatch);
+}
 
 @connect(mapStateToProps, mapDispatchToProps)
   export class Party extends Component {
@@ -46,6 +47,12 @@ function mapDispatchToProps(dispatch) {
       this.select = (index) => this.setState({ selectedIndex: index });
     }
 
+  _onPartySelected(party) {
+    this.props.setChatWindow(party.name);
+    this.props.setNewListener(party.name);
+  }
+
+
     render() {
       return (
           <div>
@@ -54,12 +61,19 @@ function mapDispatchToProps(dispatch) {
             iconElementLeft={<div />}
           />
           <List>
+            <ListItem
+              primaryText="Lobby"
+              rightAvatar={<Avatar src="dist/images/default_team.png" />}
+              leftIcon={<CommunicationChatBubble />}
+              onTouchTap={this._onPartySelected.bind(this, { name: 'Lobby' })}
+            />
           <Subheader>Parties({this.state.partylist.length}) {<GroupAdd color={grey500} style={{ margin: '15px', float: 'left' }} />}</Subheader>
           {this.state.partylist.map((party) => {
                                                      return (<ListItem
                                                        primaryText={party.name}
                                                        rightAvatar={<Avatar src={party.avatar} />}
                                                        leftIcon={<CommunicationChatBubble />}
+                                                       onTouchTap={this._onPartySelected.bind(this, party)}
                                                      />);
                                                    })}
           </List>
@@ -85,4 +99,6 @@ function mapDispatchToProps(dispatch) {
   }
 
 Party.propTypes = {
+  setChatWindow: React.PropTypes.func,
+  setNewListener: React.PropTypes.func,
 };
