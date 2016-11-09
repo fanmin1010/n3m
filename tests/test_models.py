@@ -51,11 +51,6 @@ class TestModels(BaseTestConfig):
 
 
 """
-    def test_getPartyUsers(self):
-        self.assertTrue(
-                PartyUser.getPartyUsers(self.default_party["partyID"])
-        )
-
     def test_PartyMessages(self):
         self.assertTrue(
                 PartyMessage(self.default_party["partyID"],self.default_user["id"],"2016-11-08 00:00:00","My Message")
