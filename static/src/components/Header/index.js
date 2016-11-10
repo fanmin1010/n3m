@@ -15,13 +15,16 @@ import Restore from 'material-ui/svg-icons/action/restore';
 import People from 'material-ui/svg-icons/social/people';
 import PersonAdd from 'material-ui/svg-icons/social/person-add';
 import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
+import Dialog from 'material-ui/Dialog';
+import RaisedButton from 'material-ui/RaisedButton';
+import TextField from 'material-ui/TextField';
+
 import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
 import Divider from 'material-ui/Divider';
 import { grey500 } from 'material-ui/styles/colors';
 
 import * as actionCreators from '../../actions/auth';
 import * as chatActionCreators from '../../actions/chat';
-
 
 function mapStateToProps(state) {
   return {
@@ -41,6 +44,7 @@ export class Header extends Component {
     super(props);
     this.state = {
 			selectedIndex: 0,
+      open: false,
     };
     this.btnStyle = {
       margin: 12,
@@ -79,8 +83,29 @@ export class Header extends Component {
     this.props.setNewListener(partyname);
   }
 
+  addFriendClicked() {
+    this.setState({open: true});
+  }
+
+  handleOpen = () => {
+    this.setState({open: true});
+  };
+
+  handleClose = () => {
+    this.setState({open: false});
+  };
+  
   render() {
+    const actions = [
+      <FlatButton
+        label="Ok"
+        primary={true}
+        keyboardFocused={true}
+        onTouchTap={this.handleClose}
+      />,
+    ];
     return (
+        <div>
             <header>
               <LeftNav open>
                 <div>
@@ -94,14 +119,14 @@ export class Header extends Component {
                   <MenuItem onClick={(e) => this.logout(e)}> Logout </MenuItem>
                   <Divider />
 								  <List>
-									<Subheader>Friends({this.props.friendlist.length}) {<PersonAdd color={grey500} style={{ margin: '15px', float: 'right' }} />}</Subheader>
+									<Subheader>Friends({this.props.friendlist.length}) {<PersonAdd color={grey500} style={{ margin: '15px', float: 'right' }} onTouchTap={this.addFriendClicked.bind(this)} />}</Subheader>
 									{this.props.friendlist.map((friend) => {
 									return (<ListItem
-  primaryText={friend.username}
-  leftAvatar={<Avatar src={friend.avatar} />}
-  rightIcon={<CommunicationChatBubble />}
-  onTouchTap={this._onFriendSelected.bind(this, friend)}
-         />);
+                            primaryText={friend.username}
+                            leftAvatar={<Avatar src={friend.avatar} />}
+                            rightIcon={<CommunicationChatBubble />}
+                            onTouchTap={this._onFriendSelected.bind(this, friend)}
+                         />);
           				})}
 									</List>
                   <BottomNavigation
@@ -109,20 +134,35 @@ export class Header extends Component {
                     style={{ position: 'absolute', bottom: '2px' }}
                   >
 									  <BottomNavigationItem
-  label="Friends"
-  icon={<People />}
-  onTouchTap={() => this.select(0)}
-           />
+                      label="Friends"
+                      icon={<People />}
+                      onTouchTap={() => this.select(0)}
+                               />
 										<BottomNavigationItem
-  label="Recents"
-  icon={<Restore />}
-  onTouchTap={() => this.select(1)}
-          />
+                      label="Recents"
+                      icon={<Restore />}
+                      onTouchTap={() => this.select(1)}
+                              />
 									</BottomNavigation>
                </div>
               </LeftNav>
             </header>
-
+            <div>
+              <RaisedButton label="Dialog With Date Picker" onTouchTap={this.handleOpen} />
+              <Dialog
+                title="Add a friend"
+                actions={actions}
+                modal={false}
+                open={this.state.open}
+                onRequestClose={this.handleClose}
+              >
+                Type in the friends email address and press enter.  <br />
+                <TextField
+                      hintText="friends email"
+                />
+              </Dialog>
+            </div>
+            </div>
         );
   }
 }
