@@ -32,7 +32,7 @@ def get_friendlist():
     result = db.engine.execute('select u.id, u.avatar, u.username from friendship f join "user" u  on f.friendee=u.id where f.friender = ' + str(current_user["id"]));
     friends = json.dumps([dict(r) for r in result])
     print(friends)
-    return friends, 455
+    return friends
 
 @app.route("/api/create_user", methods=["POST"])
 def create_user():
@@ -59,10 +59,12 @@ def create_user():
 @requires_auth
 def add_friendship():
     incoming = request.get_json()
+    print(incoming)
     # friendemail refers to the email to be added email->friendemail
     db.session.commit()
     friendee = User.query.filter_by(email=incoming["email"]).first()
-    new_user = User.query.filter_by(email="starks@gmail.com").first()
+    print(friendee)
+    # new_user = User.query.filter_by(email="starks@gmail.com").first()
 
     current_user = g.current_user
     if friendee == None:
@@ -87,7 +89,7 @@ def add_friendship():
         except SQLAlchemyError:
             return jsonify(message="That friendship already exists"), 410
 
-        return jsonify(error = False, id = friendee_id, email = friendee_email, avatar = friendee_avatar), 400
+        return jsonify(error = False, id = friendee_id, email = friendee_email, avatar = friendee_avatar), 200
 
 @app.route("/api/createParty", methods = ["POST"])
 @requires_auth

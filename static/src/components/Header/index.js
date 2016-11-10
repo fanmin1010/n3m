@@ -87,6 +87,13 @@ export class Header extends Component {
     this.setState({open: true});
   }
 
+  addFriend() {
+    var email=document.getElementById('addfriendtextbox').value;
+    document.getElementById('addfriendtextbox').value = '';
+    this.props.addFriend(email, this.props.userName);  
+    this.handleClose();
+  }
+
   handleOpen = () => {
     this.setState({open: true});
   };
@@ -101,7 +108,7 @@ export class Header extends Component {
         label="Ok"
         primary={true}
         keyboardFocused={true}
-        onTouchTap={this.handleClose}
+        onTouchTap={this.addFriend.bind(this)}
       />,
     ];
     return (
@@ -148,7 +155,6 @@ export class Header extends Component {
               </LeftNav>
             </header>
             <div>
-              <RaisedButton label="Dialog With Date Picker" onTouchTap={this.handleOpen} />
               <Dialog
                 title="Add a friend"
                 actions={actions}
@@ -159,6 +165,7 @@ export class Header extends Component {
                 Type in the friends email address and press enter.  <br />
                 <TextField
                       hintText="friends email"
+                      id="addfriendtextbox"
                 />
               </Dialog>
             </div>
@@ -171,6 +178,7 @@ Header.propTypes = {
   logoutAndRedirect: React.PropTypes.func,
   callUber: React.PropTypes.func,
   getFriendList: React.PropTypes.func,
+  addFriend: React.PropTypes.func,
   setChatWindow: React.PropTypes.func,
   setNewListener: React.PropTypes.func,
 };

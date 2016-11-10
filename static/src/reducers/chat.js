@@ -8,6 +8,9 @@ import {
     FRIEND_LIST_SUCCESS,
     FRIEND_LIST_FAILURE,
     FRIEND_LIST_REQUEST,
+    ADD_FRIEND_SUCCESS,
+    ADD_FRIEND_FAILURE,
+    ADD_FRIEND_REQUEST,
     NEW_CHAT_CHANNEL,
     ADD_MESSAGE,
 } from '../constants/index';
@@ -19,6 +22,7 @@ const initialState = {
   messages: [],
   allMessages: {},
   messagesStatusText: null,
+  addFriendStatusText: null,
 };
 
 
@@ -80,5 +84,18 @@ export default createReducer(initialState, {
           messages: state.allMessages[payload.partyname].slice().concat([payload.message]),
           messagesStatusText: null,
         }); },
+  [ADD_FRIEND_REQUEST]: (state, payload) =>
+        Object.assign({}, state, {
+          addFriendStatusText: null,
+        }),
+  [ADD_FRIEND_SUCCESS]: (state, payload) => {
+   console.log('addfriend success.');
+    return Object.assign({}, state, {
+          addFriendStatusText: 'addFriend done successfully.',
+        }); },
+  [ADD_FRIEND_FAILURE]: (state, payload) =>
+        Object.assign({}, state, {
+          addFriendStatusText: 'error adding a friend.',
+        }),
 });
 

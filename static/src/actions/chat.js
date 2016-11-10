@@ -5,12 +5,19 @@ import {
     FRIEND_LIST_REQUEST,
     FRIEND_LIST_SUCCESS,
     FRIEND_LIST_FAILURE,
+    ADD_FRIEND_REQUEST,
+    ADD_FRIEND_SUCCESS,
+    ADD_FRIEND_FAILURE,
     NEW_CHAT_CHANNEL,
     ADD_MESSAGE,
 } from '../constants/index';
 
 import { parseJSON } from '../utils/misc';
-import { socket_msg, callUberCall, friendlistCall } from '../utils/http_functions';
+import { socket_msg,
+         callUberCall,
+         friendlistCall,
+         addFriendCall,
+       } from '../utils/http_functions';
 
 
 export function chatMessagesRequest() {
@@ -101,7 +108,7 @@ export function friendListFailure(error) {
   };
 }
 
-export function getFriendList(uname) {
+export function getFriendList() {
   return function (dispatch) {
     dispatch(friendListRequest());
     const token = localStorage.getItem('token');
@@ -115,6 +122,46 @@ export function getFriendList(uname) {
       }
     });
 
+  };
+}
+
+
+export function addFriendRequest() {
+  return {
+    type: ADD_FRIEND_REQUEST,
+  };
+}
+
+export function addFriendSuccess(payload) {
+  return {
+    type: ADD_FRIEND_SUCCESS,
+  };
+}
+
+export function addFriendFailure(error) {
+  return {
+    type: ADD_FRIEND_FAILURE,
+    payload: error,
+  };
+}
+
+export function addFriend(email) {
+  return function (dispatch) {
+    dispatch(addFriendRequest());
+    const token = localStorage.getItem('token');
+    console.log('inside of the addFriend action');
+    console.log(email);
+    return addFriendCall(email, token, () => {
+      try {
+        dispatch(addFriendSuccess());
+        console.log('inside of add friend but about to call getfriendlist');
+        dispatch(getFriendList());
+      } catch (e) {
+        console.log('There was an error while adding a friend');
+        console.dir(e);
+        dispatch(addFriendFailure());
+      }
+    });
   };
 }
 

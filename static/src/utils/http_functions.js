@@ -23,6 +23,16 @@ export function create_user(username, email, password, pgp_key) {
   });
 }
 
+export function addFriendCall(email, token, cb) {
+  return axios.post('api/user_add_friend', {
+    email: email, 
+  }, tokenConfig(token))
+  .then(cb)
+  .catch((error) => {
+    console.log(error);
+  });
+}
+
 export function get_token(email, password) {
   return axios.post('api/get_token', {
     email,

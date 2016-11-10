@@ -17,6 +17,9 @@ import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bu
 import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
 import Divider from 'material-ui/Divider';
 import { grey500 } from 'material-ui/styles/colors';
+import Dialog from 'material-ui/Dialog';
+import RaisedButton from 'material-ui/RaisedButton';
+import TextField from 'material-ui/TextField';
 
 import * as actionCreators from '../../actions/auth';
 import * as chatActionCreators from '../../actions/chat';
@@ -36,7 +39,7 @@ function mapDispatchToProps(dispatch) {
     constructor(props) {
       super(props);
       this.state = {
-        open: true,
+        open: false,
         partylist: [
         { name: 'Superheros', avatar: 'dist/images/team01.png' },
         { name: 'ASE Team', avatar: 'dist/images/team02.png' },
@@ -52,11 +55,27 @@ function mapDispatchToProps(dispatch) {
     this.props.setNewListener(party.name);
   }
 
+  handleOpen = () => {
+    this.setState({open: true});
+  };
+
+  handleClose = () => {
+    this.setState({open: false});
+  };
+
 
     render() {
+    const actions = [
+      <FlatButton
+        label="Ok"
+        primary={true}
+        keyboardFocused={true}
+        onTouchTap={this.handleClose}
+      />,
+    ];
       return (
           <div>
-          <Drawer open={this.state.open} openSecondary>
+          <Drawer open='true' openSecondary>
           <AppBar
             iconElementLeft={<div />}
           />
@@ -67,7 +86,7 @@ function mapDispatchToProps(dispatch) {
               leftIcon={<CommunicationChatBubble />}
               onTouchTap={this._onPartySelected.bind(this, { name: 'Lobby' })}
             />
-          <Subheader>Parties({this.state.partylist.length}) {<GroupAdd color={grey500} style={{ margin: '15px', float: 'left' }} />}</Subheader>
+          <Subheader>Parties({this.state.partylist.length}) {<GroupAdd color={grey500} style={{ margin: '15px', float: 'left' }} onTouchTap={this.handleOpen.bind(this)} />}</Subheader>
           {this.state.partylist.map((party) => {
                                                      return (<ListItem
                                                        primaryText={party.name}
@@ -93,6 +112,18 @@ function mapDispatchToProps(dispatch) {
             />
             </BottomNavigation>
             </Drawer>
+              <Dialog
+                title="Add a party"
+                actions={actions}
+                modal={false}
+                open={this.state.open}
+                onRequestClose={this.handleClose}
+              >
+                Type in the friends email address and press enter.  <br />
+                <TextField
+                      hintText="Party Name"
+                />
+              </Dialog>
             </div>
             );
     }
