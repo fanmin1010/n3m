@@ -60,16 +60,14 @@ def create_user():
 @requires_auth
 def add_friendship():
     incoming = request.get_json()
-    print(incoming)
     # friendemail refers to the email to be added email->friendemail
     db.session.commit()
     friendee = User.query.filter_by(email=incoming["email"]).first()
-    print(friendee)
     # new_user = User.query.filter_by(email="starks@gmail.com").first()
 
     current_user = g.current_user
     if friendee == None:
-        return jsonify(message="User with that email does not exist"), 409
+        return jsonify(message="User with that email does not exist"), 403
     else:
         friender_email = current_user["email"]
         friender_id = current_user["id"]
@@ -88,9 +86,9 @@ def add_friendship():
             db.session.add(newfriendship2)
             db.session.commit()
         except SQLAlchemyError:
-            return jsonify(message="That friendship already exists"), 410
+            return jsonify(message="That friendship already exists"), 409
 
-        return jsonify(error = False, id = friendee_id, email = friendee_email, avatar = friendee_avatar), 200
+        return jsonify(error = False, id = friendee_id, email = friendee_email, avatar = friendee_avatar)
 
 @app.route("/api/createParty", methods = ["POST"])
 @requires_auth
@@ -104,13 +102,13 @@ def createParty():
     try:
         db.session.commit()
     except IntegrityError:
-        return jsonify(message="Unable to create party"),409
+        return jsonify(message="Party already existed."),409
 
     new_party = Party.query.filter_by(partyName=incoming["partyName"]).first()
-    print(new_party)
+    # print(new_party)
     return jsonify(
         partyID=new_party.partyID, partyName = new_party.partyName
-    ), 400
+    )
 
 @app.route("/api/add_users_to_party", methods = ["POST"])
 @requires_auth
@@ -119,18 +117,18 @@ def add_to_party():
     party = Party.query.filter_by(ownerID=g.current_user["id"], partyName=incoming["partyName"]).first()
     # print(party)
     if not party:
-        return jsonify(message="Party does not exist."), 420
+        return jsonify(message="Party does not exist."), 404
     user = User.query.filter_by(email=incoming["email"]).first()
     if not user:
-        return jsonify(message="User does not exist."), 421
+        return jsonify(message="User does not exist."), 403
     pu = PartyUser(party.partyID, user.id)
     db.session.add(pu)
     try:
         db.session.commit()
     except IntegrityError:
-        return jsonify(message="Party user relation already exists."), 422
+        return jsonify(message="Party user relation already exists."), 409
 
-    return jsonify(status = "success", avatar=user.avatar, email = user.email, name = user.username), 400
+    return jsonify(status = "success", avatar=user.avatar, email = user.email, name = user.username)
 
 @app.route("/api/get_token", methods=["POST"])
 def get_token():

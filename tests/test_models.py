@@ -11,7 +11,7 @@ class TestModels(BaseTestConfig):
                         self.default_user["email"],
                         self.default_user["password"])
         )
-    def test_get_avatar_for_useremail(self):
+    def test_get_avatar_for_user(self):
         self.assertTrue(
                 User.get_avatar_for_useremail(
                         self.default_user["email"])
@@ -19,6 +19,14 @@ class TestModels(BaseTestConfig):
         self.assertFalse(
                 User.get_avatar_for_useremail(
                         "fake@fake.com")
+        )
+        self.assertTrue(
+                User.get_avatar_for_username(
+                        self.default_user["username"])
+        )
+        self.assertFalse(
+                User.get_avatar_for_username(
+                        "fake")
         )
 
     def test_get_friendship_with_user_ids(self):

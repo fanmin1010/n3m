@@ -133,21 +133,21 @@ class TestAPI(BaseTestConfig):
                 headers = headers,
                 content_type='application/json'
         )
-        self.assertEqual(res3.status_code, 400)
+        self.assertEqual(res3.status_code, 200)
         res4 = self.app.post(
                 "/api/user_add_friend",
                 headers = headers,
                 data=json.dumps(self.friendship2),
                 content_type='application/json'
         )
-        self.assertEqual(res4.status_code, 409)
+        self.assertEqual(res4.status_code, 403)
         res5 = self.app.post(
                 "/api/user_add_friend",
                 data=json.dumps(self.friendship),
                 headers = headers,
                 content_type='application/json'
         )
-        self.assertEqual(res5.status_code, 410)
+        self.assertEqual(res5.status_code, 409)
     def test_create_party(self):
 
         headers = {
@@ -160,7 +160,7 @@ class TestAPI(BaseTestConfig):
                 headers = headers,
                 content_type='application/json'
         )
-        self.assertEqual(res.status_code, 400)
+        self.assertEqual(res.status_code, 200)
         res2 = self.app.post(
                 "/api/createParty",
                 data=json.dumps(self.party1),
@@ -183,7 +183,7 @@ class TestAPI(BaseTestConfig):
             headers = headers,
             content_type='application/json'
         )
-        self.assertEqual(res.status_code, 400)
+        self.assertEqual(res.status_code, 200)
 
         res3 = self.app.post(
             "/api/add_users_to_party",
@@ -194,7 +194,7 @@ class TestAPI(BaseTestConfig):
             headers = headers,
             content_type='application/json'
         )
-        self.assertEqual(res3.status_code, 420)
+        self.assertEqual(res3.status_code, 404)
         res4 = self.app.post(
             "/api/add_users_to_party",
             data=json.dumps({
@@ -204,7 +204,7 @@ class TestAPI(BaseTestConfig):
             headers = headers,
             content_type='application/json'
         )
-        self.assertEqual(res4.status_code, 421)
+        self.assertEqual(res4.status_code, 403)
         res2 = self.app.post(
             "/api/add_users_to_party",
             data=json.dumps({
@@ -214,7 +214,7 @@ class TestAPI(BaseTestConfig):
             headers = headers,
             content_type='application/json'
         )
-        self.assertEqual(res2.status_code, 422)
+        self.assertEqual(res2.status_code, 409)
 
     def test_get_friendlist(self):
         headers = {
@@ -227,4 +227,4 @@ class TestAPI(BaseTestConfig):
                 headers = headers,
                 content_type='application/json'
         )
-        self.assertEqual(res.status_code, 455)
+        self.assertEqual(res.status_code, 200)
