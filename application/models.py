@@ -36,6 +36,14 @@ class User(db.Model):
             return user.avatar
         else:
             return None
+    
+    @staticmethod
+    def get_avatar_for_username(uname):
+        user = User.query.filter_by(username=uname).first()
+        if user:
+            return user.avatar
+        else:
+            return None
 
 class Friendship(db.Model):
     fs_id = db.Column(db.Integer(), primary_key = True, nullable=False)
