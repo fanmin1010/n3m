@@ -9,6 +9,7 @@ import requests
 import datetime, time
 import json
 import sys
+import geocoder
 
 @app.route('/', methods=['GET'])
 def index():
@@ -156,11 +157,21 @@ def is_token_valid():
 
 @app.route("/api/calluber", methods=["GET"])
 def call_uber():
+    #incoming = request.get_json()
+    start_address = '850 3rd Ave. New York, NY 10022'
+    end_address = '205 W 109th St, New York, NY10025'
+    startgeo = geocoder.google(start_address)
+    endgeo = geocoder.google(end_address)
     url='https://api.uber.com/v1.2/estimates/price'
-    payload = {'start_latitude':'37.7752315', 'start_longitude':'-122.418075', 'end_latitude':'37.775241', 'end_longitude':'-122.518075'}
+    payload = {'start_latitude':startgeo.latlng[0], 'start_longitude':startgeo.latlng[1], 'end_latitude':endgeo.latlng[0], 'end_longitude':endgeo.latlng[1]}
     headers = {'Authorization': 'Token x4maHB7QT8tWJqKfkfPVyzWfpbp7g5QmehniOIf5', 'Content-Type': 'application/json', 'Accept-Language': 'en_US' }
     r = requests.get(url, params=payload, headers=headers)
     print(r.text)
+    #print(incoming)
+    print ("startgeo: ")
+    print (startgeo.latlng)
+    print ("endgeo: ")
+    print (endgeo.latlng)
     return jsonify(r.text)
 
 
