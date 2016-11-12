@@ -127,6 +127,9 @@ export function registerUser(username, email, password, pgp_key) {
                 dispatch(registerUserSuccess(response.token));
                 browserHistory.push('/main');
               } catch (e) {
+                console.log('in the python catch block');
+                console.dir(e);
+                console.dir(response);
                 dispatch(registerUserFailure({
                   response: {
                     status: 403,
@@ -136,7 +139,14 @@ export function registerUser(username, email, password, pgp_key) {
               }
             })
             .catch(error => {
-              dispatch(registerUserFailure(error));
+                console.log('in the promise error block');
+                console.dir(error);
+              dispatch(registerUserFailure({
+                response: {
+                  status: error.response.status,
+                  statusText: error.response.data.message,
+                }
+              }));
             });
   };
 }

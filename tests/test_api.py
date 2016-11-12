@@ -57,6 +57,125 @@ class TestAPI(BaseTestConfig):
 
         self.assertEqual(res2.status_code, 409)
 
+    def test_create_user_without_username(self):
+        usr = {
+            "username": "",
+            "email": "brokenuser@noway.com",
+            "password": "something1",
+            "pgp_key": ""
+        }
+
+        res = self.app.post(
+                "/api/create_user",
+                data=json.dumps(usr),
+                content_type='application/json'
+        )
+        self.assertEqual(res.status_code, 400)
+    
+    def test_create_user_with_short_username(self):
+        usr = {
+            "username": "bu",
+            "email": "brokenuser@noway.com",
+            "password": "something1",
+            "pgp_key": ""
+        }
+        res = self.app.post(
+                "/api/create_user",
+                data=json.dumps(usr),
+                content_type='application/json'
+        )
+        self.assertEqual(res.status_code, 400)
+    
+    def test_create_user_with_long_username(self):
+        usr = {
+            "username": "a-broken-user-with-too-long-of-a-username",
+            "email": "brokenuser@noway.com",
+            "password": "something1",
+            "pgp_key": ""
+        }
+        res = self.app.post(
+                "/api/create_user",
+                data=json.dumps(usr),
+                content_type='application/json'
+        )
+        self.assertEqual(res.status_code, 400)
+    
+    def test_create_user_without_email(self):
+        usr = {
+            "username": "brokenuser",
+            "email": "",
+            "password": "something1",
+            "pgp_key": ""
+        }
+
+        res = self.app.post(
+                "/api/create_user",
+                data=json.dumps(usr),
+                content_type='application/json'
+        )
+        self.assertEqual(res.status_code, 400)
+    
+    def test_create_user_with_invalid_email(self):
+        usr = {
+            "username": "brokenuser",
+            "email": "broken@user",
+            "password": "something1",
+            "pgp_key": ""
+        }
+
+        res = self.app.post(
+                "/api/create_user",
+                data=json.dumps(usr),
+                content_type='application/json'
+        )
+        self.assertEqual(res.status_code, 400)
+    
+    def test_create_user_without_password(self):
+        usr = {
+            "username": "brokenuser",
+            "email": "broken@user.com",
+            "password": "",
+            "pgp_key": ""
+        }
+
+        res = self.app.post(
+                "/api/create_user",
+                data=json.dumps(usr),
+                content_type='application/json'
+        )
+        self.assertEqual(res.status_code, 400)
+
+    def test_create_user_with_short_password(self):
+        usr = {
+            "username": "brokenuser",
+            "email": "broken@user.com",
+            "password": "short",
+            "pgp_key": ""
+        }
+
+        res = self.app.post(
+                "/api/create_user",
+                data=json.dumps(usr),
+                content_type='application/json'
+        )
+        self.assertEqual(res.status_code, 400)
+    
+    def test_create_user_with_long_password(self):
+        usr = {
+            "username": "brokenuser",
+            "email": "broken@user.com",
+            "password": "passwordlongerthantwenty",
+            "pgp_key": ""
+        }
+
+        res = self.app.post(
+                "/api/create_user",
+                data=json.dumps(usr),
+                content_type='application/json'
+        )
+        self.assertEqual(res.status_code, 400)
+
+
     def test_get_token_and_verify_token(self):
         res = self.app.post(
                 "/api/get_token",
@@ -107,6 +226,7 @@ class TestAPI(BaseTestConfig):
         self.assertEqual(response2.status_code, 401)
         response3 = self.app.get('/api/user', headers=bad_headers)
         self.assertEqual(response3.status_code, 401)
+
     def test_add_friendship(self):
         self.test_get_token_and_verify_token()
         headers = {

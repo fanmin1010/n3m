@@ -8,6 +8,7 @@ from .utils.auth import generate_token, requires_auth, verify_token
 import requests
 import datetime, time
 import json
+import re
 import sys
 import geocoder
 
@@ -38,11 +39,34 @@ def get_friendlist():
 @app.route("/api/create_user", methods=["POST"])
 def create_user():
     incoming = request.get_json()
+    uname = incoming["username"]
+    eml = incoming["email"]
+    pswd = incoming["password"]
+    pgp = incoming["pgp_key"]
+    eml_rgx=r"[^@]+@[^@]+\.[^@]+"
+
+    if not uname:
+        return jsonify(message='Username cannot be null.'), 400
+    if len(uname) < 3:
+        return jsonify(message='Username must be at least 3 characters.'), 400
+    if len(uname) > 20:
+        return jsonify(message='Username must be no more than 20 characters.'), 400
+    if not eml:
+        return jsonify(message='Email cannot be null.'), 400
+    if not re.match(eml_rgx, eml):
+        return jsonify(message='Email address not valid.'), 400
+    if not pswd:
+        return jsonify(message='Password cannot be null.'), 400
+    if len(pswd) < 6:
+        return jsonify(message='Password must be at least 6 characters.'), 400
+    if len(pswd) > 20:
+        return jsonify(message='Password must be no more than 20 characters.'), 400
+
     user = User(
-        username=incoming["username"],
-        email=incoming["email"],
-        password=incoming["password"],
-        pgp_key=incoming["pgp_key"],
+        username=uname,
+        email=eml,
+        password=pswd,
+        pgp_key=pgp,
         avatar="dist/images/default_avatar.png"  # waiting for Front-end pass-in
     )
     db.session.add(user)

@@ -88,7 +88,7 @@ export default createReducer(initialState, {
           avatar: null,
           userName: null,
           userId: null,
-          registerStatusText: `Register Error: ${payload.status} ${payload.statusText}`,
+          registerStatusText: `Register Error: ${payload.statusText}`,
         });
       },
 });
