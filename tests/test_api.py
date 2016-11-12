@@ -45,7 +45,7 @@ class TestAPI(BaseTestConfig):
                 data=json.dumps(self.some_user),
                 content_type='application/json'
         )
-        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.status_code, 201)
         self.assertTrue(json.loads(res.data.decode("utf-8"))["token"])
         self.assertEqual(User.query.filter_by(email=self.some_user["email"]).first().email, self.some_user["email"])
 
