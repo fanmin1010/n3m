@@ -54,7 +54,7 @@ def create_user():
     return jsonify(
         id=user.id,
         token=generate_token(new_user)
-    )
+    ), 201
 
 @app.route("/api/user_add_friend", methods = ["POST"])
 @requires_auth
@@ -146,7 +146,7 @@ def is_token_valid():
     is_valid = verify_token(incoming["token"])
 
     if is_valid:
-        return jsonify(token_is_valid=True)
+        return jsonify(token_is_valid=True), 202
     else:
         return jsonify(token_is_valid=False), 403
 
