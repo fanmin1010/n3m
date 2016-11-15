@@ -68,6 +68,8 @@ export function socket_msg(msg, pname, uname, cb) {
 }
 
 
-export function callUberCall() {
-  return axios.get('api/calluber');
+export function callUberCall(adrs) {
+  return axios.post('api/calluber',{
+    'address': '3333 Broadway, New York, NY'
+  });
 }
