@@ -52,7 +52,7 @@ function mapDispatchToProps(dispatch) {
 
   _onPartySelected(party) {
     this.props.setChatWindow(party.name);
-    this.props.setNewListener(party.name);
+    this.props.setNewListener(party.name, true, null);
   }
 
   handleOpen = () => {

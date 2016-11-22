@@ -10,10 +10,13 @@ import {
     ADD_FRIEND_FAILURE,
     NEW_CHAT_CHANNEL,
     ADD_MESSAGE,
+    SET_IS_PARTY,
 } from '../constants/index';
 
 import { parseJSON } from '../utils/misc';
-import { socket_msg,
+import { 
+        socket_msg,
+        socket_party_msg,
          callUberCall,
          friendlistCall,
          addFriendCall,
@@ -40,10 +43,25 @@ export function chatMessagesFailure(error) {
 }
 
 
-export function send_chat(msg, teamname, uname) {
+export function send_chat(msg, partyname, receiver, sender) {
   return function (dispatch) {
     dispatch(chatMessagesRequest());
-    return socket_msg(msg, teamname, uname, () => {
+    return socket_msg(msg, partyname, receiver, uname, () => {
+      try {
+        dispatch(chatMessagesSuccess());
+      } catch (e) {
+        console.log('There was an error while calling socket_msg');
+        console.dir(e);
+        dispatch(chatMessagesFailure());
+      }
+    });
+  };
+}
+
+export function send_party_chat(msg, partyname, uname) {
+  return function (dispatch) {
+    dispatch(chatMessagesRequest());
+    return socket_party_msg(msg, partyname, uname, () => {
       try {
         dispatch(chatMessagesSuccess());
       } catch (e) {
@@ -76,9 +94,24 @@ export function addMessage(partyname, message) {
   };
 }
 
+export function setIsParty(isParty, receiver) {
+  return {
+    type: SET_IS_PARTY,
+    payload: {
+      isParty: isParty,
+      receiver, receiver,
+    }
+  };
+}
 
-export function setNewListener(partyname) {
+/**
+ * @param partyname {string} in this case the partyname field is used for either one-on-one chats or party chats. 
+ * @param isParty {boolean} tells us if this is a party or one-on-one chat.
+ * @param receiver {receiver} the username of the user receiving one-on-one chat.
+ **/
+export function setNewListener(partyname, isParty, receiver) {
   return function (dispatch) {
+    dispatch(setIsParty(isParty, receiver));
     socket.removeAllListeners();
     socket.on(partyname, (data) => {
       dispatch(addMessage(partyname, data));

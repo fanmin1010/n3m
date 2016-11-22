@@ -13,16 +13,19 @@ import {
     ADD_FRIEND_REQUEST,
     NEW_CHAT_CHANNEL,
     ADD_MESSAGE,
+    SET_IS_PARTY,
 } from '../constants/index';
 
 const initialState = {
   partyname: 'Lobby',
+  receiver: null,
   friendlist: [],
   friendListStatusText: null,
   messages: [],
   allMessages: {},
   messagesStatusText: null,
   addFriendStatusText: null,
+  isParty: true,
 };
 
 
@@ -96,6 +99,11 @@ export default createReducer(initialState, {
   [ADD_FRIEND_FAILURE]: (state, payload) =>
         Object.assign({}, state, {
           addFriendStatusText: 'error adding a friend.',
+        }),
+  [SET_IS_PARTY]: (state, payload) =>
+        Object.assign({}, state, {
+          isParty: payload.isParty,
+          receiver: payload.receiver,
         }),
 });
 

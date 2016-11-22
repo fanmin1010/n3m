@@ -80,7 +80,7 @@ export class Header extends Component {
       partyname = `${friend.username.replace(' ', '')}-${this.props.userName.replace(' ', '')}`;
     }
     this.props.setChatWindow(partyname);
-    this.props.setNewListener(partyname);
+    this.props.setNewListener(partyname, false, friend.username);
   }
 
   addFriendClicked() {

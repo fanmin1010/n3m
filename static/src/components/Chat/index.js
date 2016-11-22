@@ -17,6 +17,8 @@ function mapStateToProps(state) {
   return {
     token: state.auth.token,
     userName: state.auth.userName,
+    isParty: state.chat.isParty,
+    receiver: state.chat.receiver,
     avatar: state.auth.avatar,
     isAuthenticated: state.auth.isAuthenticated,
     partyname: state.chat.partyname,
@@ -92,7 +94,12 @@ export class Chat extends Component {
   }
 
   sendMessage(msg) {
-    this.props.send_chat(msg, this.props.partyname.replace(' ', ''), this.props.userName);
+    if(this.props.isParty) {
+      this.props.send_party_chat(msg, this.props.partyname.replace(' ', ''), this.props.userName);
+    } else {
+      this.props.send_chat(msg, this.props.partyname.replace(' ', ''), this.props.receiver, this.props.userName);
+      
+    }
     document.getElementById('chatinput').value = '';
   }
 
@@ -106,6 +113,7 @@ export class Chat extends Component {
 
 Chat.propTypes = {
   send_chat: React.PropTypes.func,
+  send_party_chat: React.PropTypes.func,
   setChatWindow: React.PropTypes.func,
   setNewListener: React.PropTypes.func,
   addMessage: React.PropTypes.func,

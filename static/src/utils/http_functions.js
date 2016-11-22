@@ -58,13 +58,30 @@ export function friendlistCall(token, cb) {
  * @param uname {string} user name
  * @param cb {Funtion} call back function
  **/
-export function socket_msg(msg, pname, uname, cb) {
-  console.log('inside socket_msg');
+export function socket_party_msg(msg, pname, uname, cb) {
+  console.log('inside socket_party_msg');
   console.log(msg);
   console.log(pname);
   console.log(uname);
   console.log(cb);
-  socket.emit('servermessage', { msgtext: msg, partyname: pname, username: uname }, cb);
+  socket.emit('party_message', { msgtext: msg, partyname: pname, username: uname }, cb);
+}
+
+
+/**
+ * @param msg {string} message text of chat
+ * @param pname {string} party name
+ * @param receiver {string} the username to whome the message is being directed.
+ * @param sender {string} user name
+ * @param cb {Funtion} call back function
+ **/
+export function socket_msg(msg, pname, receiver, sender, cb) {
+  console.log('inside socket_msg');
+  console.log('Party: ' + pname);
+  console.log('From: ' + sender);
+  console.log('To: ' + receiver);
+  console.log('Body: ' + msg);
+  socket.emit('user2user_message', { msgtext: msg, partyname: pname, receiver: receiver, sender: sender }, cb);
 }
 
 
