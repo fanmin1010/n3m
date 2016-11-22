@@ -46,7 +46,7 @@ export function chatMessagesFailure(error) {
 export function send_chat(msg, partyname, receiver, sender) {
   return function (dispatch) {
     dispatch(chatMessagesRequest());
-    return socket_msg(msg, partyname, receiver, uname, () => {
+    return socket_msg(msg, partyname, receiver, sender, () => {
       try {
         dispatch(chatMessagesSuccess());
       } catch (e) {

@@ -213,10 +213,11 @@ def party_message(message):
 @socketio.on('user2user_message')
 def user2user_message(message):
     print('There was a message: ' + str(message), file=sys.stderr)
-    avatar = User.get_avatar_for_username(message['username'])
+    avatar = User.get_avatar_for_username(message['sender'])
     now = datetime.datetime.now().strftime('%H:%M:%S')
     sender=message['sender']
     receiver=message['receiver']
     print('This is the time: ' + str(now), file=sys.stderr)
     socketio.emit(message['partyname'], {'username': sender, 'text': message['msgtext'], 'avatar': avatar, 'time': now})
     # This is where the message should get inserted into database. Remove this line.
+    
