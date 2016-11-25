@@ -54,7 +54,7 @@ export class Header extends Component {
 		this.select = (index) => {
       console.log('inside of the select function');
       this.setState({ selectedIndex: index });
-      this.props.callUber();
+      this.props.callUber('201 W 109th St, New York, NY10025' );
       console.log('done calling uber');
     };
   }

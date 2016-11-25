@@ -198,9 +198,9 @@ export function addFriend(email) {
   };
 }
 
-export function callUber() {
+export function callUber(addr) {
   return function (dispatch) {
-    return callUberCall()
+    return callUberCall(addr)
             .then(parseJSON)
             .then(response => {
               try {

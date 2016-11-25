@@ -177,23 +177,23 @@ def is_token_valid():
 
 
 
-@app.route("/api/calluber", methods=["GET"])
+@app.route("/api/calluber", methods=["POST"])
 def call_uber():
-    #incoming = request.get_json()
+    incoming = request.get_json()
     start_address = '850 3rd Ave. New York, NY 10022'
-    end_address = '205 W 109th St, New York, NY10025'
+    end_address = incoming["end_address"]
     startgeo = geocoder.google(start_address)
     endgeo = geocoder.google(end_address)
     url='https://api.uber.com/v1.2/estimates/price'
     payload = {'start_latitude':startgeo.latlng[0], 'start_longitude':startgeo.latlng[1], 'end_latitude':endgeo.latlng[0], 'end_longitude':endgeo.latlng[1]}
     headers = {'Authorization': 'Token x4maHB7QT8tWJqKfkfPVyzWfpbp7g5QmehniOIf5', 'Content-Type': 'application/json', 'Accept-Language': 'en_US' }
     r = requests.get(url, params=payload, headers=headers)
-    print(r.text)
+    #print(r.text)
     #print(incoming)
-    print ("startgeo: ")
-    print (startgeo.latlng)
-    print ("endgeo: ")
-    print (endgeo.latlng)
+    print("start address: " + start_address)
+    print("end address: " + end_address)
+    print ("startgeo: " + str(startgeo.latlng))
+    print ("endgeo: " + str(endgeo.latlng))
     return jsonify(r.text)
 
 
