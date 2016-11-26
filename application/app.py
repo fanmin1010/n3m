@@ -62,7 +62,7 @@ def create_user():
     if len(pswd) > 20:
         return jsonify(message='Password must be no more than 20 characters.'), 400
 
-    av_path = "dist/images/avatar0{}.png".fomat(randint(0,9))
+    av_path = "dist/images/avatar0{}.png".format(randint(0,9))
     user = User(
         username=uname,
         email=eml,
@@ -124,7 +124,7 @@ def add_friendship():
 @requires_auth
 def createParty():
     incoming = request.get_json()
-    av_path = "dist/images/team0{}.png".fomat(randint(0,9))
+    av_path = "dist/images/team0{}.png".format(randint(0,9))
     party = Party(
         partyName=incoming["partyName"],
         ownerID=g.current_user["id"],
@@ -146,7 +146,7 @@ def createParty():
 @requires_auth
 def get_partylist():
     current_user = g.current_user
-    result = db.engine.execute('select * from party where "ownerID" = ' + str(current_user["id"]));
+    result = db.engine.execute('select * from party where "ownerID" = %s UNION select * from party p join partyuser pu on p.partyID=pu.partyID where pu.userID =%s', (current_user["id"], current_user["id"]));
     #result=Party.query.filter_by(ownerID=current_user).all()
     parties = json.dumps([dict(r) for r in result])
     print(parties)

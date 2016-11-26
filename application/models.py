@@ -129,6 +129,7 @@ class FriendMessage(db.Model):
         self.fs_id = fs_id
         self.senderID = senderID
         self.message = message
+        self.timestamp = timestamp
 
     @staticmethod
     def add_friendMessage(sender, receiver, now, messagetext):
@@ -191,8 +192,8 @@ class FriendMessage(db.Model):
                 msg_list.append(dict(time=msg.timestamp, text=msg.message, avatar=avatar, username = username))
             return msg_list
 
-"""
 class PartyMessage(db.Model):
+    __tablename__ = 'partymessage'
     pmID = db.Column(db.Integer(), primary_key = True, nullable=False)
     partyID = db.Column(db.Integer(), db.ForeignKey('party.partyID'), nullable=False)
     senderID = db.Column(db.Integer(), db.ForeignKey('user.id'), nullable=False)
@@ -203,6 +204,7 @@ class PartyMessage(db.Model):
         self.partyID = partyID
         self.senderID = senderID
         self.message = message
+        self.timestamp = timestamp
 
     @staticmethod
     def getPartyMessages(partyID):
@@ -211,7 +213,7 @@ class PartyMessage(db.Model):
             return partyMessages
         else:
             return None
-"""
+
 
 """
 class UberRide(db.Model):
