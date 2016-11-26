@@ -17,8 +17,13 @@ import sqlalchemy as sa
 def upgrade():
     op.add_column(
       'party',
-      sa.Column('avatar', sa.String(length=128), nullable=False, default='dist/images/default_team.png')
+      sa.Column('avatar', sa.String(length=128), nullable=True, default='dist/images/default_team.png')
       )
+      op.execute("""
+          UPDATE "party"
+          SET avatar='dist/images/default_team.png'
+      """)
+      op.alter_column('party','avatar',nullable=False)
 
 def downgrade():
     op.drop_column('party', 'avatar')
