@@ -1,7 +1,7 @@
 from __future__ import print_function
 from flask import request, render_template, jsonify, url_for, redirect, g
 from flask_socketio import SocketIO, emit
-from .models import User, Friendship, Party, PartyUser
+from .models import User, Friendship, Party, PartyUser #,UberRide
 from index import app, db
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from .utils.auth import generate_token, requires_auth, verify_token
@@ -134,6 +134,19 @@ def createParty():
         partyID=new_party.partyID, partyName = new_party.partyName
     )
 
+    
+@app.route("/api/partylist", methods=["GET"])
+@requires_auth
+def get_partylist():
+    current_user = g.current_user
+    #result = db.engine.execute('select * from party where ownerID = ' + str(current_user["id"]));
+    result=Party.query.filter_by(ownerID=current_user).all()
+    parties = json.dumps([dict(r) for r in result])
+    print(parties)
+    return parties 
+
+
+
 @app.route("/api/add_users_to_party", methods = ["POST"])
 @requires_auth
 def add_to_party():
@@ -195,6 +208,34 @@ def call_uber():
     print ("startgeo: " + str(startgeo.latlng))
     print ("endgeo: " + str(endgeo.latlng))
     return jsonify(r.text)
+
+"""
+@app.route("/api/saveride", methods = ["POST"])
+@requires_auth
+def saveride():
+    incoming = request.get_json()
+    #now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    ride = UberRide(
+        userID=g.current_user["id"],
+        when=incoming["when"],
+        duration=incoming["duration"],
+        location=incoming["location"],
+        destination=incoming["destination"],
+        cost=incoming["cost"]
+    )
+    db.session.add(ride)
+    try:
+        db.session.commit()
+    IntegrityError:
+        return jsonify(message="Ride already existed."),409
+
+    new_ride = UberRide.query.filter_by(userID=incoming["userID"]).first()
+    # print(new_ride)
+    return jsonify(
+        rideID=new_ride.id, rideDisplay = new_ride.__repr__
+    )
+"""
+
 
 
 socketio = SocketIO(app)
