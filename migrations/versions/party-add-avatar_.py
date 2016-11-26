@@ -19,11 +19,12 @@ def upgrade():
       'party',
       sa.Column('avatar', sa.String(length=128), nullable=True, default='dist/images/default_team.png')
       )
-      op.execute("""
-          UPDATE "party"
-          SET avatar='dist/images/default_team.png'
-      """)
-      op.alter_column('party','avatar',nullable=False)
+    op.execute("""
+        UPDATE "party"
+        SET avatar='dist/images/default_team.png'
+    """)
+    op.alter_column('party','avatar',nullable=False)
+
 
 def downgrade():
     op.drop_column('party', 'avatar')
