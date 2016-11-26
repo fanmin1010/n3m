@@ -81,7 +81,7 @@ class Party(db.Model):
     avatar = db.Column(db.String(128), unique=False)
     __table_args__ = (db.UniqueConstraint('partyName', 'ownerID', name = 'unique_pname_with_owner'), )
 
-    def __init__(self, partyName, ownerID):
+    def __init__(self, partyName, ownerID, avatar):
         self.partyName = partyName
         self.ownerID = ownerID
         self.avatar = avatar

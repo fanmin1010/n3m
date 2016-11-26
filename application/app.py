@@ -11,6 +11,7 @@ import json
 import re
 import sys
 import geocoder
+from random import randint
 
 @app.route('/', methods=['GET'])
 def index():
@@ -61,12 +62,13 @@ def create_user():
     if len(pswd) > 20:
         return jsonify(message='Password must be no more than 20 characters.'), 400
 
+    av_path = "dist/images/avatar0{}.png".fomat(randint(0,9))
     user = User(
         username=uname,
         email=eml,
         password=pswd,
         pgp_key=pgp,
-        avatar="dist/images/default_avatar.png"  # waiting for Front-end pass-in
+        avatar=av_path
     )
     db.session.add(user)
     try:
@@ -122,10 +124,11 @@ def add_friendship():
 @requires_auth
 def createParty():
     incoming = request.get_json()
+    av_path = "dist/images/team0{}.png".fomat(randint(0,9))
     party = Party(
         partyName=incoming["partyName"],
-        ownerID=g.current_user["id"]
-        avatar="dist/images/default_team.png"  # waiting for Front-end pass-in
+        ownerID=g.current_user["id"],
+        avatar=av_path
     )
     db.session.add(party)
     try:
