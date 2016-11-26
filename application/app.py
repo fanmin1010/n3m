@@ -139,8 +139,8 @@ def createParty():
 @requires_auth
 def get_partylist():
     current_user = g.current_user
-    #result = db.engine.execute('select * from party where ownerID = ' + str(current_user["id"]));
-    result=Party.query.filter_by(ownerID=current_user).all()
+    result = db.engine.execute('select * from party where "ownerID" = ' + str(current_user["id"]));
+    #result=Party.query.filter_by(ownerID=current_user).all()
     parties = json.dumps([dict(r) for r in result])
     print(parties)
     return parties 
