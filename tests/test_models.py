@@ -1,7 +1,8 @@
 from testing_config import BaseTestConfig
-from application.models import User, Friendship
+from application.models import User, Friendship, FriendMessage
 from application.models import Party
 from application.models import PartyUser
+import datetime, time
 # from application.models import PartyMessage
 
 class TestModels(BaseTestConfig):
@@ -57,6 +58,16 @@ class TestModels(BaseTestConfig):
         self.assertTrue(PartyUser.getPartyUsers(party.partyID))
         self.assertFalse(PartyUser.getPartyUsers(10101))
 
+    def test_add_and_get_friendMessage(self):
+        now = datetime.datetime.now().strftime('%H:%M:%S')
+        sender = self.default_user["username"]
+        receiver = self.d_user_two["username"]
+        messagetext = "hello"
+        
+        result = FriendMessage.add_friendMessage(sender, receiver, now, messagetext)
+        self.assertEqual(result, "success")
+        result = FriendMessage.getFriendMessages(sender, receiver)
+        self.assertTrue(result)
 
 """
     def test_PartyMessages(self):
