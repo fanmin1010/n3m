@@ -1,5 +1,5 @@
 from testing_config import BaseTestConfig
-from application.models import User, Friendship, Party
+from application.models import User, Friendship, Party #, UberRide
 import json
 from application.utils import auth
 
@@ -348,3 +348,27 @@ class TestAPI(BaseTestConfig):
                 content_type='application/json'
         )
         self.assertEqual(res.status_code, 200)
+
+
+    def test_get_partylist(self):
+        headers = {
+            'content_type':'application/json',
+            'Authorization': self.token
+        }
+        res = self.app.get(
+                "/api/partylist",
+                data=json.dumps({}),
+                headers = headers,
+                content_type='application/json'
+        )
+        self.assertEqual(res.status_code, 200)
+
+"""
+    def test_getRides(self):
+        headers = {
+            'content_type':'application/json',
+            'Authorization':self.token
+        }
+        res = self.app.get(
+                "/api/
+"""

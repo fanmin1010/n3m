@@ -3,6 +3,7 @@ from application.models import User, Friendship
 from application.models import Party
 from application.models import PartyUser
 # from application.models import PartyMessage
+# from application.models import UberRide 
 
 class TestModels(BaseTestConfig):
     def test_get_user_with_email_and_password(self):
@@ -57,6 +58,16 @@ class TestModels(BaseTestConfig):
         self.assertTrue(PartyUser.getPartyUsers(party.partyID))
         self.assertFalse(PartyUser.getPartyUsers(10101))
 
+
+"""
+    def test_getRides(self):
+        self.assertTrue(
+                UberRide.getRides(self.default_user["id"])
+        )
+        self.assertFalse(UberRide.getRides(self.d_user_two["id"]))
+        for ride in UberRide.getRides(self.default_user["id"]):
+            self.assertTrue("UberRide" in repr(ride))
+"""
 
 """
     def test_PartyMessages(self):
