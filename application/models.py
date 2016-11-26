@@ -1,5 +1,7 @@
 from index import db, bcrypt
 from datetime import datetime
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
+from sqlalchemy import desc
 
 class User(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
@@ -36,7 +38,7 @@ class User(db.Model):
             return user.avatar
         else:
             return None
-    
+
     @staticmethod
     def get_avatar_for_username(uname):
         user = User.query.filter_by(username=uname).first()
@@ -79,7 +81,7 @@ class Party(db.Model):
     avatar = db.Column(db.String(128), unique=False)
     __table_args__ = (db.UniqueConstraint('partyName', 'ownerID', name = 'unique_pname_with_owner'), )
 
-    def __init__(self, partyName, ownerID):
+    def __init__(self, partyName, ownerID, avatar):
         self.partyName = partyName
         self.ownerID = ownerID
         self.avatar = avatar
@@ -97,6 +99,7 @@ class Party(db.Model):
             return None
 
 class PartyUser(db.Model):
+    __tablename__ = 'partyuser'
     puID = db.Column(db.Integer(), primary_key = True, nullable=False)
     partyID = db.Column(db.Integer(), db.ForeignKey('party.partyID'), nullable=False)
     userID = db.Column(db.Integer(), db.ForeignKey('user.id'), nullable=False)
@@ -114,36 +117,8 @@ class PartyUser(db.Model):
         else:
             return None
 
-"""
-class UberRide(db.Model):
-    id = db.Column(db.Integer(), primary_key = True, nullable=False)
-    userID = db.Column(db.Integer(), db.ForeignKey('user.id'), nullable=False)
-    when = db.Column(db.DateTime(), server_default=sa.func.current_timestamp())
-    duration = db.Column('duration', sa.Interval())
-    location = db.Column('location', sa.String(length=255), nullable=False)
-    destination = db.Column('destination', sa.String(length=255), nullable=False)
-    cost = db.Column('cost', sa.Float(), nullable=False)
-
-    def __init__(self, userID, when, duration, location, destination, cost):
-        self.userID = userID 
-        self.when = when
-        self.duration = duration
-        self.location = location
-        self.destination = destination
-        self.cost = cost
-
-    def __repr__(self):
-        return '<Uber Ride on %r from %r to %r for %r>' % (self.when, self.location, self.destination, self.cost)
-
-    @staticmethod
-    def getRides(userID):
-        userRides = UberRide.query.filter_by(userID=userID).all()
-        if userRides:
-            return userRides 
-        else:
-            return None
-
 class FriendMessage(db.Model):
+    __tablename__ = 'friendmessage'
     fmID = db.Column(db.Integer(), primary_key = True, nullable = False)
     fs_id = db.Column(db.Integer(), db.ForeignKey('friendship.fs_id'), nullable=False)
     senderID = db.Column(db.Integer(), db.ForeignKey('user.id'), nullable=False)
@@ -156,10 +131,67 @@ class FriendMessage(db.Model):
         self.message = message
 
     @staticmethod
-    def getFriendMessages(senderID):
-        friendMessages = FriendMessage.query.filter_by(senderID=senderID)
-        return friendMessages
+    def add_friendMessage(sender, receiver, now, messagetext):
+        senderuser = User.query.filter_by(username=sender).first()
+        if senderuser is None:
+            return "empty sender user"
+        senderID=senderuser.id
+        receiveruser = User.query.filter_by(username=receiver).first()
+        if receiveruser is None:
+            return "empty receiver user"
+        receiverID=receiveruser.id
+        # always store the message with one friendship where friender_id<=friendee_id
+        if senderID<receiverID:
+            fs = Friendship.get_friendship_with_user_ids(senderID, receiverID)
+        else:
+            fs = Friendship.get_friendship_with_user_ids(receiverID, senderID)
+        if fs is None:
+            return "empty friendship"
+        fs_id = fs.fs_id
+        message = FriendMessage(fs_id, senderID, now, messagetext)
+        db.session.add(message)
+        try:
+            db.session.commit()
+        except IntegrityError:
+            return "database error"
+        return "success"
 
+    @staticmethod
+    def getFriendMessages(user1, user2):
+        senderuser = User.query.filter_by(username=user1).first()
+        if senderuser is None:
+            return "empty user1"
+        senderID=senderuser.id
+        receiveruser = User.query.filter_by(username=user2).first()
+        if receiveruser is None:
+            return "empty user2"
+        receiverID=receiveruser.id
+        # always store the message with one friendship where friender_id<=friendee_id
+        if senderID<receiverID:
+            fs = Friendship.get_friendship_with_user_ids(senderID, receiverID)
+        else:
+            fs = Friendship.get_friendship_with_user_ids(receiverID, senderID)
+        if fs is None:
+            return "empty friendship"
+        fs_id = fs.fs_id
+        friendMessages = FriendMessage.query.filter_by(fs_id = fs_id).order_by(FriendMessage.timestamp).all()
+        sender_av = User.get_avatar_for_username(user1)
+        receiver_av = User.get_avatar_for_username(user2)
+        if friendMessages is None:
+            return None
+        else:
+            msg_list = []
+            for msg in friendMessages:
+                if msg.senderID == senderID:
+                    avatar = sender_av
+                    username = user1
+                else:
+                    avatar = receiver_av
+                    username = user2
+                msg_list.append(dict(time=msg.timestamp, text=msg.message, avatar=avatar, username = username))
+            return msg_list
+
+"""
 class PartyMessage(db.Model):
     pmID = db.Column(db.Integer(), primary_key = True, nullable=False)
     partyID = db.Column(db.Integer(), db.ForeignKey('party.partyID'), nullable=False)
@@ -177,6 +209,36 @@ class PartyMessage(db.Model):
         partyMessages = PartyMessage.query.filter_by(partyID=partyID)
         if partyMessages:
             return partyMessages
+        else:
+            return None
+"""
+
+"""
+class UberRide(db.Model):
+    id = db.Column(db.Integer(), primary_key = True, nullable=False)
+    userID = db.Column(db.Integer(), db.ForeignKey('user.id'), nullable=False)
+    when = db.Column(db.DateTime(), server_default=sa.func.current_timestamp())
+    duration = db.Column('duration', sa.Interval())
+    location = db.Column('location', sa.String(length=255), nullable=False)
+    destination = db.Column('destination', sa.String(length=255), nullable=False)
+    cost = db.Column('cost', sa.Float(), nullable=False)
+
+    def __init__(self, userID, when, duration, location, destination, cost):
+        self.userID = userID
+        self.when = when
+        self.duration = duration
+        self.location = location
+        self.destination = destination
+        self.cost = cost
+
+    def __repr__(self):
+        return '<Uber Ride on %r from %r to %r for %r>' % (self.when, self.location, self.destination, self.cost)
+
+    @staticmethod
+    def getRides(userID):
+        userRides = UberRide.query.filter_by(userID=userID).all()
+        if userRides:
+            return userRides
         else:
             return None
 """

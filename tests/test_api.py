@@ -71,7 +71,7 @@ class TestAPI(BaseTestConfig):
                 content_type='application/json'
         )
         self.assertEqual(res.status_code, 400)
-    
+
     def test_create_user_with_short_username(self):
         usr = {
             "username": "bu",
@@ -85,7 +85,7 @@ class TestAPI(BaseTestConfig):
                 content_type='application/json'
         )
         self.assertEqual(res.status_code, 400)
-    
+
     def test_create_user_with_long_username(self):
         usr = {
             "username": "a-broken-user-with-too-long-of-a-username",
@@ -99,7 +99,7 @@ class TestAPI(BaseTestConfig):
                 content_type='application/json'
         )
         self.assertEqual(res.status_code, 400)
-    
+
     def test_create_user_without_email(self):
         usr = {
             "username": "brokenuser",
@@ -114,7 +114,7 @@ class TestAPI(BaseTestConfig):
                 content_type='application/json'
         )
         self.assertEqual(res.status_code, 400)
-    
+
     def test_create_user_with_invalid_email(self):
         usr = {
             "username": "brokenuser",
@@ -129,7 +129,7 @@ class TestAPI(BaseTestConfig):
                 content_type='application/json'
         )
         self.assertEqual(res.status_code, 400)
-    
+
     def test_create_user_without_password(self):
         usr = {
             "username": "brokenuser",
@@ -159,7 +159,7 @@ class TestAPI(BaseTestConfig):
                 content_type='application/json'
         )
         self.assertEqual(res.status_code, 400)
-    
+
     def test_create_user_with_long_password(self):
         usr = {
             "username": "brokenuser",
@@ -254,6 +254,7 @@ class TestAPI(BaseTestConfig):
                 content_type='application/json'
         )
         self.assertEqual(res3.status_code, 200)
+
         res4 = self.app.post(
                 "/api/user_add_friend",
                 headers = headers,
@@ -372,3 +373,4 @@ class TestAPI(BaseTestConfig):
         res = self.app.get(
                 "/api/
 """
+

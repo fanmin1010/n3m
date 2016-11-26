@@ -69,6 +69,7 @@ class BaseTestConfig(TestCase):
                 data=json.dumps(self.d_user_two),
                 content_type='application/json'
         )
+        self.fs_id = json.loads(f_res.data.decode("utf-8"))["friendship_id"]
         p_res = self.app.post(
             "/api/createParty",
             data=json.dumps(self.default_party),

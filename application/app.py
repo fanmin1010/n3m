@@ -1,7 +1,7 @@
 from __future__ import print_function
 from flask import request, render_template, jsonify, url_for, redirect, g
 from flask_socketio import SocketIO, emit
-from .models import User, Friendship, Party, PartyUser #,UberRide
+from .models import User, Friendship, Party, PartyUser, FriendMessage #,UberRide
 from index import app, db
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from .utils.auth import generate_token, requires_auth, verify_token
@@ -11,6 +11,7 @@ import json
 import re
 import sys
 import geocoder
+from random import randint
 
 @app.route('/', methods=['GET'])
 def index():
@@ -33,7 +34,6 @@ def get_friendlist():
     current_user = g.current_user
     result = db.engine.execute('select u.id, u.avatar, u.username from friendship f join "user" u  on f.friendee=u.id where f.friender = ' + str(current_user["id"]));
     friends = json.dumps([dict(r) for r in result])
-    print(friends)
     return friends
 
 @app.route("/api/create_user", methods=["POST"])
@@ -62,12 +62,13 @@ def create_user():
     if len(pswd) > 20:
         return jsonify(message='Password must be no more than 20 characters.'), 400
 
+    av_path = "dist/images/avatar0{}.png".fomat(randint(0,9))
     user = User(
         username=uname,
         email=eml,
         password=pswd,
         pgp_key=pgp,
-        avatar="dist/images/default_avatar.png"  # waiting for Front-end pass-in
+        avatar=av_path
     )
     db.session.add(user)
     try:
@@ -111,17 +112,23 @@ def add_friendship():
             db.session.commit()
         except SQLAlchemyError:
             return jsonify(message="That friendship already exists"), 409
+        fs_id = 0
+        if friender_id<friendee_id:
+            fs_id = newfriendship.fs_id
+        else:
+            fs_id = newfriendship2.fs_id
 
-        return jsonify(error = False, id = friendee_id, email = friendee_email, avatar = friendee_avatar)
+        return jsonify(error = False, id = friendee_id, email = friendee_email, avatar = friendee_avatar, friendship_id=fs_id)
 
 @app.route("/api/createParty", methods = ["POST"])
 @requires_auth
 def createParty():
     incoming = request.get_json()
+    av_path = "dist/images/team0{}.png".fomat(randint(0,9))
     party = Party(
         partyName=incoming["partyName"],
-        ownerID=g.current_user["id"]
-        avatar="dist/images/default_team.png"  # waiting for Front-end pass-in
+        ownerID=g.current_user["id"],
+        avatar=av_path
     )
     db.session.add(party)
     try:
@@ -130,12 +137,11 @@ def createParty():
         return jsonify(message="Party already existed."),409
 
     new_party = Party.query.filter_by(partyName=incoming["partyName"]).first()
-    # print(new_party)
     return jsonify(
         partyID=new_party.partyID, partyName = new_party.partyName
     )
 
-    
+
 @app.route("/api/partylist", methods=["GET"])
 @requires_auth
 def get_partylist():
@@ -144,7 +150,7 @@ def get_partylist():
     #result=Party.query.filter_by(ownerID=current_user).all()
     parties = json.dumps([dict(r) for r in result])
     print(parties)
-    return parties 
+    return parties
 
 
 
@@ -260,6 +266,16 @@ def user2user_message(message):
     sender=message['sender']
     receiver=message['receiver']
     print('This is the time: ' + str(now), file=sys.stderr)
-    socketio.emit(message['partyname'], {'username': sender, 'text': message['msgtext'], 'avatar': avatar, 'time': now})
+    # socketio.emit(message['partyname'], {'username': sender, 'text': message['msgtext'], 'avatar': avatar, 'time': now})
     # This is where the message should get inserted into database. Remove this line.
-    
+    result = FriendMessage.add_friendMessage(sender, receiver, now, message['msgtext'])
+    if result == "success":
+        socketio.emit(message['partyname'], {'username': sender, 'text': message['msgtext'], 'avatar': avatar, 'time': now})
+    else:
+        print("Something happend with error in the database.")
+
+
+def get_friend_msg_his(curr_user, friend):
+    # both curr_user and friend are the usernames that you want to retrieve the message history of
+    msg_list = FriendMessage.getFriendMessages(curr_user, friend)
+    pass

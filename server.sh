@@ -1,3 +1,2 @@
 #!/bin/bash
-python manage.py start_app 
-
+python manage.py start_app
