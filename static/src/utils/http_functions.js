@@ -98,3 +98,11 @@ export function callUberCall(addr) {
     'end_address': addr
   });
 }
+
+export function callOpenTableCall(id, covers, datetime) {
+  return axios.post('api/callopentable',{
+    'id': id,
+    'covers': covers,
+    'datetime': datetime
+  });
+}

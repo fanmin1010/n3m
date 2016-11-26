@@ -24,6 +24,7 @@ import {
         socket_msg,
         socket_party_msg,
          callUberCall,
+         callOpenTableCall,
          friendlistCall,
          addFriendCall,
          addPartyCall,
@@ -288,6 +289,23 @@ export function addParty(partyname) {
 export function callUber(addr) {
   return function (dispatch) {
     return callUberCall(addr)
+            .then(parseJSON)
+            .then(response => {
+              try {
+                console.log(response);
+              } catch (e) {
+                console.log(e);
+              }
+            })
+            .catch(error => {
+              console.log(error);
+            });
+  };
+}
+
+export function callOpenTable(id, covers, datetime) {
+  return function (dispatch) {
+    return callOpenTableCall(id, covers, datetime)
             .then(parseJSON)
             .then(response => {
               try {

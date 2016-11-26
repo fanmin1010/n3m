@@ -56,6 +56,8 @@ export class Header extends Component {
       this.setState({ selectedIndex: index });
       this.props.callUber('201 W 109th St, New York, NY10025' );
       console.log('done calling uber');
+      this.props.callOpenTable('261196', '2', '2016-11-27 18:30'  );
+      console.log('done calling opentable');
     };
   }
   componentWillMount() {
@@ -177,6 +179,7 @@ export class Header extends Component {
 Header.propTypes = {
   logoutAndRedirect: React.PropTypes.func,
   callUber: React.PropTypes.func,
+  callOpenTable: React.PropTypes.func,
   getFriendList: React.PropTypes.func,
   addFriend: React.PropTypes.func,
   setChatWindow: React.PropTypes.func,
