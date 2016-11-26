@@ -76,11 +76,14 @@ class Party(db.Model):
     partyID = db.Column(db.Integer(), primary_key = True, nullable=False)
     partyName = db.Column(db.String(255), nullable=False)
     ownerID = db.Column(db.Integer(), db.ForeignKey('user.id'), nullable=False)
+    avatar = db.Column(db.String(128), unique=False)
     __table_args__ = (db.UniqueConstraint('partyName', 'ownerID', name = 'unique_pname_with_owner'), )
 
     def __init__(self, partyName, ownerID):
         self.partyName = partyName
         self.ownerID = ownerID
+        self.avatar = avatar
+
     def __repr__(self):
         return '<Party %r owned by %r>' % (self.partyName, self.ownerID)
 

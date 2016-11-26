@@ -121,6 +121,7 @@ def createParty():
     party = Party(
         partyName=incoming["partyName"],
         ownerID=g.current_user["id"]
+        avatar="dist/images/default_team.png"  # waiting for Front-end pass-in
     )
     db.session.add(party)
     try:
