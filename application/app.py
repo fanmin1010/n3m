@@ -5,6 +5,7 @@ from .models import User, Friendship, Party, PartyUser, FriendMessage #,UberRide
 from index import app, db
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from .utils.auth import generate_token, requires_auth, verify_token
+from bs4 import BeautifulSoup
 import requests
 import datetime, time
 import json
@@ -146,7 +147,7 @@ def createParty():
 @requires_auth
 def get_partylist():
     current_user = g.current_user
-    result = db.engine.execute('select * from party where "ownerID" = %s UNION select * from party p join partyuser pu on p.partyID=pu.partyID where pu.userID =%s', (current_user["id"], current_user["id"]));
+    result = db.engine.execute('select * from party where "ownerID" = %s UNION select p."partyID", p."partyName", p."ownerID", p."avatar" from party p join partyuser pu on p."partyID"=pu."partyID" where pu."userID" =%s', (current_user["id"], current_user["id"]));
     #result=Party.query.filter_by(ownerID=current_user).all()
     parties = json.dumps([dict(r) for r in result])
     print(parties)
@@ -200,6 +201,7 @@ def is_token_valid():
 @app.route("/api/calluber", methods=["POST"])
 def call_uber():
     incoming = request.get_json()
+    print(incoming)
     start_address = '850 3rd Ave. New York, NY 10022'
     end_address = incoming["end_address"]
     startgeo = geocoder.google(start_address)
@@ -209,12 +211,36 @@ def call_uber():
     headers = {'Authorization': 'Token x4maHB7QT8tWJqKfkfPVyzWfpbp7g5QmehniOIf5', 'Content-Type': 'application/json', 'Accept-Language': 'en_US' }
     r = requests.get(url, params=payload, headers=headers)
     #print(r.text)
-    #print(incoming)
     print("start address: " + start_address)
     print("end address: " + end_address)
     print ("startgeo: " + str(startgeo.latlng))
     print ("endgeo: " + str(endgeo.latlng))
     return jsonify(r.text)
+
+@app.route("/api/callopentable", methods=["POST"])
+def call_opentable():
+    incoming = request.get_json()
+    print(incoming)
+    timeList = []
+    id = incoming["id"]
+    url = 'http://www.opentable.com/restaurant/profile/'
+    url = url + id
+    url = url +'/search'
+    covers = incoming["covers"]
+    dateTime = incoming["datetime"]
+    payload = {'covers':covers, 'dateTime':dateTime}
+    headers = {'Content-Type': 'application/json; charset=UTF-8'}
+    r = requests.post(url, params=payload, headers=headers)
+    soup = BeautifulSoup(r.text, 'html.parser')
+
+    for tag in soup.select('.dtp-results-times li'):
+        timeList.append(tag.string)
+    
+    for timeSlot in timeList:
+        print(timeSlot)
+
+    print("callopentable from app.py")
+    return jsonify(timeList)
 
 """
 @app.route("/api/saveride", methods = ["POST"])

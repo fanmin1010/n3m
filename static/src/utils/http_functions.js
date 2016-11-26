@@ -68,6 +68,14 @@ export function socket_party_msg(msg, pname, uname, cb) {
 }
 
 
+export function partylistCall(token, cb) {
+  return axios.get('api/partylist', tokenConfig(token))
+            .then(cb)
+            .catch((error) => {
+              console.log(error);
+            });
+}
+
 /**
  * @param msg {string} message text of chat
  * @param pname {string} party name
@@ -88,5 +96,13 @@ export function socket_msg(msg, pname, receiver, sender, cb) {
 export function callUberCall(addr) {
   return axios.post('api/calluber',{
     'end_address': addr
+  });
+}
+
+export function callOpenTableCall(id, covers, datetime) {
+  return axios.post('api/callopentable',{
+    'id': id,
+    'covers': covers,
+    'datetime': datetime
   });
 }

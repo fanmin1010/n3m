@@ -11,6 +11,12 @@ import {
     NEW_CHAT_CHANNEL,
     ADD_MESSAGE,
     SET_IS_PARTY,
+    PARTY_LIST_REQUEST,
+    PARTY_LIST_SUCCESS,
+    PARTY_LIST_FAILURE,
+    ADD_PARTY_REQUEST,
+    ADD_PARTY_SUCCESS,
+    ADD_PARTY_FAILURE,
 } from '../constants/index';
 
 import { parseJSON } from '../utils/misc';
@@ -18,8 +24,11 @@ import {
         socket_msg,
         socket_party_msg,
          callUberCall,
+         callOpenTableCall,
          friendlistCall,
          addFriendCall,
+         addPartyCall,
+         partylistCall,
        } from '../utils/http_functions';
 
 
@@ -198,9 +207,105 @@ export function addFriend(email) {
   };
 }
 
+export function partyListRequest() {
+  return {
+    type: PARTY_LIST_REQUEST,
+  };
+}
+
+export function partyListSuccess(payload) {
+  return {
+    type: PARTY_LIST_SUCCESS,
+    payload,
+  };
+}
+
+export function partyListFailure(error) {
+  return {
+    type: PARTY_LIST_FAILURE,
+    payload: error,
+  };
+}
+
+export function getPartyList() {
+  return function (dispatch) {
+    console.log('In the getPartyList function');
+    dispatch(partyListRequest());
+    const token = localStorage.getItem('token');
+    return partylistCall(token, (data) => {
+      try {
+        console.log('Getting back the partylist');
+        console.log(data);
+        dispatch(partyListSuccess(data));
+      } catch (e) {
+        console.log('There was an error while calling partylist');
+        console.dir(e);
+        dispatch(partyListFailure());
+      }
+    });
+
+  };
+}
+
+export function addPartyRequest() {
+  return {
+    type: ADD_PARTY_REQUEST,
+  };
+}
+
+export function addPartySuccess(payload) {
+  return {
+    type: ADD_PARTY_SUCCESS,
+  };
+}
+
+export function addPartyFailure(error) {
+  return {
+    type: ADD_PARTY_FAILURE,
+    payload: error,
+  };
+}
+
+export function addParty(partyname) {
+  return function (dispatch) {
+    dispatch(addPartyRequest());
+    const token = localStorage.getItem('token');
+    console.log('inside of the addParty action');
+    console.log(partyname);
+    return addPartyCall(partyname, token, () => {
+      try {
+        dispatch(addPartySuccess());
+        console.log('inside of add party and about to call getpartylist');
+        dispatch(getPartyList());
+      } catch (e) {
+        console.log('There was an error while adding a party');
+        console.dir(e);
+        dispatch(addPartyFailure());
+      }
+    });
+  };
+}
+
 export function callUber(addr) {
   return function (dispatch) {
     return callUberCall(addr)
+            .then(parseJSON)
+            .then(response => {
+              try {
+                console.log(response);
+              } catch (e) {
+                console.log(e);
+              }
+            })
+            .catch(error => {
+              console.log(error);
+            });
+  };
+}
+
+export function callOpenTable(id, covers, datetime) {
+  return function (dispatch) {
+    return callOpenTableCall(id, covers, datetime)
             .then(parseJSON)
             .then(response => {
               try {
