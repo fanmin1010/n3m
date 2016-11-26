@@ -112,6 +112,34 @@ class PartyUser(db.Model):
             return None
 
 """
+class UberRide(db.Model):
+    id = db.Column(db.Integer(), primary_key = True, nullable=False)
+    userID = db.Column(db.Integer(), db.ForeignKey('user.id'), nullable=False)
+    when = db.Column(db.DateTime(), server_default=sa.func.current_timestamp())
+    duration = db.Column('duration', sa.Interval())
+    location = db.Column('location', sa.String(length=255), nullable=False)
+    destination = db.Column('destination', sa.String(length=255), nullable=False)
+    cost = db.Column('cost', sa.Float(), nullable=False)
+
+    def __init__(self, userID, when, duration, location, destination, cost):
+        self.userID = userID 
+        self.when = when
+        self.duration = duration
+        self.location = location
+        self.destination = destination
+        self.cost = cost
+
+    def __repr__(self):
+        return '<Uber Ride on %r from %r to %r for %r>' % (self.when, self.location, self.destination, self.cost)
+
+    @staticmethod
+    def getRides(userID):
+        userRides = UberRide.query.filter_by(userID=userID).all()
+        if userRides:
+            return userRides 
+        else:
+            return None
+
 class FriendMessage(db.Model):
     fmID = db.Column(db.Integer(), primary_key = True, nullable = False)
     fs_id = db.Column(db.Integer(), db.ForeignKey('friendship.fs_id'), nullable=False)
