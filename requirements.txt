@@ -32,3 +32,4 @@ flask-socketio
 eventlet
 geocoder
 googlemaps
+bs4

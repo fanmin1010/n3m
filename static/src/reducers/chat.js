@@ -14,6 +14,12 @@ import {
     NEW_CHAT_CHANNEL,
     ADD_MESSAGE,
     SET_IS_PARTY,
+    PARTY_LIST_SUCCESS,
+    PARTY_LIST_FAILURE,
+    PARTY_LIST_REQUEST,
+    ADD_PARTY_SUCCESS,
+    ADD_PARTY_FAILURE,
+    ADD_PARTY_REQUEST,
 } from '../constants/index';
 
 const initialState = {
@@ -26,6 +32,9 @@ const initialState = {
   messagesStatusText: null,
   addFriendStatusText: null,
   isParty: true,
+  partylist: [],
+  partyListStatusText: null,
+  addPartyStatusText: null,
 };
 
 
@@ -104,6 +113,34 @@ export default createReducer(initialState, {
         Object.assign({}, state, {
           isParty: payload.isParty,
           receiver: payload.receiver,
+        }),
+  [PARTY_LIST_REQUEST]: (state, payload) =>
+        Object.assign({}, state, {
+          partyListStatusText: null,
+        }),
+  [PARTY_LIST_SUCCESS]: (state, payload) => {
+   console.log('partylistsuccess.');
+   console.dir(payload);
+    return Object.assign({}, state, {
+          partyListStatusText: 'partylist retreived successfully.',
+          partylist: payload.data,
+        }); },
+  [PARTY_LIST_FAILURE]: (state, payload) =>
+        Object.assign({}, state, {
+          partyListStatusText: 'error retreiving partylist.',
+        }),
+  [ADD_PARTY_REQUEST]: (state, payload) =>
+        Object.assign({}, state, {
+          addPartyStatusText: null,
+        }),
+  [ADD_PARTY_SUCCESS]: (state, payload) => {
+   console.log('addparty success.');
+    return Object.assign({}, state, {
+          addPartyStatusText: 'addParty done successfully.',
+        }); },
+  [ADD_PARTY_FAILURE]: (state, payload) =>
+        Object.assign({}, state, {
+          addPartyStatusText: 'error adding a party.',
         }),
 });
 
