@@ -348,6 +348,8 @@ class TestAPI(BaseTestConfig):
                 headers = headers,
                 content_type='application/json'
         )
+        print(json.loads(res.data.decode("utf-8")))
+
         self.assertEqual(res.status_code, 200)
 
 
@@ -362,6 +364,7 @@ class TestAPI(BaseTestConfig):
                 headers = headers,
                 content_type='application/json'
         )
+        print(json.loads(res.data.decode("utf-8")))
         self.assertEqual(res.status_code, 200)
 
 """
@@ -373,4 +376,3 @@ class TestAPI(BaseTestConfig):
         res = self.app.get(
                 "/api/
 """
-

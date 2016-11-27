@@ -137,7 +137,7 @@ def createParty():
     except IntegrityError:
         return jsonify(message="Party already existed."),409
 
-    new_party = Party.query.filter_by(partyName=incoming["partyName"]).first()
+    new_party = party
     return jsonify(
         partyID=new_party.partyID, partyName = new_party.partyName
     )
@@ -196,8 +196,6 @@ def is_token_valid():
         return jsonify(token_is_valid=False), 403
 
 
-
-
 @app.route("/api/calluber", methods=["POST"])
 def call_uber():
     incoming = request.get_json()
@@ -235,7 +233,7 @@ def call_opentable():
 
     for tag in soup.select('.dtp-results-times li'):
         timeList.append(tag.string)
-    
+
     for timeSlot in timeList:
         print(timeSlot)
 
@@ -283,6 +281,10 @@ def party_message(message):
     socketio.emit(message['partyname'], {'username': message['username'], 'text': message['msgtext'], 'avatar': avatar, 'time': now})
     # This is where the message should get inserted into database. Remove this line.
 
+def get_party_msg_his(partyID):
+    # both curr_user and friend are the usernames that you want to retrieve the message history of
+    msg_list = PartyMessage.getPartyMessages(partyID)
+    pass
 
 @socketio.on('user2user_message')
 def user2user_message(message):

@@ -1,10 +1,9 @@
 from testing_config import BaseTestConfig
-from application.models import User, Friendship, FriendMessage
+from application.models import User, Friendship, FriendMessage, PartyMessage
 from application.models import Party
 from application.models import PartyUser
 import datetime, time
-# from application.models import PartyMessage
-# from application.models import UberRide 
+# from application.models import UberRide
 
 class TestModels(BaseTestConfig):
     def test_get_user_with_email_and_password(self):
@@ -64,11 +63,23 @@ class TestModels(BaseTestConfig):
         sender = self.default_user["username"]
         receiver = self.d_user_two["username"]
         messagetext = "hello"
-        
+
         result = FriendMessage.add_friendMessage(sender, receiver, now, messagetext)
         self.assertEqual(result, "success")
         result = FriendMessage.getFriendMessages(sender, receiver)
         self.assertTrue(result)
+
+    def test_add_and_get_partyMessage(self):
+        now = datetime.datetime.now().strftime('%H:%M:%S')
+        sender = self.default_user
+        party = self.default_party
+        messagetext = "hello"
+        res = PartyMessage.add_partyMessage(party["partyID"], sender["username"], now, messagetext)
+        self.assertEqual(res, "success")
+        res2 = PartyMessage.add_partyMessage(party["partyID"], sender["username"], now, "hello again")
+        result = PartyMessage.getPartyMessages(party["partyID"])
+        self.assertTrue(len(result)==2)
+        print(result)
 
 """
     def test_getRides(self):

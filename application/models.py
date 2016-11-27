@@ -125,11 +125,10 @@ class FriendMessage(db.Model):
     timestamp = db.Column(db.DateTime(), nullable=False, server_default=db.func.now())
     message = db.Column(db.String(65535), nullable=False)
 
-    def __init__(self, fs_id, senderID, timestamp, message):
+    def __init__(self, fs_id, senderID, message):
         self.fs_id = fs_id
         self.senderID = senderID
         self.message = message
-        self.timestamp = timestamp
 
     @staticmethod
     def add_friendMessage(sender, receiver, now, messagetext):
@@ -149,7 +148,7 @@ class FriendMessage(db.Model):
         if fs is None:
             return "empty friendship"
         fs_id = fs.fs_id
-        message = FriendMessage(fs_id, senderID, now, messagetext)
+        message = FriendMessage(fs_id, senderID, messagetext)
         db.session.add(message)
         try:
             db.session.commit()
@@ -200,19 +199,37 @@ class PartyMessage(db.Model):
     timestamp = db.Column(db.DateTime(), nullable=False, server_default=db.func.now())
     message = db.Column(db.String(65535), nullable=False)
 
-    def __init__(self, partyID, senderID, timestamp, message):
+    def __init__(self, partyID, senderID, message):
         self.partyID = partyID
         self.senderID = senderID
         self.message = message
-        self.timestamp = timestamp
+
+    @staticmethod
+    def add_partyMessage(partyID, sender, now, messagetext):
+        senderuser = User.query.filter_by(username=sender).first()
+        if senderuser is None:
+            return "empty sender user"
+        senderID=senderuser.id
+        message = PartyMessage(partyID, senderID, messagetext)
+        db.session.add(message)
+        try:
+            db.session.commit()
+        except IntegrityError:
+            return "database error"
+        return "success"
 
     @staticmethod
     def getPartyMessages(partyID):
-        partyMessages = PartyMessage.query.filter_by(partyID=partyID)
-        if partyMessages:
-            return partyMessages
-        else:
+        partyMessages = PartyMessage.query.filter_by(partyID =partyID).order_by(PartyMessage.timestamp).all()
+        if partyMessages is None:
             return None
+        else:
+            msg_list = []
+            for msg in partyMessages:
+                sender = User.query.filter_by(id=msg.senderID).first()
+                av = sender.avatar
+                msg_list.append(dict(time=msg.timestamp, text=msg.message, avatar=av, username = sender.username))
+            return msg_list
 
 
 """
