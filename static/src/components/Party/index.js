@@ -26,7 +26,9 @@ import * as chatActionCreators from '../../actions/chat';
 
 
 function mapStateToProps(state) {
-  return { };
+  return {
+    partylist: state.chat.partylist,
+  };
 }
 
 
@@ -40,19 +42,19 @@ function mapDispatchToProps(dispatch) {
       super(props);
       this.state = {
         open: false,
-        partylist: [
-        { name: 'Superheros', avatar: 'dist/images/team01.png' },
-        { name: 'ASE Team', avatar: 'dist/images/team02.png' },
-        ],
         selectedIndex: 0,
       };
 
       this.select = (index) => this.setState({ selectedIndex: index });
     }
+  
+    componentWillMount() {
+      this.props.getPartyList();
+    }
 
   _onPartySelected(party) {
-    this.props.setChatWindow(party.name);
-    this.props.setNewListener(party.name, true, null);
+    this.props.setChatWindow(party.partyName);
+    this.props.setNewListener(party.partyName, true, null);
   }
 
   handleOpen = () => {
@@ -63,6 +65,13 @@ function mapDispatchToProps(dispatch) {
     this.setState({open: false});
   };
 
+  addParty() {
+    var partyname = document.getElementById('addpartytextbox').value;
+    //var friends = document.getElementById('').value
+    document.getElementById('addpartytextbox').value = '';
+    this.props.addParty(this.props.userName, partyname);  
+    this.handleClose();
+  }
 
     render() {
     const actions = [
@@ -70,7 +79,7 @@ function mapDispatchToProps(dispatch) {
         label="Ok"
         primary={true}
         keyboardFocused={true}
-        onTouchTap={this.handleClose}
+        onTouchTap={this.addParty.bind(this)}
       />,
     ];
       return (
@@ -86,10 +95,10 @@ function mapDispatchToProps(dispatch) {
               leftIcon={<CommunicationChatBubble />}
               onTouchTap={this._onPartySelected.bind(this, { name: 'Lobby' })}
             />
-          <Subheader>Parties({this.state.partylist.length}) {<GroupAdd color={grey500} style={{ margin: '15px', float: 'left' }} onTouchTap={this.handleOpen.bind(this)} />}</Subheader>
-          {this.state.partylist.map((party) => {
+          <Subheader>Parties({this.props.partylist.length}) {<GroupAdd color={grey500} style={{ margin: '15px', float: 'left' }} onTouchTap={this.handleOpen.bind(this)} />}</Subheader>
+          {this.props.partylist.map((party) => {
                                                      return (<ListItem
-                                                       primaryText={party.name}
+                                                       primaryText={party.partyName}
                                                        rightAvatar={<Avatar src={party.avatar} />}
                                                        leftIcon={<CommunicationChatBubble />}
                                                        onTouchTap={this._onPartySelected.bind(this, party)}
@@ -122,6 +131,7 @@ function mapDispatchToProps(dispatch) {
                 Type in the friends email address and press enter.  <br />
                 <TextField
                       hintText="Party Name"
+                      id="addpartytextbox"
                 />
               </Dialog>
             </div>
@@ -132,4 +142,6 @@ function mapDispatchToProps(dispatch) {
 Party.propTypes = {
   setChatWindow: React.PropTypes.func,
   setNewListener: React.PropTypes.func,
+  addParty: React.PropTypes.func,
+  getPartyList: React.PropTypes.func,
 };

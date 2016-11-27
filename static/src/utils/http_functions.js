@@ -68,6 +68,14 @@ export function socket_party_msg(msg, pname, uname, cb) {
 }
 
 
+export function partylistCall(token, cb) {
+  return axios.get('api/partylist', tokenConfig(token))
+            .then(cb)
+            .catch((error) => {
+              console.log(error);
+            });
+}
+
 /**
  * @param msg {string} message text of chat
  * @param pname {string} party name
