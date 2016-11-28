@@ -1,0 +1,3 @@
+#!/bin/bash
+autopep8 --in-place --aggressive application/models.py application/app.py
+pylint application/app.y application/models.py
