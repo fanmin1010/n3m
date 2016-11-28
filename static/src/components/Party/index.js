@@ -67,9 +67,10 @@ function mapDispatchToProps(dispatch) {
 
   addParty() {
     var partyname = document.getElementById('addpartytextbox').value;
+    console.log('Partyname is: ' + partyname);
     //var friends = document.getElementById('').value
     document.getElementById('addpartytextbox').value = '';
-    this.props.addParty(this.props.userName, partyname);  
+    this.props.addParty(partyname);  
     this.handleClose();
   }
 

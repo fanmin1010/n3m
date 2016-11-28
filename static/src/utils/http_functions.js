@@ -33,6 +33,16 @@ export function addFriendCall(email, token, cb) {
   });
 }
 
+export function addPartyCall(partyName, token, cb) {
+  return axios.post('api/createParty', {
+    partyName: partyName, 
+  }, tokenConfig(token))
+  .then(cb)
+  .catch((error) => {
+    console.log(error);
+  });
+}
+
 export function get_token(email, password) {
   return axios.post('api/get_token', {
     email,

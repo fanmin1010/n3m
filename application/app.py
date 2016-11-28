@@ -125,6 +125,8 @@ def add_friendship():
 @requires_auth
 def createParty():
     incoming = request.get_json()
+    print('The partyname is')
+    print(incoming)
     av_path = "dist/images/team0{}.png".format(randint(0,9))
     party = Party(
         partyName=incoming["partyName"],
@@ -240,7 +242,6 @@ def call_opentable():
     print("callopentable from app.py")
     return jsonify(timeList)
 
-"""
 @app.route("/api/saveride", methods = ["POST"])
 @requires_auth
 def saveride():
@@ -257,7 +258,7 @@ def saveride():
     db.session.add(ride)
     try:
         db.session.commit()
-    IntegrityError:
+    except IntegrityError:
         return jsonify(message="Ride already existed."),409
 
     new_ride = UberRide.query.filter_by(userID=incoming["userID"]).first()
@@ -265,12 +266,10 @@ def saveride():
     return jsonify(
         rideID=new_ride.id, rideDisplay = new_ride.__repr__
     )
-"""
 
 
 
 socketio = SocketIO(app)
-
 
 @socketio.on('party_message')
 def party_message(message):
@@ -307,3 +306,4 @@ def get_friend_msg_his(curr_user, friend):
     # both curr_user and friend are the usernames that you want to retrieve the message history of
     msg_list = FriendMessage.getFriendMessages(curr_user, friend)
     pass
+
