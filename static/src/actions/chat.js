@@ -125,7 +125,11 @@ export function setNewListener(partyname, isParty, receiver) {
   return function (dispatch) {
     dispatch(setIsParty(isParty, receiver));
     socket.removeAllListeners();
+    console.log('setting up listener on ' + partyname);
+    console.log(partyname);
     socket.on(partyname, (data) => {
+      console.log('received message from server');
+      console.log(data);
       dispatch(addMessage(partyname, data));
       document.getElementById('messagelist').scrollTop = 9999;
     });
