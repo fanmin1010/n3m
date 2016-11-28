@@ -149,7 +149,7 @@ def createParty():
 @requires_auth
 def get_partylist():
     current_user = g.current_user
-    result = db.engine.execute('select * from party where "ownerID" = %s UNION select p."partyID", p."partyName", p."ownerID", p."avatar" from party p join partyuser pu on p."partyID"=pu."partyID" where pu."userID" =%s', (current_user["id"], current_user["id"]));
+    result = db.engine.execute('select * from party where "ownerID" = {} UNION select p."partyID", p."partyName", p."ownerID", p."avatar" from party p join partyuser pu on p."partyID"=pu."partyID" where pu."userID" ={}'.format(current_user["id"], current_user["id"]));
     #result=Party.query.filter_by(ownerID=current_user).all()
     parties = json.dumps([dict(r) for r in result])
     print(parties)
@@ -306,4 +306,3 @@ def get_friend_msg_his(curr_user, friend):
     # both curr_user and friend are the usernames that you want to retrieve the message history of
     msg_list = FriendMessage.getFriendMessages(curr_user, friend)
     pass
-
