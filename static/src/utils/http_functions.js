@@ -65,16 +65,18 @@ export function friendlistCall(token, cb) {
 /**
  * @param msg {string} message text of chat
  * @param pname {string} party name
+ * @param pid {string} party id
  * @param uname {string} user name
  * @param cb {Funtion} call back function
  **/
-export function socket_party_msg(msg, pname, uname, cb) {
+export function socket_party_msg(msg, pname, pid, uname, cb) {
   console.log('inside socket_party_msg');
   console.log(msg);
   console.log(pname);
+  console.log(pid);
   console.log(uname);
   console.log(cb);
-  socket.emit('party_message', { msgtext: msg, partyname: pname, username: uname }, cb);
+  socket.emit('party_message', { msgtext: msg, partyname: pname, partyId: pid, username: uname }, cb);
 }
 
 

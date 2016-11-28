@@ -67,14 +67,14 @@ export function send_chat(msg, partyname, receiver, sender) {
   };
 }
 
-export function send_party_chat(msg, partyname, uname) {
+export function send_party_chat(msg, partyname, partyId, uname) {
   return function (dispatch) {
     dispatch(chatMessagesRequest());
-    return socket_party_msg(msg, partyname, uname, () => {
+    return socket_party_msg(msg, partyname, partyId, uname, () => {
       try {
         dispatch(chatMessagesSuccess());
       } catch (e) {
-        console.log('There was an error while calling socket_msg');
+        console.log('There was an error while calling socket_party_msg');
         console.dir(e);
         dispatch(chatMessagesFailure());
       }
@@ -83,11 +83,14 @@ export function send_party_chat(msg, partyname, uname) {
 }
 
 
-export function setChatWindow(partyname) {
+export function setChatWindow(partyname, partyId) {
+  console.log(partyname);
+  var partyId = partyId || -1
   return {
     type: NEW_CHAT_CHANNEL,
     payload: {
-      partyname,
+      partyname: partyname,
+      partyId: partyId,
     },
   };
 }
@@ -97,8 +100,8 @@ export function addMessage(partyname, message) {
   return {
     type: ADD_MESSAGE,
     payload: {
-      message,
-      partyname,
+      message: message,
+      partyname: partyname,
     },
   };
 }
@@ -108,7 +111,7 @@ export function setIsParty(isParty, receiver) {
     type: SET_IS_PARTY,
     payload: {
       isParty: isParty,
-      receiver, receiver,
+      receiver: receiver,
     }
   };
 }
@@ -233,6 +236,7 @@ export function getPartyList() {
     dispatch(partyListRequest());
     const token = localStorage.getItem('token');
     return partylistCall(token, (data) => {
+
       try {
         console.log('Getting back the partylist');
         console.log(data);

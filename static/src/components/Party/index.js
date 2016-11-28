@@ -53,8 +53,8 @@ function mapDispatchToProps(dispatch) {
     }
 
   _onPartySelected(party) {
-    this.props.setChatWindow(party.partyName);
-    this.props.setNewListener(party.partyName, true, null);
+    this.props.setChatWindow(party.partyName, party.partyID);
+    this.props.setNewListener(party.partyName+''+party.partyID, true, null);
   }
 
   handleOpen = () => {

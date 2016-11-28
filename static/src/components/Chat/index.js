@@ -22,6 +22,7 @@ function mapStateToProps(state) {
     avatar: state.auth.avatar,
     isAuthenticated: state.auth.isAuthenticated,
     partyname: state.chat.partyname,
+    partyId: state.chat.partyId,
     messages: state.chat.messages,
     allMessages: state.chat.allMessages,
   };
@@ -95,7 +96,7 @@ export class Chat extends Component {
 
   sendMessage(msg) {
     if(this.props.isParty) {
-      this.props.send_party_chat(msg, this.props.partyname.replace(' ', ''), this.props.userName);
+      this.props.send_party_chat(msg, this.props.partyname.replace(' ', ''), this.props.partyId, this.props.userName);
     } else {
       this.props.send_chat(msg, this.props.partyname.replace(' ', ''), this.props.receiver, this.props.userName);
       
