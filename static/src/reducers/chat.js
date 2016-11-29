@@ -24,6 +24,7 @@ import {
 
 const initialState = {
   partyname: 'Lobby',
+  partyId: -1,
   receiver: null,
   friendlist: [],
   friendListStatusText: null,
@@ -43,9 +44,8 @@ export default createReducer(initialState, {
         Object.assign({}, state, {
           messagesStatusText: null,
         }),
-  [CHAT_MESSAGES_SUCCESS]: (state, payload) => {
+  [CHAT_MESSAGES_SUCCESS]: (state) => {
    console.log('chatmessagesuccess.');
-   console.dir(payload);
     return Object.assign({}, state, {
           messagesStatusText: 'messages retreived successfully.',
         }); },
@@ -70,7 +70,7 @@ export default createReducer(initialState, {
         }),
   [NEW_CHAT_CHANNEL]: (state, payload) => {
       console.log('In NEW_CHAT_CHANNEL reducer');
-      //console.dir(payload);
+      console.dir(payload);
       var updatedAllMessages =  Object.assign({}, ({ [payload.partyname]: [] }), state.allMessages);
       //console.log('allmessages: ');
       //console.dir(updatedAllMessages);
@@ -79,6 +79,7 @@ export default createReducer(initialState, {
       //console.dir(updatedMessages);
       var newstate =  Object.assign({}, state, {
           partyname: payload.partyname,
+          partyId: payload.partyId,
           allMessages: updatedAllMessages,
           messages: updatedMessages,
           messagesStatusText: null,

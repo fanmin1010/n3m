@@ -31,7 +31,11 @@ Coverage HTML written to dir htmlcov
 ======================================================================================== 5 passed in 5.22 seconds ========================================================================================
 
 ```
-
+### Back-End Linting
+From repo root execute:
+```
+./run_pylint
+```
 
 ## Front-end Testing
 For front-end testing we use the karma test runner with the mocha test runner and phantomjs as a web-driver. Karma was selected because it integrates well with multiple IDEs, CI environments, and testing frameworks. Also, it is really nice to have the option to switch from phantomjs to another real browser as the web-driver (like chrome). Mocha was selected because it is easy to use and there is a lot of documentation o support developer ramp-up time. 

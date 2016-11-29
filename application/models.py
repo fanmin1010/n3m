@@ -3,6 +3,7 @@ from datetime import datetime
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy import desc
 
+
 class User(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     username = db.Column(db.String(255), unique=True)
@@ -47,39 +48,59 @@ class User(db.Model):
         else:
             return None
 
+
 class Friendship(db.Model):
-    fs_id = db.Column(db.Integer(), primary_key = True, nullable=False)
+    fs_id = db.Column(db.Integer(), primary_key=True, nullable=False)
     friender = db.Column(db.Integer(), db.ForeignKey('user.id'))
     friendee = db.Column(db.Integer(), db.ForeignKey('user.id'))
-    est_time = db.Column(db.DateTime(), nullable = False, server_default=db.func.now())
-    __table_args__ = (db.UniqueConstraint('friender', 'friendee', name = 'uix_1'), )
+    est_time = db.Column(
+        db.DateTime(),
+        nullable=False,
+        server_default=db.func.now())
+    __table_args__ = (
+        db.UniqueConstraint(
+            'friender',
+            'friendee',
+            name='uix_1'),
+    )
 
     def __init__(self, friender, friendee):
         self.friender = friender
         self.friendee = friendee
+
     def __repr__(self):
-        return '<Friendship between %r and %r>' % (self.friender, self.friendee)
+        return '<Friendship between %r and %r>' % (
+            self.friender, self.friendee)
+
     @staticmethod
     def get_friendship_with_user_ids(friender_id, friendee_id):
-        f_ship  = Friendship.query.filter_by(friender=friender_id, friendee = friendee_id).first()
-        if f_ship:
-            return f_ship
-        else:
-            return None
-    @staticmethod
-    def get_all_friendship_of_user(friender_id):
-        f_ship = Friendship.query.filter_by(friender = friender_id).all()
+        f_ship = Friendship.query.filter_by(
+            friender=friender_id, friendee=friendee_id).first()
         if f_ship:
             return f_ship
         else:
             return None
 
+    @staticmethod
+    def get_all_friendship_of_user(friender_id):
+        f_ship = Friendship.query.filter_by(friender=friender_id).all()
+        if f_ship:
+            return f_ship
+        else:
+            return None
+
+
 class Party(db.Model):
-    partyID = db.Column(db.Integer(), primary_key = True, nullable=False)
+    partyID = db.Column(db.Integer(), primary_key=True, nullable=False)
     partyName = db.Column(db.String(255), nullable=False)
     ownerID = db.Column(db.Integer(), db.ForeignKey('user.id'), nullable=False)
     avatar = db.Column(db.String(128), unique=False)
-    __table_args__ = (db.UniqueConstraint('partyName', 'ownerID', name = 'unique_pname_with_owner'), )
+    __table_args__ = (
+        db.UniqueConstraint(
+            'partyName',
+            'ownerID',
+            name='unique_pname_with_owner'),
+    )
 
     def __init__(self, partyName, ownerID, avatar):
         self.partyName = partyName
@@ -98,12 +119,21 @@ class Party(db.Model):
         else:
             return None
 
+
 class PartyUser(db.Model):
     __tablename__ = 'partyuser'
-    puID = db.Column(db.Integer(), primary_key = True, nullable=False)
-    partyID = db.Column(db.Integer(), db.ForeignKey('party.partyID'), nullable=False)
+    puID = db.Column(db.Integer(), primary_key=True, nullable=False)
+    partyID = db.Column(
+        db.Integer(),
+        db.ForeignKey('party.partyID'),
+        nullable=False)
     userID = db.Column(db.Integer(), db.ForeignKey('user.id'), nullable=False)
-    __table_args__ = (db.UniqueConstraint('partyID', 'userID', name = 'unique_pid_with_user'), )
+    __table_args__ = (
+        db.UniqueConstraint(
+            'partyID',
+            'userID',
+            name='unique_pid_with_user'),
+    )
 
     def __init__(self, partyID, userID):
         self.partyID = partyID
@@ -117,12 +147,22 @@ class PartyUser(db.Model):
         else:
             return None
 
+
 class FriendMessage(db.Model):
     __tablename__ = 'friendmessage'
-    fmID = db.Column(db.Integer(), primary_key = True, nullable = False)
-    fs_id = db.Column(db.Integer(), db.ForeignKey('friendship.fs_id'), nullable=False)
-    senderID = db.Column(db.Integer(), db.ForeignKey('user.id'), nullable=False)
-    timestamp = db.Column(db.DateTime(), nullable=False, server_default=db.func.now())
+    fmID = db.Column(db.Integer(), primary_key=True, nullable=False)
+    fs_id = db.Column(
+        db.Integer(),
+        db.ForeignKey('friendship.fs_id'),
+        nullable=False)
+    senderID = db.Column(
+        db.Integer(),
+        db.ForeignKey('user.id'),
+        nullable=False)
+    timestamp = db.Column(
+        db.DateTime(),
+        nullable=False,
+        server_default=db.func.now())
     message = db.Column(db.String(65535), nullable=False)
 
     def __init__(self, fs_id, senderID, message):
@@ -135,13 +175,14 @@ class FriendMessage(db.Model):
         senderuser = User.query.filter_by(username=sender).first()
         if senderuser is None:
             return "empty sender user"
-        senderID=senderuser.id
+        senderID = senderuser.id
         receiveruser = User.query.filter_by(username=receiver).first()
         if receiveruser is None:
             return "empty receiver user"
-        receiverID=receiveruser.id
-        # always store the message with one friendship where friender_id<=friendee_id
-        if senderID<receiverID:
+        receiverID = receiveruser.id
+        # always store the message with one friendship where
+        # friender_id<=friendee_id
+        if senderID < receiverID:
             fs = Friendship.get_friendship_with_user_ids(senderID, receiverID)
         else:
             fs = Friendship.get_friendship_with_user_ids(receiverID, senderID)
@@ -161,20 +202,23 @@ class FriendMessage(db.Model):
         senderuser = User.query.filter_by(username=user1).first()
         if senderuser is None:
             return "empty user1"
-        senderID=senderuser.id
+        senderID = senderuser.id
         receiveruser = User.query.filter_by(username=user2).first()
         if receiveruser is None:
             return "empty user2"
-        receiverID=receiveruser.id
-        # always store the message with one friendship where friender_id<=friendee_id
-        if senderID<receiverID:
+        receiverID = receiveruser.id
+        # always store the message with one friendship where
+        # friender_id<=friendee_id
+        if senderID < receiverID:
             fs = Friendship.get_friendship_with_user_ids(senderID, receiverID)
         else:
             fs = Friendship.get_friendship_with_user_ids(receiverID, senderID)
         if fs is None:
             return "empty friendship"
         fs_id = fs.fs_id
-        friendMessages = FriendMessage.query.filter_by(fs_id = fs_id).order_by(FriendMessage.timestamp).all()
+        friendMessages = FriendMessage.query.filter_by(
+            fs_id=fs_id).order_by(
+            FriendMessage.timestamp).all()
         sender_av = User.get_avatar_for_username(user1)
         receiver_av = User.get_avatar_for_username(user2)
         if friendMessages is None:
@@ -188,15 +232,30 @@ class FriendMessage(db.Model):
                 else:
                     avatar = receiver_av
                     username = user2
-                msg_list.append(dict(time=msg.timestamp, text=msg.message, avatar=avatar, username = username))
+                msg_list.append(
+                    dict(
+                        time=msg.timestamp,
+                        text=msg.message,
+                        avatar=avatar,
+                        username=username))
             return msg_list
+
 
 class PartyMessage(db.Model):
     __tablename__ = 'partymessage'
-    pmID = db.Column(db.Integer(), primary_key = True, nullable=False)
-    partyID = db.Column(db.Integer(), db.ForeignKey('party.partyID'), nullable=False)
-    senderID = db.Column(db.Integer(), db.ForeignKey('user.id'), nullable=False)
-    timestamp = db.Column(db.DateTime(), nullable=False, server_default=db.func.now())
+    pmID = db.Column(db.Integer(), primary_key=True, nullable=False)
+    partyID = db.Column(
+        db.Integer(),
+        db.ForeignKey('party.partyID'),
+        nullable=False)
+    senderID = db.Column(
+        db.Integer(),
+        db.ForeignKey('user.id'),
+        nullable=False)
+    timestamp = db.Column(
+        db.DateTime(),
+        nullable=False,
+        server_default=db.func.now())
     message = db.Column(db.String(65535), nullable=False)
 
     def __init__(self, partyID, senderID, message):
@@ -209,7 +268,7 @@ class PartyMessage(db.Model):
         senderuser = User.query.filter_by(username=sender).first()
         if senderuser is None:
             return "empty sender user"
-        senderID=senderuser.id
+        senderID = senderuser.id
         message = PartyMessage(partyID, senderID, messagetext)
         db.session.add(message)
         try:
@@ -220,7 +279,9 @@ class PartyMessage(db.Model):
 
     @staticmethod
     def getPartyMessages(partyID):
-        partyMessages = PartyMessage.query.filter_by(partyID =partyID).order_by(PartyMessage.timestamp).all()
+        partyMessages = PartyMessage.query.filter_by(
+            partyID=partyID).order_by(
+            PartyMessage.timestamp).all()
         if partyMessages is None:
             return None
         else:
@@ -228,7 +289,12 @@ class PartyMessage(db.Model):
             for msg in partyMessages:
                 sender = User.query.filter_by(id=msg.senderID).first()
                 av = sender.avatar
-                msg_list.append(dict(time=msg.timestamp, text=msg.message, avatar=av, username = sender.username))
+                msg_list.append(
+                    dict(
+                        time=msg.timestamp,
+                        text=msg.message,
+                        avatar=av,
+                        username=sender.username))
             return msg_list
 
 
