@@ -13,6 +13,8 @@ import re
 import sys
 import geocoder
 from random import randint
+import constants
+
 
 @app.route('/', methods=['GET'])
 def index():
@@ -77,6 +79,14 @@ def create_user():
     except IntegrityError:
         return jsonify(message="User with that username or email already exists"), 409
     new_user = User.query.filter_by(email=incoming["email"]).first()
+    for id in [constants.uber_id, constants.opentable_id]:
+        newfriendship = Friendship(new_user.id, id)
+        newfriendship2 = Friendship(friendee_id, id)
+        db.session.add(newfriendship)
+        db.session.commit()
+        db.session.add(newfriendship2)
+        db.session.commit()
+
     return jsonify(
         id=user.id,
         token=generate_token(new_user)
@@ -182,8 +192,9 @@ def get_token():
     incoming = request.get_json()
     user = User.get_user_with_email_and_password(incoming["email"], incoming["password"])
     if user:
+        if user.id in [constants.uber_id, constants.opentable_id]:
+            return jsonify(error=True), 403
         return jsonify(token=generate_token(user))
-
     return jsonify(error=True), 403
 
 

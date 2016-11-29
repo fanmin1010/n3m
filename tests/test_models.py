@@ -63,7 +63,10 @@ class TestModels(BaseTestConfig):
         sender = self.default_user["username"]
         receiver = self.d_user_two["username"]
         messagetext = "hello"
-
+        res1 = FriendMessage.add_friendMessage("nulluser", receiver, now, messagetext)
+        self.assertEqual(res1, "empty sender user")
+        res2 = FriendMessage.add_friendMessage(sender, "nulluser", now, messagetext)
+        self.assertEqual(res2, "empty receiver user")
         result = FriendMessage.add_friendMessage(sender, receiver, now, messagetext)
         self.assertEqual(result, "success")
         result = FriendMessage.getFriendMessages(sender, receiver)
