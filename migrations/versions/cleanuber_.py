@@ -18,7 +18,7 @@ def upgrade():
     op.drop_table('uber')
     op.drop_table('opentable')
     op.execute("""
-        INSERT INTO "user" ("email", "username", "password", "username", "pgp_key", "avatar") VALUES ('uber_aid@party.io', 'uber_aid', 'uberpwd', '123','dist/images/uber.png')
+        INSERT INTO "user" ("email", "username", "password", "pgp_key", "avatar") VALUES ('uber_aid@party.io', 'uber_aid', 'uberpwd', '123','dist/images/uber.png')
     """)
     op.execute("""
         INSERT INTO "user" ("email", "username", "password", "pgp_key", "avatar") VALUES ('opentable_aid@party.io', 'opentable_aid', 'oppwd', '123','dist/images/opentable.png')
