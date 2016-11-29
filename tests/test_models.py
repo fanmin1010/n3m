@@ -42,8 +42,8 @@ class TestModels(BaseTestConfig):
         self.assertTrue(
             Friendship.get_all_friendship_of_user(self.default_user["id"])
         )
-        self.assertFalse(
-            Friendship.get_all_friendship_of_user(self.d_user_three["id"])
+        self.assertEqual(
+            len(Friendship.get_all_friendship_of_user(self.d_user_three["id"])), 2
         )
 
     def test_getMyParties(self):

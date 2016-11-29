@@ -27,4 +27,26 @@ def upgrade():
 
 
 def downgrade():
-    pass
+    op.create_table('uber',
+    sa.Column('id', sa.Integer(), primary_key=True),
+    sa.Column('userID', sa.Integer(), sa.ForeignKey('user.id'), nullable=False),
+    sa.Column('timestamp', sa.DateTime, server_default=sa.func.current_timestamp()),
+    sa.Column('duration', sa.Interval()),
+    sa.Column('location', sa.String(length=255), nullable=False),
+    sa.Column('destination', sa.String(length=255), nullable=False),
+    sa.Column('cost', sa.Float(), nullable=False),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.create_table('opentable',
+    sa.Column('id', sa.Integer(), primary_key=True),
+    sa.Column('userID', sa.Integer(), sa.ForeignKey('user.id'), nullable=False),
+    sa.Column('timestamp', sa.DateTime, server_default=sa.func.current_timestamp()),
+    sa.Column('date', sa.Date()),
+    sa.Column('timeslot', sa.String(length=255), nullable=False),
+    sa.Column('destination', sa.String(length=255), nullable=False),
+    sa.Column('partysize', sa.Integer(), nullable=False),
+    sa.PrimaryKeyConstraint('id')
+    )
+    op.execute("""
+        delete from "user" where email = 'opentable_aid@party.io' or email = 'uber_aid@party.io'
+    """)
