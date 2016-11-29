@@ -20,6 +20,15 @@ class User(db.Model):
         self.pgp_key = pgp_key
         self.avatar = avatar
 
+    def __str__(self):
+        return '''User:::::: 
+        ID: ''' + str(self.id) + '''
+        EMAIL: ''' + self.email + '''
+        USERNAME: ''' + self.username + '''
+        PASSWORD: ''' + self.password + '''
+        PGP: ''' + self.pgp_key + '''
+        AVATAR: ''' + self.avatar + '''
+        '''
     @staticmethod
     def hashed_password(password):
         return bcrypt.generate_password_hash(password)

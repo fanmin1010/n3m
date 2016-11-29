@@ -89,16 +89,24 @@ def create_user():
         return jsonify(
             message="User with that username or email already exists"), 409
     new_user = User.query.filter_by(email=incoming["email"]).first()
-    print(new_user.id)
-    print(constants.uber_id)
-    print(constants.opentable_id)
-    for id in [constants.uber_id, constants.opentable_id]:
-        newfriendship = Friendship(new_user.id, id)
-        newfriendship2 = Friendship(id, new_user.id)
-        db.session.add(newfriendship)
-        db.session.commit()
-        db.session.add(newfriendship2)
-        db.session.commit()
+
+    def mk_friend(botemail):
+        if new_user.email in bot_emails:
+            return None
+        bot = User.query.filter_by(email=botemail).first()
+        print(str(bot))
+        if bot is not None:
+            print('Bot is not none :)')
+            newfriendship = Friendship(new_user.id, bot.id)
+            newfriendship2 = Friendship(bot.id, new_user.id)
+            db.session.add(newfriendship)
+            db.session.commit()
+            db.session.add(newfriendship2)
+            db.session.commit()
+
+    bot_emails = [constants.UBER_EMAIL, constants.OPENTABLE_EMAIL]
+    for email in bot_emails:
+        mk_friend(email)
 
     return jsonify(
         id=user.id,

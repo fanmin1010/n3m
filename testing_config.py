@@ -4,7 +4,7 @@ from application.models import User
 import os
 from setup import basedir
 import json
-
+import application.constants as constants
 
 class BaseTestConfig(TestCase):
     default_user = {
@@ -33,6 +33,20 @@ class BaseTestConfig(TestCase):
         "partyID": 1,
         "partyName": "My Party"
     }
+    
+    uber_user = {
+        "username": "uber_aid",
+        "email":  constants.UBER_EMAIL,
+        "password": "uber_pwd",
+        "pgp_key": "uberpgp"
+    }
+
+    opentable_user = {
+        "username": "opentable_aid",
+        "email": constants.OPENTABLE_EMAIL,
+        "password": "opentable_pwd",
+        "pgp_key": "opentablepgp"
+    }
 
     def create_app(self):
         app.config.from_object('config.TestingConfig')
@@ -42,12 +56,22 @@ class BaseTestConfig(TestCase):
         self.app = self.create_app().test_client()
         db.create_all()
 
+        res_uber = self.app.post(
+                "/api/create_user",
+                data=json.dumps(self.uber_user),
+                content_type='application/json'
+        )
+        res_opentable = self.app.post(
+                "/api/create_user",
+                data=json.dumps(self.opentable_user),
+                content_type='application/json'
+        )
+
         res = self.app.post(
                 "/api/create_user",
                 data=json.dumps(self.default_user),
                 content_type='application/json'
         )
-        print(json.loads(res.data.decode("utf-8")))
         self.token = json.loads(res.data.decode("utf-8"))["token"]
         res2 = self.app.post(
                 "/api/create_user",
@@ -60,6 +84,8 @@ class BaseTestConfig(TestCase):
                 data=json.dumps(self.d_user_three),
                 content_type='application/json'
         )
+      
+      
         headers = {
             'content_type':'application/json',
             'Authorization': self.token
