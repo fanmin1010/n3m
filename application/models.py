@@ -179,6 +179,8 @@ class FriendMessage(db.Model):
         self.senderID = senderID
         self.message = message
 
+    def __str__(self):
+        return '''FriendshipID: ''' + str(self.fs_id) + ''', TimeStamp: ''' + str(self.timestamp)
     @staticmethod
     def add_friendMessage(sender, receiver, now, messagetext):
         senderuser = User.query.filter_by(username=sender).first()
@@ -241,9 +243,10 @@ class FriendMessage(db.Model):
                 else:
                     avatar = receiver_av
                     username = user2
+                print(str(msg))
                 msg_list.append(
                     dict(
-                        time=msg.timestamp,
+                        time=str(msg.timestamp),
                         text=msg.message,
                         avatar=avatar,
                         username=username))
@@ -300,7 +303,7 @@ class PartyMessage(db.Model):
                 av = sender.avatar
                 msg_list.append(
                     dict(
-                        time=msg.timestamp,
+                        time=str(msg.timestamp),
                         text=msg.message,
                         avatar=av,
                         username=sender.username))
