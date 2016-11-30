@@ -98,6 +98,7 @@ export class Header extends Component {
     this.props.setNewListener(partyname, false, friend.username);
     this.props.setGeoListener(this.props.userName);
 
+    document.getElementById('chatinput').placeholder = '';
     if(OPENTABLE_USERNAME === partyname){
       document.getElementById('chatinput').placeholder = 'Restaurant Name@8:00pm';
     }

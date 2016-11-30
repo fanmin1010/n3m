@@ -49,6 +49,7 @@ export class Chat extends Component {
   }
 
   componentDidMount() {
+      document.getElementById('chatinput').placeholder = 'Chat Message';
   }
 
   componentWillMount() {
@@ -85,7 +86,6 @@ export class Chat extends Component {
                 </List>
 
 								<TextField
-  hintText="Chat message"
   id="chatinput"
   style={{ width: '98%', left: '1%', position: 'relative', backgroundColor: 'white', bottom: '5px', zIndex: '2' }}
 								/>
@@ -107,6 +107,7 @@ export class Chat extends Component {
       
     }
     document.getElementById('chatinput').value = '';
+    document.getElementById('chatinput').placeholder = '';
     if(OPENTABLE_USERNAME === this.props.partyname){
       document.getElementById('chatinput').placeholder = 'Restaurant Name@8:00pm';
     }
