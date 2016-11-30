@@ -28,3 +28,10 @@ export const PARTY_LIST_FAILURE = 'PARTY_LIST_FAILURE';
 export const ADD_PARTY_REQUEST = 'ADD_PARTY_REQUEST';
 export const ADD_PARTY_SUCCESS = 'ADD_PARTY_SUCCESS';
 export const ADD_PARTY_FAILURE = 'ADD_PARTY_FAILURE';
+
+export const UBER_EMAIL = 'uber_aid@party.io';
+export const OPENTABLE_EMAIL = 'opentable_aid@party.io';
+export const UBER_USERNAME = 'uber_aid';
+export const OPENTABLE_USERNAME = 'opentable_aid';
+export const BOTLIST = ['uber_aid', 'opentable_aid',];
+

@@ -25,6 +25,14 @@ import { grey500 } from 'material-ui/styles/colors';
 
 import * as actionCreators from '../../actions/auth';
 import * as chatActionCreators from '../../actions/chat';
+import {
+    UBER_USERNAME,
+    OPENTABLE_USERNAME,
+    BOTLIST,
+} from '../../constants/index';
+
+
+
 
 function mapStateToProps(state) {
   return {
@@ -62,6 +70,7 @@ export class Header extends Component {
   }
   componentWillMount() {
     this.props.getFriendList(this.props.userName);
+    this.props.setGeoListener(this.props.userName);
   }
 
   dispatchNewRoute(route) {
@@ -76,13 +85,28 @@ export class Header extends Component {
 
   _onFriendSelected(friend) {
     let partyname;
-    if (this.props.userId < friend.id) {
+    if(BOTLIST.includes(friend.username)){
+      console.log('you clicked a bot.');
+      partyname = friend.username;
+    }
+    else if (this.props.userId < friend.id) {
       partyname = `${this.props.userName.replace(' ', '')}-${friend.username.replace(' ', '')}`;
     } else {
       partyname = `${friend.username.replace(' ', '')}-${this.props.userName.replace(' ', '')}`;
     }
     this.props.setChatWindow(partyname);
     this.props.setNewListener(partyname, false, friend.username);
+    this.props.setGeoListener(this.props.userName);
+
+    if(OPENTABLE_USERNAME === partyname){
+      document.getElementById('chatinput').placeholder = 'Restaurant Name@8:00pm';
+    }
+    else if(UBER_USERNAME === partyname){
+      document.getElementById('chatinput').placeholder = 'Destination Address';
+    }
+    else {
+      document.getElementById('chatinput').placeholder = 'Chat Message';
+    }
   }
 
   addFriendClicked() {
@@ -184,5 +208,6 @@ Header.propTypes = {
   addFriend: React.PropTypes.func,
   setChatWindow: React.PropTypes.func,
   setNewListener: React.PropTypes.func,
+  setGeoListener: React.PropTypes.func,
 };
 

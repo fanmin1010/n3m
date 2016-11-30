@@ -136,6 +136,19 @@ export function setNewListener(partyname, isParty, receiver) {
   };
 }
 
+export function setGeoListener(username){
+  return function(dispatch) {
+    socket.on(username+'__geo', (data) => {
+      console.log('Inside of the setGeoListener awesome');
+      console.dir(data);
+      navigator.geolocation.getCurrentPosition(function(position){
+        console.log('got the position information for user:');
+        console.dir(position);
+        socket.emit('geodata', {'partyname': data.partyname, 'username': username, 'msgtext': data.msgtext, 'username': username, 'latitude': position.coords.latitude.toFixed(3), 'longitude': position.coords.longitude.toFixed(3)});
+      });
+    });
+  };
+}
 
 export function friendListRequest() {
   return {

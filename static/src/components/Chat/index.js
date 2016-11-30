@@ -11,6 +11,11 @@ import { bindActionCreators } from 'redux';
 import { grey400, darkBlack, lightBlack } from 'material-ui/styles/colors';
 
 import * as actionCreators from '../../actions/chat';
+import {
+    UBER_USERNAME,
+    OPENTABLE_USERNAME,
+    BOTLIST,
+} from '../../constants/index';
 
 function mapStateToProps(state) {
   console.log(state);
@@ -62,18 +67,18 @@ export class Chat extends Component {
                     return (<ListItem
                       leftAvatar={(msg.username === this.props.userName) ? null : <Avatar src={msg.avatar} />}
                       rightAvatar={(msg.username === this.props.userName) ? <Avatar src={msg.avatar} /> : null}
-                      primaryText={
+                      secondaryText={
                           <h5>
                             <span style={{ fontSize: '10pt', color: darkBlack }}>{msg.time} </span>--
                             {msg.username}
                           </h5>
                         }
-                      secondaryText={
-                          <p>
-                          {msg.text}
-                          </p>
-                        }
-                      secondaryTextLines={2}
+                      primaryText={
+                        (BOTLIST.includes(msg.username))
+                          ? <pre> {msg.text} </pre>
+                          : <p> {msg.text} </p>
+                       }
+                      secondaryTextLines={1}
                       style={(msg.username === 'Me') ? { textAlign: 'right' } : {}}
                     />);
                   })}
@@ -102,6 +107,15 @@ export class Chat extends Component {
       
     }
     document.getElementById('chatinput').value = '';
+    if(OPENTABLE_USERNAME === this.props.partyname){
+      document.getElementById('chatinput').placeholder = 'Restaurant Name@8:00pm';
+    }
+    else if(UBER_USERNAME === this.props.partyname){
+      document.getElementById('chatinput').placeholder = 'Destination Address';
+    }
+    else {
+      document.getElementById('chatinput').placeholder = 'Chat Message';
+    }
   }
 
   _handleKeyPress(e) {
