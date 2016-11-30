@@ -406,8 +406,14 @@ def user2user_message(message):
         print("Something happend with error in the database.")
 
 
-def get_friend_msg_his(curr_user, friend):
-    # both curr_user and friend are the usernames that you want to retrieve
+@app.route("/api/friendhistory", methods=["POST"])
+@requires_auth
+def get_friend_msg_his():
+    current_user = g.current_user['username']
+    incoming = request.get_json()
+    friend = incoming["friend"]
+    # both current_user and friend are the usernames that you want to retrieve
     # the message history of
-    msg_list = FriendMessage.getFriendMessages(curr_user, friend)
-    pass
+    msg_list = FriendMessage.getFriendMessages(current_user, friend)
+    print(msg_list)
+    return jsonify(msg_list)

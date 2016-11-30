@@ -5,6 +5,9 @@ import {
     FRIEND_LIST_REQUEST,
     FRIEND_LIST_SUCCESS,
     FRIEND_LIST_FAILURE,
+    FRIEND_HISTORY_REQUEST,
+    FRIEND_HISTORY_SUCCESS,
+    FRIEND_HISTORY_FAILURE,
     ADD_FRIEND_REQUEST,
     ADD_FRIEND_SUCCESS,
     ADD_FRIEND_FAILURE,
@@ -26,6 +29,7 @@ import {
          callUberCall,
          callOpenTableCall,
          friendlistCall,
+         friendHistoryCall,
          addFriendCall,
          addPartyCall,
          partylistCall,
@@ -187,6 +191,46 @@ export function getFriendList() {
   };
 }
 
+export function friendHistoryRequest() {
+  return {
+    type: FRIEND_HISTORY_REQUEST,
+  };
+}
+
+export function friendHistorySuccess(messages) {
+  return {
+    type: FRIEND_HISTORY_SUCCESS,
+    payload: {
+      messages: messages
+    },
+  };
+}
+
+export function friendHistoryFailure(error) {
+  return {
+    type: FRIEND_HISTORY_FAILURE,
+    payload: error,
+  };
+}
+
+export function getFriendHistory(friendName) {
+  return function (dispatch) {
+    dispatch(friendHistoryRequest());
+    const token = localStorage.getItem('token');
+    return friendHistoryCall(friendName, token, (data) => {
+      console.dir('The data in friend History');
+      console.dir(data.data);
+      try {
+        dispatch(friendHistorySuccess(data.data));
+      } catch (e) {
+        console.log('There was an error while calling friendHistory');
+        console.dir(e);
+        dispatch(friendHistoryFailure());
+      }
+    });
+
+  };
+}
 
 export function addFriendRequest() {
   return {

@@ -8,6 +8,9 @@ import {
     FRIEND_LIST_SUCCESS,
     FRIEND_LIST_FAILURE,
     FRIEND_LIST_REQUEST,
+    FRIEND_HISTORY_REQUEST,
+    FRIEND_HISTORY_SUCCESS,
+    FRIEND_HISTORY_FAILURE,
     ADD_FRIEND_SUCCESS,
     ADD_FRIEND_FAILURE,
     ADD_FRIEND_REQUEST,
@@ -28,6 +31,7 @@ const initialState = {
   receiver: null,
   friendlist: [],
   friendListStatusText: null,
+  friendHistoryStatusText: null,
   messages: [],
   allMessages: {},
   messagesStatusText: null,
@@ -67,6 +71,21 @@ export default createReducer(initialState, {
   [FRIEND_LIST_FAILURE]: (state, payload) =>
         Object.assign({}, state, {
           friendListStatusText: 'error retreiving friendlist.',
+        }),
+  [FRIEND_HISTORY_REQUEST]: (state, payload) =>
+        Object.assign({}, state, {
+          friendHistoryStatusText: null,
+        }),
+  [FRIEND_HISTORY_SUCCESS]: (state, payload) => {
+   console.log('friendhistorysuccess.');
+   console.dir(payload);
+    return Object.assign({}, state, {
+          friendHistoryStatusText: 'friend history retreived successfully.',
+          messages: payload.messages,
+        }); },
+  [FRIEND_HISTORY_FAILURE]: (state, payload) =>
+        Object.assign({}, state, {
+          friendHistoryStatusText: 'error retreiving friend history.',
         }),
   [NEW_CHAT_CHANNEL]: (state, payload) => {
       console.log('In NEW_CHAT_CHANNEL reducer');
