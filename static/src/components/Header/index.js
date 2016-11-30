@@ -84,6 +84,7 @@ export class Header extends Component {
   }
 
   _onFriendSelected(friend) {
+    this.props.getFriendHistory(friend.username);
     let partyname;
     if(BOTLIST.includes(friend.username)){
       console.log('you clicked a bot.');
@@ -206,6 +207,7 @@ Header.propTypes = {
   callUber: React.PropTypes.func,
   callOpenTable: React.PropTypes.func,
   getFriendList: React.PropTypes.func,
+  getFriendHistory: React.PropTypes.func,
   addFriend: React.PropTypes.func,
   setChatWindow: React.PropTypes.func,
   setNewListener: React.PropTypes.func,

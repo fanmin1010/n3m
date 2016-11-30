@@ -62,6 +62,15 @@ export function friendlistCall(token, cb) {
             });
 }
 
+export function friendHistoryCall(friendName, token, cb) {
+  return axios.post('api/friendhistory', {
+      'friend': friendName
+    }, tokenConfig(token))
+            .then(cb)
+            .catch((error) => {
+              console.log(error);
+            });
+}
 /**
  * @param msg {string} message text of chat
  * @param pname {string} party name
