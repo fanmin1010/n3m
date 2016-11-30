@@ -222,6 +222,7 @@ export function getFriendHistory(friendName) {
       console.dir(data.data);
       try {
         dispatch(friendHistorySuccess(data.data));
+        document.getElementById('messagelist').scrollTop = 9999;
       } catch (e) {
         console.log('There was an error while calling friendHistory');
         console.dir(e);
