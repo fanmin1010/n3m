@@ -290,7 +290,7 @@ def call_opentable(rest_id, guest_count, res_time):
         times = times + 'None available \n'
     return times
 
-
+"""
 @app.route("/api/saveride", methods=["POST"])
 @requires_auth
 def saveride():
@@ -315,7 +315,7 @@ def saveride():
     return jsonify(
         rideID=new_ride.id, rideDisplay=new_ride.__repr__
     )
-
+"""
 
 socketio = SocketIO(app)
 
