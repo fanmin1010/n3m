@@ -15,7 +15,8 @@ import sys
 import geocoder
 from random import randint
 import constants
-
+import difflib
+from OpenTable import restaurants
 
 
 @app.route('/', methods=['GET'])
@@ -221,7 +222,8 @@ def add_to_party():
 @app.route("/api/get_token", methods=["POST"])
 def get_token():
     incoming = request.get_json()
-    if incoming["email"]=='uber_aid@party.io' or incoming["email"]=='opentable_aid@party.io':
+    bot_emails = [constants.UBER_EMAIL, constants.OPENTABLE_EMAIL]
+    if incoming["email"] in bot_emails:
         return jsonify(error=True), 403
     user = User.get_user_with_email_and_password(
         incoming["email"], incoming["password"])
@@ -266,17 +268,13 @@ def call_uber(end_address, lat, lng):
     return reply_text
 
 
-@app.route("/api/callopentable", methods=["POST"])
-def call_opentable():
-    incoming = request.get_json()
-    print(incoming)
+def call_opentable(rest_id, guest_count, res_time):
     timeList = []
-    id = incoming["id"]
     url = 'http://www.opentable.com/restaurant/profile/'
-    url = url + id
+    url = url + str(rest_id)
     url = url + '/search'
-    covers = incoming["covers"]
-    dateTime = incoming["datetime"]
+    covers = guest_count
+    dateTime = res_time
     payload = {'covers': covers, 'dateTime': dateTime}
     headers = {'Content-Type': 'application/json; charset=UTF-8'}
     r = requests.post(url, params=payload, headers=headers)
@@ -284,12 +282,13 @@ def call_opentable():
 
     for tag in soup.select('.dtp-results-times li'):
         timeList.append(tag.string)
-
+    times = '\nReservation Times: \n'
     for timeSlot in timeList:
-        print(timeSlot)
-
-    print("callopentable from app.py")
-    return jsonify(timeList)
+        if timeSlot is not None:
+            times = times + timeSlot + '\n'
+    if len(times) <= 22:
+        times = times + 'None available \n'
+    return times
 
 
 @app.route("/api/saveride", methods=["POST"])
@@ -344,8 +343,26 @@ def get_party_msg_his(partyID):
     pass
 
 def opentable_message(message, lat, lon):
-    return 'opentable message: lat: ' + lat + ', lon: ' + lon 
-
+    keylist = restaurants.keys()
+    restname, resv_info = message.split('@')
+    resv_time, partysize = resv_info.split('||')
+    print('^^^^^^^^')
+    print(restname)
+    print(time)
+    print(partysize)
+    print('$$$$$$$$$')
+    mtch = difflib.get_close_matches(restname.strip(), keylist, 1, 0.1)
+    try:
+        print(str(mtch))
+        reply_text = ''
+        if message != mtch[0]:
+            reply_text = '\nCould not find ' + restname + '. Showing results for closest match: \n' + mtch[0] 
+        rest_id = restaurants[mtch[0]]['Id']
+        reply_text = '\n' + reply_text + mtch[0] + ' in ' + restaurants[mtch[0]]['Neighborhood']['Name'] + ', ' + restaurants[mtch[0]]['Region']['Name']  
+        reply_text = reply_text + call_opentable(rest_id, partysize.strip(), resv_time)
+        return reply_text
+    except:
+        return 'Could not find any restaurants close to that.'
 
 def uber_message(message, lat, lon):
     return call_uber(message, lat, lon)

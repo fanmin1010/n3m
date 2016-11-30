@@ -109,7 +109,7 @@ export class Chat extends Component {
     document.getElementById('chatinput').value = '';
     document.getElementById('chatinput').placeholder = '';
     if(OPENTABLE_USERNAME === this.props.partyname){
-      document.getElementById('chatinput').placeholder = 'Restaurant Name@8:00pm';
+      document.getElementById('chatinput').placeholder = 'Restaurant Name@YYYY-MM-DD 24:00 || Partysize';
     }
     else if(UBER_USERNAME === this.props.partyname){
       document.getElementById('chatinput').placeholder = 'Destination Address';

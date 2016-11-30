@@ -100,7 +100,7 @@ export class Header extends Component {
 
     document.getElementById('chatinput').placeholder = '';
     if(OPENTABLE_USERNAME === partyname){
-      document.getElementById('chatinput').placeholder = 'Restaurant Name@8:00pm';
+      document.getElementById('chatinput').placeholder = 'Restaurant Name@YYYY-MM-DD 24:00 || Partysize';
     }
     else if(UBER_USERNAME === partyname){
       document.getElementById('chatinput').placeholder = 'Destination Address';
