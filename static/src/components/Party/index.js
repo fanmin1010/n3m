@@ -6,10 +6,12 @@ import Avatar from 'material-ui/Avatar';
 import Drawer from 'material-ui/Drawer';
 import { List, ListItem } from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
+import IconButton from 'material-ui/IconButton';
+import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import FlatButton from 'material-ui/FlatButton';
 import ChevronRight from 'material-ui/svg-icons/navigation/chevron-right';
-import MoreVert from 'material-ui/svg-icons/navigation/more-vert';
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import Restore from 'material-ui/svg-icons/action/restore';
 import Toys from 'material-ui/svg-icons/hardware/toys';
 import GroupAdd from 'material-ui/svg-icons/social/group-add';
@@ -83,6 +85,20 @@ function mapDispatchToProps(dispatch) {
         onTouchTap={this.addParty.bind(this)}
       />,
     ];
+      const iconButtonElement = (
+          <IconButton
+            touch={true}
+            tooltip="more"
+            tooltipPosition="bottom-left"
+          >
+          <MoreVertIcon color={grey500} />
+          </IconButton>
+          );
+      const leftIconMenu = (
+          <IconMenu iconButtonElement={iconButtonElement}>
+          <MenuItem>Add Friend</MenuItem>
+          </IconMenu>
+          );
       return (
           <div>
           <Drawer open='true' openSecondary>
@@ -101,7 +117,7 @@ function mapDispatchToProps(dispatch) {
                                                      return (<ListItem
                                                        primaryText={party.partyName}
                                                        rightAvatar={<Avatar src={party.avatar} />}
-                                                       leftIcon={<CommunicationChatBubble />}
+                                                       leftIcon={leftIconMenu}
                                                        onTouchTap={this._onPartySelected.bind(this, party)}
                                                      />);
                                                    })}
