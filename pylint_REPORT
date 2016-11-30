@@ -1,0 +1,317 @@
+************* Module n3m.application.app
+C: 43, 0: Line too long (117/100) (line-too-long)
+C:189, 0: Line too long (204/100) (line-too-long)
+C:413, 0: Line too long (122/100) (line-too-long)
+C:420, 0: Wrong hanging indentation (remove 10 spaces).
+                      'msgtext'], 'avatar': avatar, 'time': now})
+            |         ^ (bad-continuation)
+C:  1, 0: Missing module docstring (missing-docstring)
+E:  5, 0: Unable to import 'index' (import-error)
+W: 17, 0: Relative import 'constants', should be 'n3m.application.constants' (relative-import)
+W: 19, 0: Relative import 'OpenTable', should be 'n3m.application.OpenTable' (relative-import)
+C: 23, 0: Missing function docstring (missing-docstring)
+C: 28, 0: Missing function docstring (missing-docstring)
+W: 28,18: Unused argument 'path' (unused-argument)
+C: 34, 0: Missing function docstring (missing-docstring)
+C: 40, 0: Missing function docstring (missing-docstring)
+C: 51, 0: Missing function docstring (missing-docstring)
+E: 92,15: Class 'User' has no 'query' member (no-member)
+C: 94, 4: Missing function docstring (missing-docstring)
+E: 97,14: Class 'User' has no 'query' member (no-member)
+R: 51, 0: Too many return statements (10/6) (too-many-return-statements)
+C:120, 0: Missing function docstring (missing-docstring)
+E:124,15: Class 'User' has no 'query' member (no-member)
+W:131, 8: Unused variable 'friender_email' (unused-variable)
+C:162, 0: Invalid function name "createParty" (invalid-name)
+C:162, 0: Missing function docstring (missing-docstring)
+C:186, 0: Missing function docstring (missing-docstring)
+C:200, 0: Missing function docstring (missing-docstring)
+E:202,12: Class 'Party' has no 'query' member (no-member)
+E:208,11: Class 'User' has no 'query' member (no-member)
+C:211, 4: Invalid variable name "pu" (invalid-name)
+C:223, 0: Missing function docstring (missing-docstring)
+C:236, 0: Missing function docstring (missing-docstring)
+C:246, 0: Missing function docstring (missing-docstring)
+W:251, 4: No exception type(s) specified (bare-except)
+C:263, 4: Invalid variable name "r" (invalid-name)
+C:266, 8: Invalid variable name "p" (invalid-name)
+C:272, 0: Missing function docstring (missing-docstring)
+C:273, 4: Invalid variable name "timeList" (invalid-name)
+C:278, 4: Invalid variable name "dateTime" (invalid-name)
+C:281, 4: Invalid variable name "r" (invalid-name)
+C:287, 8: Invalid variable name "timeSlot" (invalid-name)
+W:319,-1: String statement has no effect (pointless-string-statement)
+C:321, 0: Invalid constant name "socketio" (invalid-name)
+C:325, 0: Missing function docstring (missing-docstring)
+C:329, 4: Invalid variable name "partyId" (invalid-name)
+C:340, 0: Invalid argument name "partyID" (invalid-name)
+C:340, 0: Missing function docstring (missing-docstring)
+E:343,15: Undefined variable 'PartyMessage' (undefined-variable)
+W:344, 4: Unnecessary pass statement (unnecessary-pass)
+W:343, 4: Unused variable 'msg_list' (unused-variable)
+C:347, 0: Missing function docstring (missing-docstring)
+W:369, 4: No exception type(s) specified (bare-except)
+W:347,36: Unused argument 'lon' (unused-argument)
+W:347,31: Unused argument 'lat' (unused-argument)
+C:373, 0: Missing function docstring (missing-docstring)
+C:377, 0: Missing function docstring (missing-docstring)
+C:385, 0: Missing function docstring (missing-docstring)
+C:406, 0: Missing function docstring (missing-docstring)
+C:429, 0: Missing function docstring (missing-docstring)
+W:433, 4: Unnecessary pass statement (unnecessary-pass)
+W:432, 4: Unused variable 'msg_list' (unused-variable)
+W:  2, 0: Unused redirect imported from flask (unused-import)
+W:  2, 0: Unused url_for imported from flask (unused-import)
+W:  3, 0: Unused emit imported from flask_socketio (unused-import)
+C:  5, 0: external import "from index import app, db" comes before "from .models import User, Friendship, Party, PartyUser, FriendMessage" (wrong-import-order)
+C:  6, 0: external import "from sqlalchemy.exc import IntegrityError, SQLAlchemyError" comes before "from .models import User, Friendship, Party, PartyUser, FriendMessage" (wrong-import-order)
+C:  8, 0: external import "from bs4 import BeautifulSoup" comes before "from .models import User, Friendship, Party, PartyUser, FriendMessage" (wrong-import-order)
+C:  9, 0: external import "import requests" comes before "from .models import User, Friendship, Party, PartyUser, FriendMessage" (wrong-import-order)
+C: 10, 0: standard import "import datetime" comes before "from flask import request, render_template, jsonify, url_for, redirect, g" (wrong-import-order)
+C: 11, 0: standard import "import time" comes before "from flask import request, render_template, jsonify, url_for, redirect, g" (wrong-import-order)
+C: 12, 0: standard import "import json" comes before "from flask import request, render_template, jsonify, url_for, redirect, g" (wrong-import-order)
+C: 13, 0: standard import "import re" comes before "from flask import request, render_template, jsonify, url_for, redirect, g" (wrong-import-order)
+C: 14, 0: standard import "import sys" comes before "from flask import request, render_template, jsonify, url_for, redirect, g" (wrong-import-order)
+C: 15, 0: external import "import geocoder" comes before "from .models import User, Friendship, Party, PartyUser, FriendMessage" (wrong-import-order)
+C: 16, 0: standard import "from random import randint" comes before "from flask import request, render_template, jsonify, url_for, redirect, g" (wrong-import-order)
+C: 17, 0: external import "import constants" comes before "from .models import User, Friendship, Party, PartyUser, FriendMessage" (wrong-import-order)
+C: 18, 0: standard import "import difflib" comes before "from flask import request, render_template, jsonify, url_for, redirect, g" (wrong-import-order)
+C: 19, 0: external import "from OpenTable import restaurants" comes before "from .models import User, Friendship, Party, PartyUser, FriendMessage" (wrong-import-order)
+************* Module n3m.application.models
+C:238, 0: Wrong hanging indentation (add 4 spaces).
+            FriendMessage.timestamp).all()
+            ^   | (bad-continuation)
+C:301, 0: Wrong hanging indentation (add 4 spaces).
+            PartyMessage.timestamp).all()
+            ^   | (bad-continuation)
+C:  1, 0: Missing module docstring (missing-docstring)
+E:  1, 0: Unable to import 'index' (import-error)
+C:  9, 4: Invalid class attribute name "id" (invalid-name)
+R: 16, 4: Too many arguments (6/5) (too-many-arguments)
+C: 42, 4: Invalid method name "get_user_with_email_and_password" (invalid-name)
+E: 44,15: Class 'User' has no 'query' member (no-member)
+E: 53,15: Class 'User' has no 'query' member (no-member)
+E: 62,15: Class 'User' has no 'query' member (no-member)
+C: 69, 0: Missing class docstring (missing-docstring)
+C: 93, 4: Missing method docstring (missing-docstring)
+E: 94,17: Class 'Friendship' has no 'query' member (no-member)
+C:102, 4: Missing method docstring (missing-docstring)
+E:103,17: Class 'Friendship' has no 'query' member (no-member)
+C:124, 8: Invalid attribute name "ownerID" (invalid-name)
+C:123, 8: Invalid attribute name "partyName" (invalid-name)
+C:110, 0: Missing class docstring (missing-docstring)
+C:122, 4: Invalid argument name "partyName" (invalid-name)
+C:122, 4: Invalid argument name "ownerID" (invalid-name)
+C:131, 4: Invalid method name "getMyParties" (invalid-name)
+C:131, 4: Invalid argument name "ownerID" (invalid-name)
+C:131, 4: Missing method docstring (missing-docstring)
+E:132,18: Class 'Party' has no 'query' member (no-member)
+R:110, 0: Too few public methods (1/2) (too-few-public-methods)
+C:157, 8: Invalid attribute name "userID" (invalid-name)
+C:156, 8: Invalid attribute name "partyID" (invalid-name)
+C:140, 0: Missing class docstring (missing-docstring)
+C:155, 4: Invalid argument name "partyID" (invalid-name)
+C:155, 4: Invalid argument name "userID" (invalid-name)
+C:160, 4: Invalid method name "getPartyUsers" (invalid-name)
+C:160, 4: Invalid argument name "partyID" (invalid-name)
+C:160, 4: Missing method docstring (missing-docstring)
+C:161, 8: Invalid variable name "partyUsers" (invalid-name)
+E:161,21: Class 'PartyUser' has no 'query' member (no-member)
+R:140, 0: Too few public methods (1/2) (too-few-public-methods)
+C:187, 8: Invalid attribute name "senderID" (invalid-name)
+C:168, 0: Missing class docstring (missing-docstring)
+C:185, 4: Invalid argument name "senderID" (invalid-name)
+C:191, 4: Invalid method name "add_friendMessage" (invalid-name)
+C:191, 4: Missing method docstring (missing-docstring)
+E:192,21: Class 'User' has no 'query' member (no-member)
+C:195, 8: Invalid variable name "senderID" (invalid-name)
+E:196,23: Class 'User' has no 'query' member (no-member)
+C:199, 8: Invalid variable name "receiverID" (invalid-name)
+C:203,12: Invalid variable name "fs" (invalid-name)
+C:205,12: Invalid variable name "fs" (invalid-name)
+W:191,44: Unused argument 'now' (unused-argument)
+C:218, 4: Invalid method name "getFriendMessages" (invalid-name)
+C:218, 4: Missing method docstring (missing-docstring)
+E:219,21: Class 'User' has no 'query' member (no-member)
+C:222, 8: Invalid variable name "senderID" (invalid-name)
+E:223,23: Class 'User' has no 'query' member (no-member)
+C:226, 8: Invalid variable name "receiverID" (invalid-name)
+C:230,12: Invalid variable name "fs" (invalid-name)
+C:232,12: Invalid variable name "fs" (invalid-name)
+C:236, 8: Invalid variable name "friendMessages" (invalid-name)
+E:236,25: Class 'FriendMessage' has no 'query' member (no-member)
+C:280, 8: Invalid attribute name "senderID" (invalid-name)
+C:279, 8: Invalid attribute name "partyID" (invalid-name)
+C:261, 0: Missing class docstring (missing-docstring)
+C:278, 4: Invalid argument name "partyID" (invalid-name)
+C:278, 4: Invalid argument name "senderID" (invalid-name)
+C:284, 4: Invalid method name "add_partyMessage" (invalid-name)
+C:284, 4: Invalid argument name "partyID" (invalid-name)
+C:284, 4: Missing method docstring (missing-docstring)
+E:285,21: Class 'User' has no 'query' member (no-member)
+C:288, 8: Invalid variable name "senderID" (invalid-name)
+W:284,42: Unused argument 'now' (unused-argument)
+C:298, 4: Invalid method name "getPartyMessages" (invalid-name)
+C:298, 4: Invalid argument name "partyID" (invalid-name)
+C:298, 4: Missing method docstring (missing-docstring)
+C:299, 8: Invalid variable name "partyMessages" (invalid-name)
+E:299,24: Class 'PartyMessage' has no 'query' member (no-member)
+E:307,25: Class 'User' has no 'query' member (no-member)
+C:308,16: Invalid variable name "av" (invalid-name)
+W:346,-1: String statement has no effect (pointless-string-statement)
+W:  2, 0: Unused datetime imported from datetime (unused-import)
+W:  3, 0: Unused SQLAlchemyError imported from sqlalchemy.exc (unused-import)
+W:  4, 0: Unused desc imported from sqlalchemy (unused-import)
+C:  2, 0: standard import "from datetime import datetime" comes before "from index import db, bcrypt" (wrong-import-order)
+
+
+Report
+======
+438 statements analysed.
+
+Statistics by type
+------------------
+
++---------+-------+-----------+-----------+------------+---------+
+|type     |number |old number |difference |%documented |%badname |
++=========+=======+===========+===========+============+=========+
+|module   |2      |2          |=          |0.00        |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+|class    |6      |6          |=          |16.67       |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+|method   |21     |21         |=          |61.90       |33.33    |
++---------+-------+-----------+-----------+------------+---------+
+|function |22     |22         |=          |0.00        |4.55     |
++---------+-------+-----------+-----------+------------+---------+
+
+
+
+External dependencies
+---------------------
+::
+
+    bs4 (n3m.application.app)
+    flask (n3m.application.app)
+    flask_socketio (n3m.application.app)
+    geocoder (n3m.application.app)
+    n3m 
+      \-application 
+        \-OpenTable (n3m.application.app)
+        \-constants (n3m.application.app)
+        \-utils 
+          \-auth (n3m.application.app)
+    requests (n3m.application.app)
+    sqlalchemy (n3m.application.models)
+      \-exc (n3m.application.models,n3m.application.app)
+
+
+
+Raw metrics
+-----------
+
++----------+-------+------+---------+-----------+
+|type      |number |%     |previous |difference |
++==========+=======+======+=========+===========+
+|code      |641    |81.45 |613      |+28.00     |
++----------+-------+------+---------+-----------+
+|docstring |32     |4.07  |31       |+1.00      |
++----------+-------+------+---------+-----------+
+|comment   |21     |2.67  |21       |=          |
++----------+-------+------+---------+-----------+
+|empty     |93     |11.82 |90       |+3.00      |
++----------+-------+------+---------+-----------+
+
+
+
+Duplication
+-----------
+
++-------------------------+------+---------+-----------+
+|                         |now   |previous |difference |
++=========================+======+=========+===========+
+|nb duplicated lines      |0     |0        |=          |
++-------------------------+------+---------+-----------+
+|percent duplicated lines |0.000 |0.000    |=          |
++-------------------------+------+---------+-----------+
+
+
+
+Messages by category
+--------------------
+
++-----------+-------+---------+-----------+
+|type       |number |previous |difference |
++===========+=======+=========+===========+
+|convention |108    |107      |+1.00      |
++-----------+-------+---------+-----------+
+|refactor   |4      |4        |=          |
++-----------+-------+---------+-----------+
+|warning    |22     |21       |+1.00      |
++-----------+-------+---------+-----------+
+|error      |23     |23       |=          |
++-----------+-------+---------+-----------+
+
+
+
+% errors / warnings by module
+-----------------------------
+
++-----------------------+------+--------+---------+-----------+
+|module                 |error |warning |refactor |convention |
++=======================+======+========+=========+===========+
+|n3m.application.models |69.57 |27.27   |75.00    |51.85      |
++-----------------------+------+--------+---------+-----------+
+|n3m.application.app    |30.43 |72.73   |25.00    |48.15      |
++-----------------------+------+--------+---------+-----------+
+
+
+
+Messages
+--------
+
++---------------------------+------------+
+|message id                 |occurrences |
++===========================+============+
+|invalid-name               |50          |
++---------------------------+------------+
+|missing-docstring          |37          |
++---------------------------+------------+
+|no-member                  |20          |
++---------------------------+------------+
+|wrong-import-order         |15          |
++---------------------------+------------+
+|unused-import              |6           |
++---------------------------+------------+
+|unused-argument            |5           |
++---------------------------+------------+
+|unused-variable            |3           |
++---------------------------+------------+
+|line-too-long              |3           |
++---------------------------+------------+
+|bad-continuation           |3           |
++---------------------------+------------+
+|unnecessary-pass           |2           |
++---------------------------+------------+
+|too-few-public-methods     |2           |
++---------------------------+------------+
+|relative-import            |2           |
++---------------------------+------------+
+|pointless-string-statement |2           |
++---------------------------+------------+
+|import-error               |2           |
++---------------------------+------------+
+|bare-except                |2           |
++---------------------------+------------+
+|undefined-variable         |1           |
++---------------------------+------------+
+|too-many-return-statements |1           |
++---------------------------+------------+
+|too-many-arguments         |1           |
++---------------------------+------------+
+
+
+
+Global evaluation
+-----------------
+Your code has been rated at 4.32/10 (previous run: 4.35/10, -0.03)
+
