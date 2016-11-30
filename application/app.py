@@ -1,27 +1,27 @@
 '''CONTROLLER'''
 from __future__ import print_function
-from flask import request, render_template, jsonify, url_for, redirect, g
-from flask_socketio import SocketIO, emit
-from .models import User, Friendship, Party, PartyUser, FriendMessage, PartyMessage
-from index import app, db
-from sqlalchemy.exc import IntegrityError, SQLAlchemyError
-from .utils.auth import generate_token, requires_auth, verify_token
-from bs4 import BeautifulSoup
-import requests
 import datetime
 import time
 import json
 import re
 import sys
-import geocoder
-from random import randint
-import constants
 import difflib
-from OpenTable import restaurants
-
+from random import randint
+import requests
+import geocoder
+from flask import request, render_template, jsonify, g
+from flask_socketio import SocketIO
+from index import app, db
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
+from bs4 import BeautifulSoup
+import application.constants as constants
+from application.OpenTable import restaurants
+from .utils.auth import generate_token, requires_auth, verify_token
+from .models import User, Friendship, Party, PartyUser, FriendMessage, PartyMessage
 
 
 socketio = SocketIO(app)
+
 
 @app.route('/', methods=['GET'])
 def index():
@@ -32,6 +32,7 @@ def index():
 @app.route('/<path:path>', methods=['GET'])
 def any_root_path(path):
     '''default redirection to index.html'''
+    print(path)
     return render_template('index.html')
 
 
@@ -48,11 +49,11 @@ def get_friendlist():
     '''get firends of current user'''
     current_user = g.current_user
     result = db.engine.execute(
-        'select u.id, u.avatar, u.username from friendship f join "user" u  on f.friendee=u.id where f.friender = ' +
+        '''select u.user_id, u.avatar, u.username from friendship f ''' +
+        '''join "user" u  on f.friendee=u.user_id where f.friender = ''' +
         str(
-            current_user["id"]))
-    friends = json.dumps([dict(r) for r in result])
-    return friends
+            current_user["user_id"]))
+    return json.dumps([dict(r) for r in result])
 
 
 @app.route("/api/create_user", methods=["POST"])
@@ -67,49 +68,50 @@ def create_user():
 
     if not uname:
         return jsonify(message='Username cannot be null.'), 400
-    if len(uname) < 3:
+    elif len(uname) < 3:
         return jsonify(message='Username must be at least 3 characters.'), 400
-    if len(uname) > 20:
+    elif len(uname) > 20:
         return jsonify(
             message='Username must be no more than 20 characters.'), 400
-    if not eml:
+    elif not eml:
         return jsonify(message='Email cannot be null.'), 400
-    if not re.match(eml_rgx, eml):
+    elif not re.match(eml_rgx, eml):
         return jsonify(message='Email address not valid.'), 400
-    if not pswd:
+    elif not pswd:
         return jsonify(message='Password cannot be null.'), 400
-    if len(pswd) < 6:
+    elif len(pswd) < 6:
         return jsonify(message='Password must be at least 6 characters.'), 400
-    if len(pswd) > 20:
+    elif len(pswd) > 20:
         return jsonify(
             message='Password must be no more than 20 characters.'), 400
-
-    av_path = "dist/images/avatar0{}.png".format(randint(0, 9))
-    user = User(
-        username=uname,
-        email=eml,
-        password=pswd,
-        pgp_key=pgp,
-        avatar=av_path
-    )
-    db.session.add(user)
-    try:
-        db.session.commit()
-    except IntegrityError:
-        return jsonify(
-            message="User with that username or email already exists"), 409
-    new_user = User.query.filter_by(email=incoming["email"]).first()
+    else:
+        av_path = "dist/images/avatar0{}.png".format(randint(0, 9))
+        user = User(
+            username=uname,
+            email=eml,
+            password=pswd,
+            pgp_key=pgp,
+            avatar=av_path
+        )
+        db.session.add(user)
+        try:
+            db.session.commit()
+        except IntegrityError:
+            return jsonify(
+                message="User with that username or email already exists"), 409
+        new_user = User.query.filter_by(email=incoming["email"]).first()
 
     def mk_friend(botemail):
-        '''create friendship between user and api bots to be able to display api responses in chat'''
+        '''create friendship between user and api bots to be able to
+        display api responses in chat'''
         if new_user.email in bot_emails:
             return None
         bot = User.query.filter_by(email=botemail).first()
         # print(str(bot))
         if bot is not None:
             # print('Bot is not none :)')
-            newfriendship = Friendship(new_user.id, bot.id)
-            newfriendship2 = Friendship(bot.id, new_user.id)
+            newfriendship = Friendship(new_user.user_id, bot.user_id)
+            newfriendship2 = Friendship(bot.user_id, new_user.user_id)
             db.session.add(newfriendship)
             db.session.commit()
             db.session.add(newfriendship2)
@@ -120,7 +122,7 @@ def create_user():
         mk_friend(email)
 
     return jsonify(
-        id=user.id,
+        id=user.user_id,
         token=generate_token(new_user)
     ), 201
 
@@ -139,11 +141,10 @@ def add_friendship():
     if friendee is None:
         return jsonify(message="User with that email does not exist"), 403
     else:
-        friender_email = current_user["email"]
-        friender_id = current_user["id"]
+        friender_id = current_user["user_id"]
 
         friendee_email = friendee.email
-        friendee_id = friendee.id
+        friendee_id = friendee.user_id
         friendee_avatar = friendee.avatar
         newfriendship = Friendship(friender_id, friendee_id)
         # this is for early practice that friendship doesnt need to be
@@ -168,17 +169,17 @@ def add_friendship():
                        avatar=friendee_avatar, friendship_id=fs_id)
 
 
-@app.route("/api/createParty", methods=["POST"])
+@app.route("/api/createparty", methods=["POST"])
 @requires_auth
-def createParty():
+def create_party():
     '''create a new party for a given user/owner'''
     incoming = request.get_json()
     # print('The partyname is')
     # print(incoming)
     av_path = "dist/images/team0{}.png".format(randint(0, 9))
     party = Party(
-        partyName=incoming["partyName"],
-        ownerID=g.current_user["id"],
+        party_name=incoming["party_name"],
+        owner_id=g.current_user["user_id"],
         avatar=av_path
     )
     db.session.add(party)
@@ -189,7 +190,7 @@ def createParty():
 
     new_party = party
     return jsonify(
-        partyID=new_party.partyID, partyName=new_party.partyName
+        party_id=new_party.party_id, party_name=new_party.party_name
     )
 
 
@@ -199,10 +200,17 @@ def get_partylist():
     '''retrieve all parties for a user'''
     current_user = g.current_user
     result = db.engine.execute(
-        'select * from party where "ownerID" = {} UNION select p."partyID", p."partyName", p."ownerID", p."avatar" from party p join partyuser pu on p."partyID"=pu."partyID" where pu."userID" ={}'.format(
-            current_user["id"],
-            current_user["id"]))
-    # result=Party.query.filter_by(ownerID=current_user).all()
+        '''select *
+        from party
+        where "owner_id" = {}
+        UNION
+        select p."party_id", p."party_name", p."owner_id", p."avatar"
+        from party p
+        join partyuser pu on p."party_id"=pu."party_id"
+        where pu."user_id" ={}'''.format(
+            current_user["user_id"],
+            current_user["user_id"]))
+    # result=Party.query.filter_by(owner_id=current_user).all()
     parties = json.dumps([dict(r) for r in result])
     print(str(parties), file=sys.stderr)
     return parties
@@ -214,15 +222,15 @@ def add_to_party():
     ''' add user to a party'''
     incoming = request.get_json()
     party = Party.query.filter_by(
-        partyID=incoming["partyID"]).first()
+        party_id=incoming["party_id"]).first()
     # print(party)
     if not party:
         return jsonify(message="Party does not exist."), 404
     user = User.query.filter_by(username=incoming["username"]).first()
     if not user:
         return jsonify(message="User does not exist."), 403
-    pu = PartyUser(party.partyID, user.id)
-    db.session.add(pu)
+    party_user = PartyUser(party.party_id, user.user_id)
+    db.session.add(party_user)
     try:
         db.session.commit()
     except IntegrityError:
@@ -236,9 +244,10 @@ def add_to_party():
 def get_token():
     '''create token for new user or retrieve existing'''
     incoming = request.get_json()
-    if incoming["email"]=='uber_aid@party.io' or incoming["email"]=='opentable_aid@party.io':
+    if incoming["email"] == 'uber_aid@party.io' or incoming[
+            "email"] == 'opentable_aid@party.io':
         return jsonify(error=True), 403
-    user = User.get_user_with_email_and_password(
+    user = User.get_user(
         incoming["email"], incoming["password"])
     if user:
         return jsonify(token=generate_token(user))
@@ -275,33 +284,34 @@ def call_uber(end_address, lat, lng):
         'Authorization': 'Token x4maHB7QT8tWJqKfkfPVyzWfpbp7g5QmehniOIf5',
         'Content-Type': 'application/json',
         'Accept-Language': 'en_US'}
-    r = requests.get(url, params=payload, headers=headers)
-    json_data = json.loads(r.text)
+    api_result = requests.get(url, params=payload, headers=headers)
+    json_data = json.loads(api_result.text)
     reply_text = '\n'
-    for p in json_data['prices']:
+    for price in json_data['prices']:
         reply_text = reply_text + \
-            p['display_name'] + ': ' + p['estimate'] + '\n'
+            price['display_name'] + ': ' + price['estimate'] + '\n'
     return reply_text
 
 
 def call_opentable(rest_id, guest_count, res_time):
-    timeList = []
+    ''' makes a request to the open table api for available reservation times '''
+    timelist = []
     url = 'http://www.opentable.com/restaurant/profile/'
     url = url + str(rest_id)
     url = url + '/search'
     covers = guest_count
-    dateTime = res_time
-    payload = {'covers': covers, 'dateTime': dateTime}
+    date_time = res_time
+    payload = {'covers': covers, 'dateTime': date_time}
     headers = {'Content-Type': 'application/json; charset=UTF-8'}
-    r = requests.post(url, params=payload, headers=headers)
-    soup = BeautifulSoup(r.text, 'html.parser')
+    api_result = requests.post(url, params=payload, headers=headers)
+    soup = BeautifulSoup(api_result.text, 'html.parser')
 
     for tag in soup.select('.dtp-results-times li'):
-        timeList.append(tag.string)
+        timelist.append(tag.string)
     times = '\nReservation Times: \n'
-    for timeSlot in timeList:
-        if timeSlot is not None:
-            times = times + timeSlot + '\n'
+    for time_slot in timelist:
+        if time_slot is not None:
+            times = times + time_slot + '\n'
     if len(times) <= 22:
         times = times + 'None available \n'
     return times
@@ -313,18 +323,18 @@ def party_message(message):
     print('There was a party message: ' + str(message), file=sys.stderr)
     avatar = User.get_avatar_for_username(message['username'])
     now = datetime.datetime.now().strftime('%H:%M:%S')
-    partyId = message['partyId']
+    party_id = message['party_id']
     print('This is the time: ' + str(now), file=sys.stderr)
-    time = datetime.datetime.now()
     result = None
-    if message['partyId'] != -1:
-       result=PartyMessage.add_partyMessage(partyId, message['username'], time, message['msgtext'])
-    if result == "success" or message['partyId'] == -1:
+    if message['party_id'] != -1:
+        result = PartyMessage.add_party_message(
+            party_id, message['username'], message['msgtext'])
+    if result == "success" or message['party_id'] == -1:
         socketio.emit(message['partyname'],
-                  {'username': message['username'],
-                   'text': message['msgtext'],
-                   'avatar': avatar,
-                   'time': now})
+                      {'username': message['username'],
+                       'text': message['msgtext'],
+                       'avatar': avatar,
+                       'time': now})
     else:
         print("Something happend with error in the database.")
     # This is where the message should get inserted into database. Remove this
@@ -334,14 +344,14 @@ def party_message(message):
 @app.route("/api/partyhistory", methods=["POST"])
 @requires_auth
 def get_party_msg_his():
-    current_user = g.current_user['username']
+    '''returns the history of messages for a specific party'''
     incoming = request.get_json()
-    partyID = incoming["partyID"]
-    msg_list = PartyMessage.getPartyMessages(partyID)
+    party_id = incoming["party_id"]
+    msg_list = PartyMessage.get_party_messages(party_id)
     return jsonify(msg_list)
 
 
-def opentable_message(message, lat, lon):
+def opentable_message(message):
     '''call opentable api and return response'''
     keylist = restaurants.keys()
     restname, resv_info = message.split('@')
@@ -378,7 +388,7 @@ def get_bot_message(botname, message, lat, lon):
     if botname == constants.UBER_USERNAME:
         return uber_message(message, lat, lon)
     elif botname == constants.OPENTABLE_USERNAME:
-        return opentable_message(message, lat, lon)
+        return opentable_message(message)
 
 
 @socketio.on('geodata')
@@ -391,8 +401,8 @@ def bot_message(message):
         message['latitude'],
         message['longitude'])
     bot_now = datetime.datetime.now().strftime('%H:%M:%S')
-    result2 = FriendMessage.add_friendMessage(
-        message['receiver'], message['username'], bot_now, text_reply)
+    result2 = FriendMessage.add_friend_message(
+        message['receiver'], message['username'], text_reply)
     if result2 == "success":
         socketio.emit(message['partyname'],
                       {'username': message['receiver'],
@@ -412,15 +422,14 @@ def user2user_message(message):
     sender = message['sender']
     receiver = message['receiver']
     print('This is the time: ' + str(now), file=sys.stderr)
-    # socketio.emit(message['partyname'], {'username': sender, 'text': message['msgtext'], 'avatar': avatar, 'time': now})
-    # This is where the message should get inserted into database. Remove this
-    # line.
-    time = datetime.datetime.now()
-    result = FriendMessage.add_friendMessage(
-        sender, receiver, time, message['msgtext'])
+    result = FriendMessage.add_friend_message(
+        sender, receiver, message['msgtext'])
     if result == "success":
-        socketio.emit(message['partyname'], {'username': sender, 'text': message[
-                      'msgtext'], 'avatar': avatar, 'time': now})
+        socketio.emit(message['partyname'],
+                      {'username': sender,
+                       'text': message['msgtext'],
+                       'avatar': avatar,
+                       'time': now})
         if message['receiver'] in constants.BOTLIST:
             socketio.emit(sender + '__geo',
                           {'partyname': message['partyname'],
@@ -433,11 +442,12 @@ def user2user_message(message):
 @app.route("/api/friendhistory", methods=["POST"])
 @requires_auth
 def get_friend_msg_his():
+    '''returns the message history between two friends'''
     current_user = g.current_user['username']
     incoming = request.get_json()
     friend = incoming["friend"]
     # both current_user and friend are the usernames that you want to retrieve
     # the message history of
-    msg_list = FriendMessage.getFriendMessages(current_user, friend)
+    msg_list = FriendMessage.get_friend_messages(current_user, friend)
     print(msg_list)
     return jsonify(msg_list)

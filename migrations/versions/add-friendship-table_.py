@@ -17,8 +17,8 @@ import sqlalchemy as sa
 def upgrade():
     op.create_table('friendship',
     sa.Column('fs_id', sa.Integer(), nullable=False),
-    sa.Column('friender', sa.Integer(), sa.ForeignKey('user.id'), nullable=False),
-    sa.Column('friendee', sa.Integer(), sa.ForeignKey('user.id'), nullable=False),
+    sa.Column('friender', sa.Integer(), sa.ForeignKey('user.user_id'), nullable=False),
+    sa.Column('friendee', sa.Integer(), sa.ForeignKey('user.user_id'), nullable=False),
     sa.Column('est_time', sa.DateTime, nullable = False, server_default=sa.func.now()),
     sa.PrimaryKeyConstraint('fs_id'),
     sa.UniqueConstraint('friender', 'friendee')

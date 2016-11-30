@@ -16,12 +16,12 @@ import sqlalchemy as sa
 
 def upgrade():
     op.create_table('friendmessage',
-    sa.Column('fmID', sa.Integer(), nullable=False),
+    sa.Column('fm_id', sa.Integer(), nullable=False),
     sa.Column('fs_id', sa.Integer(), sa.ForeignKey('friendship.fs_id'), nullable=False),
-    sa.Column('senderID', sa.Integer(), sa.ForeignKey('user.id'), nullable=False),
+    sa.Column('sender_id', sa.Integer(), sa.ForeignKey('user.user_id'), nullable=False),
     sa.Column('timestamp', sa.DateTime(timezone=False)),
     sa.Column('message', sa.String(length=65535), nullable=False),
-    sa.PrimaryKeyConstraint('fmID')
+    sa.PrimaryKeyConstraint('fm_id')
     )
 
 def downgrade():

@@ -15,7 +15,7 @@ import sqlalchemy as sa
 
 
 def upgrade():
-    op.create_unique_constraint("uq_party_name", "party", ["partyName","ownerID"])
+    op.create_unique_constraint("uq_party_name", "party", ["party_name","owner_id"])
 
 
 def downgrade():
