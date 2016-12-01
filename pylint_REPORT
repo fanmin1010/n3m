@@ -78,92 +78,87 @@ C: 17, 0: external import "import constants" comes before "from .models import U
 C: 18, 0: standard import "import difflib" comes before "from flask import request, render_template, jsonify, url_for, redirect, g" (wrong-import-order)
 C: 19, 0: external import "from OpenTable import restaurants" comes before "from .models import User, Friendship, Party, PartyUser, FriendMessage" (wrong-import-order)
 ************* Module n3m.application.models
-C:231, 0: Wrong hanging indentation (add 4 spaces).
+C:238, 0: Wrong hanging indentation (add 4 spaces).
             FriendMessage.timestamp).all()
             ^   | (bad-continuation)
-C:294, 0: Wrong hanging indentation (add 4 spaces).
+C:301, 0: Wrong hanging indentation (add 4 spaces).
             PartyMessage.timestamp).all()
             ^   | (bad-continuation)
 C:  1, 0: Missing module docstring (missing-docstring)
 E:  1, 0: Unable to import 'index' (import-error)
-C:  7, 0: Missing class docstring (missing-docstring)
-C:  8, 4: Invalid class attribute name "id" (invalid-name)
-R: 15, 4: Too many arguments (6/5) (too-many-arguments)
-C: 34, 4: Missing method docstring (missing-docstring)
-C: 38, 4: Invalid method name "get_user_with_email_and_password" (invalid-name)
-C: 38, 4: Missing method docstring (missing-docstring)
-E: 39,15: Class 'User' has no 'query' member (no-member)
-C: 46, 4: Missing method docstring (missing-docstring)
-E: 47,15: Class 'User' has no 'query' member (no-member)
-C: 54, 4: Missing method docstring (missing-docstring)
-E: 55,15: Class 'User' has no 'query' member (no-member)
-C: 62, 0: Missing class docstring (missing-docstring)
-C: 86, 4: Missing method docstring (missing-docstring)
-E: 87,17: Class 'Friendship' has no 'query' member (no-member)
-C: 95, 4: Missing method docstring (missing-docstring)
-E: 96,17: Class 'Friendship' has no 'query' member (no-member)
-C:117, 8: Invalid attribute name "ownerID" (invalid-name)
-C:116, 8: Invalid attribute name "partyName" (invalid-name)
-C:103, 0: Missing class docstring (missing-docstring)
-C:115, 4: Invalid argument name "partyName" (invalid-name)
-C:115, 4: Invalid argument name "ownerID" (invalid-name)
-C:124, 4: Invalid method name "getMyParties" (invalid-name)
-C:124, 4: Invalid argument name "ownerID" (invalid-name)
-C:124, 4: Missing method docstring (missing-docstring)
-E:125,18: Class 'Party' has no 'query' member (no-member)
-R:103, 0: Too few public methods (1/2) (too-few-public-methods)
-C:150, 8: Invalid attribute name "userID" (invalid-name)
-C:149, 8: Invalid attribute name "partyID" (invalid-name)
-C:133, 0: Missing class docstring (missing-docstring)
-C:148, 4: Invalid argument name "partyID" (invalid-name)
-C:148, 4: Invalid argument name "userID" (invalid-name)
-C:153, 4: Invalid method name "getPartyUsers" (invalid-name)
-C:153, 4: Invalid argument name "partyID" (invalid-name)
-C:153, 4: Missing method docstring (missing-docstring)
-C:154, 8: Invalid variable name "partyUsers" (invalid-name)
-E:154,21: Class 'PartyUser' has no 'query' member (no-member)
-R:133, 0: Too few public methods (1/2) (too-few-public-methods)
-C:180, 8: Invalid attribute name "senderID" (invalid-name)
-C:161, 0: Missing class docstring (missing-docstring)
-C:178, 4: Invalid argument name "senderID" (invalid-name)
-C:184, 4: Invalid method name "add_friendMessage" (invalid-name)
-C:184, 4: Missing method docstring (missing-docstring)
-E:185,21: Class 'User' has no 'query' member (no-member)
-C:188, 8: Invalid variable name "senderID" (invalid-name)
-E:189,23: Class 'User' has no 'query' member (no-member)
-C:192, 8: Invalid variable name "receiverID" (invalid-name)
-C:196,12: Invalid variable name "fs" (invalid-name)
-C:198,12: Invalid variable name "fs" (invalid-name)
-W:184,44: Unused argument 'now' (unused-argument)
-C:211, 4: Invalid method name "getFriendMessages" (invalid-name)
-C:211, 4: Missing method docstring (missing-docstring)
-E:212,21: Class 'User' has no 'query' member (no-member)
-C:215, 8: Invalid variable name "senderID" (invalid-name)
-E:216,23: Class 'User' has no 'query' member (no-member)
-C:219, 8: Invalid variable name "receiverID" (invalid-name)
-C:223,12: Invalid variable name "fs" (invalid-name)
-C:225,12: Invalid variable name "fs" (invalid-name)
-C:229, 8: Invalid variable name "friendMessages" (invalid-name)
-E:229,25: Class 'FriendMessage' has no 'query' member (no-member)
-C:273, 8: Invalid attribute name "senderID" (invalid-name)
-C:272, 8: Invalid attribute name "partyID" (invalid-name)
-C:254, 0: Missing class docstring (missing-docstring)
-C:271, 4: Invalid argument name "partyID" (invalid-name)
-C:271, 4: Invalid argument name "senderID" (invalid-name)
-C:277, 4: Invalid method name "add_partyMessage" (invalid-name)
-C:277, 4: Invalid argument name "partyID" (invalid-name)
-C:277, 4: Missing method docstring (missing-docstring)
-E:278,21: Class 'User' has no 'query' member (no-member)
-C:281, 8: Invalid variable name "senderID" (invalid-name)
-W:277,42: Unused argument 'now' (unused-argument)
-C:291, 4: Invalid method name "getPartyMessages" (invalid-name)
-C:291, 4: Invalid argument name "partyID" (invalid-name)
-C:291, 4: Missing method docstring (missing-docstring)
-C:292, 8: Invalid variable name "partyMessages" (invalid-name)
-E:292,24: Class 'PartyMessage' has no 'query' member (no-member)
-E:300,25: Class 'User' has no 'query' member (no-member)
-C:301,16: Invalid variable name "av" (invalid-name)
-W:339,-1: String statement has no effect (pointless-string-statement)
+C:  9, 4: Invalid class attribute name "id" (invalid-name)
+R: 16, 4: Too many arguments (6/5) (too-many-arguments)
+C: 42, 4: Invalid method name "get_user_with_email_and_password" (invalid-name)
+E: 44,15: Class 'User' has no 'query' member (no-member)
+E: 53,15: Class 'User' has no 'query' member (no-member)
+E: 62,15: Class 'User' has no 'query' member (no-member)
+C: 69, 0: Missing class docstring (missing-docstring)
+C: 93, 4: Missing method docstring (missing-docstring)
+E: 94,17: Class 'Friendship' has no 'query' member (no-member)
+C:102, 4: Missing method docstring (missing-docstring)
+E:103,17: Class 'Friendship' has no 'query' member (no-member)
+C:124, 8: Invalid attribute name "ownerID" (invalid-name)
+C:123, 8: Invalid attribute name "partyName" (invalid-name)
+C:110, 0: Missing class docstring (missing-docstring)
+C:122, 4: Invalid argument name "partyName" (invalid-name)
+C:122, 4: Invalid argument name "ownerID" (invalid-name)
+C:131, 4: Invalid method name "getMyParties" (invalid-name)
+C:131, 4: Invalid argument name "ownerID" (invalid-name)
+C:131, 4: Missing method docstring (missing-docstring)
+E:132,18: Class 'Party' has no 'query' member (no-member)
+R:110, 0: Too few public methods (1/2) (too-few-public-methods)
+C:157, 8: Invalid attribute name "userID" (invalid-name)
+C:156, 8: Invalid attribute name "partyID" (invalid-name)
+C:140, 0: Missing class docstring (missing-docstring)
+C:155, 4: Invalid argument name "partyID" (invalid-name)
+C:155, 4: Invalid argument name "userID" (invalid-name)
+C:160, 4: Invalid method name "getPartyUsers" (invalid-name)
+C:160, 4: Invalid argument name "partyID" (invalid-name)
+C:160, 4: Missing method docstring (missing-docstring)
+C:161, 8: Invalid variable name "partyUsers" (invalid-name)
+E:161,21: Class 'PartyUser' has no 'query' member (no-member)
+R:140, 0: Too few public methods (1/2) (too-few-public-methods)
+C:187, 8: Invalid attribute name "senderID" (invalid-name)
+C:168, 0: Missing class docstring (missing-docstring)
+C:185, 4: Invalid argument name "senderID" (invalid-name)
+C:191, 4: Invalid method name "add_friendMessage" (invalid-name)
+C:191, 4: Missing method docstring (missing-docstring)
+E:192,21: Class 'User' has no 'query' member (no-member)
+C:195, 8: Invalid variable name "senderID" (invalid-name)
+E:196,23: Class 'User' has no 'query' member (no-member)
+C:199, 8: Invalid variable name "receiverID" (invalid-name)
+C:203,12: Invalid variable name "fs" (invalid-name)
+C:205,12: Invalid variable name "fs" (invalid-name)
+W:191,44: Unused argument 'now' (unused-argument)
+C:218, 4: Invalid method name "getFriendMessages" (invalid-name)
+C:218, 4: Missing method docstring (missing-docstring)
+E:219,21: Class 'User' has no 'query' member (no-member)
+C:222, 8: Invalid variable name "senderID" (invalid-name)
+E:223,23: Class 'User' has no 'query' member (no-member)
+C:226, 8: Invalid variable name "receiverID" (invalid-name)
+C:230,12: Invalid variable name "fs" (invalid-name)
+C:232,12: Invalid variable name "fs" (invalid-name)
+C:236, 8: Invalid variable name "friendMessages" (invalid-name)
+E:236,25: Class 'FriendMessage' has no 'query' member (no-member)
+C:280, 8: Invalid attribute name "senderID" (invalid-name)
+C:279, 8: Invalid attribute name "partyID" (invalid-name)
+C:261, 0: Missing class docstring (missing-docstring)
+C:278, 4: Invalid argument name "partyID" (invalid-name)
+C:278, 4: Invalid argument name "senderID" (invalid-name)
+C:284, 4: Invalid method name "add_partyMessage" (invalid-name)
+C:284, 4: Invalid argument name "partyID" (invalid-name)
+C:284, 4: Missing method docstring (missing-docstring)
+E:285,21: Class 'User' has no 'query' member (no-member)
+C:288, 8: Invalid variable name "senderID" (invalid-name)
+W:284,42: Unused argument 'now' (unused-argument)
+C:298, 4: Invalid method name "getPartyMessages" (invalid-name)
+C:298, 4: Invalid argument name "partyID" (invalid-name)
+C:298, 4: Missing method docstring (missing-docstring)
+C:299, 8: Invalid variable name "partyMessages" (invalid-name)
+E:299,24: Class 'PartyMessage' has no 'query' member (no-member)
+E:307,25: Class 'User' has no 'query' member (no-member)
+C:308,16: Invalid variable name "av" (invalid-name)
+W:346,-1: String statement has no effect (pointless-string-statement)
 W:  2, 0: Unused datetime imported from datetime (unused-import)
 W:  3, 0: Unused SQLAlchemyError imported from sqlalchemy.exc (unused-import)
 W:  4, 0: Unused desc imported from sqlalchemy (unused-import)
@@ -182,11 +177,11 @@ Statistics by type
 +=========+=======+===========+===========+============+=========+
 |module   |2      |2          |=          |0.00        |0.00     |
 +---------+-------+-----------+-----------+------------+---------+
-|class    |6      |6          |=          |0.00        |0.00     |
+|class    |6      |6          |=          |16.67       |0.00     |
 +---------+-------+-----------+-----------+------------+---------+
-|method   |21     |21         |=          |42.86       |33.33    |
+|method   |21     |21         |=          |61.90       |33.33    |
 +---------+-------+-----------+-----------+------------+---------+
-|function |22     |23         |-1.00      |0.00        |4.55     |
+|function |22     |22         |=          |0.00        |4.55     |
 +---------+-------+-----------+-----------+------------+---------+
 
 
@@ -217,13 +212,13 @@ Raw metrics
 +----------+-------+------+---------+-----------+
 |type      |number |%     |previous |difference |
 +==========+=======+======+=========+===========+
-|code      |641    |82.18 |635      |+6.00      |
+|code      |641    |81.45 |613      |+28.00     |
 +----------+-------+------+---------+-----------+
-|docstring |25     |3.21  |25       |=          |
+|docstring |32     |4.07  |31       |+1.00      |
 +----------+-------+------+---------+-----------+
-|comment   |21     |2.69  |24       |-3.00      |
+|comment   |21     |2.67  |21       |=          |
 +----------+-------+------+---------+-----------+
-|empty     |93     |11.92 |96       |-3.00      |
+|empty     |93     |11.82 |90       |+3.00      |
 +----------+-------+------+---------+-----------+
 
 
@@ -247,13 +242,13 @@ Messages by category
 +-----------+-------+---------+-----------+
 |type       |number |previous |difference |
 +===========+=======+=========+===========+
-|convention |113    |114      |-1.00      |
+|convention |108    |107      |+1.00      |
 +-----------+-------+---------+-----------+
 |refactor   |4      |4        |=          |
 +-----------+-------+---------+-----------+
 |warning    |22     |21       |+1.00      |
 +-----------+-------+---------+-----------+
-|error      |23     |25       |-2.00      |
+|error      |23     |23       |=          |
 +-----------+-------+---------+-----------+
 
 
@@ -264,9 +259,9 @@ Messages by category
 +-----------------------+------+--------+---------+-----------+
 |module                 |error |warning |refactor |convention |
 +=======================+======+========+=========+===========+
-|n3m.application.models |69.57 |27.27   |75.00    |53.98      |
+|n3m.application.models |69.57 |27.27   |75.00    |51.85      |
 +-----------------------+------+--------+---------+-----------+
-|n3m.application.app    |30.43 |72.73   |25.00    |46.02      |
+|n3m.application.app    |30.43 |72.73   |25.00    |48.15      |
 +-----------------------+------+--------+---------+-----------+
 
 
@@ -279,7 +274,7 @@ Messages
 +===========================+============+
 |invalid-name               |50          |
 +---------------------------+------------+
-|missing-docstring          |42          |
+|missing-docstring          |37          |
 +---------------------------+------------+
 |no-member                  |20          |
 +---------------------------+------------+
@@ -318,5 +313,5 @@ Messages
 
 Global evaluation
 -----------------
-Your code has been rated at 4.20/10 (previous run: 4.08/10, +0.12)
+Your code has been rated at 4.32/10 (previous run: 4.35/10, -0.03)
 
