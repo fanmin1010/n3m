@@ -193,7 +193,7 @@ class FriendMessage(db.Model):
         self.fs_id = fs_id
         self.senderID = senderID
         self.message = message
-        self.timestamp = time
+        self.timestamp = db.func.now()
 
     def __str__(self):
         return '''FriendshipID: ''' + \

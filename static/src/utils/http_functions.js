@@ -33,6 +33,17 @@ export function addFriendCall(email, token, cb) {
   });
 }
 
+export function addFriendToPartyCall(friend, partyid, token, cb) {
+  return axios.post('api/add_users_to_party', {
+    username: friend,
+    partyID: partyid
+  }, tokenConfig(token))
+  .then(cb)
+  .catch((error) => {
+    console.log(error);
+  });
+}
+
 export function addPartyCall(partyName, token, cb) {
   return axios.post('api/createParty', {
     partyName: partyName, 

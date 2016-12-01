@@ -30,6 +30,8 @@ import * as chatActionCreators from '../../actions/chat';
 function mapStateToProps(state) {
   return {
     partylist: state.chat.partylist,
+    partyname: state.chat.partyname,
+    partyId: state.chat.partyId,
   };
 }
 
@@ -44,6 +46,7 @@ function mapDispatchToProps(dispatch) {
       super(props);
       this.state = {
         open: false,
+        addfriend_open: false,
         selectedIndex: 0,
       };
 
@@ -67,6 +70,22 @@ function mapDispatchToProps(dispatch) {
     this.setState({open: false});
   };
 
+  handleAddFriendOpen = () => {
+    this.setState({addfriend_open: true});
+  };
+
+  handleAddFriendClose = () => {
+    this.setState({addfriend_open: false});
+  };
+
+  addFriend() {
+    var friendname = document.getElementById('addfriendtopartytextbox').value;
+    console.log('Friendname is: ' + friendname);
+    document.getElementById('addfriendtopartytextbox').value = '';
+    this.props.addFriendToParty(friendname, this.props.partyId);
+    this.handleAddFriendClose();
+  }
+
   addParty() {
     var partyname = document.getElementById('addpartytextbox').value;
     console.log('Partyname is: ' + partyname);
@@ -85,6 +104,15 @@ function mapDispatchToProps(dispatch) {
         onTouchTap={this.addParty.bind(this)}
       />,
     ];
+    
+    const friendactions = [
+      <FlatButton
+        label="Ok"
+        primary={true}
+        keyboardFocused={true}
+        onTouchTap={this.addFriend.bind(this)}
+      />,
+    ];
       const iconButtonElement = (
           <IconButton
             touch={true}
@@ -96,7 +124,9 @@ function mapDispatchToProps(dispatch) {
           );
       const leftIconMenu = (
           <IconMenu iconButtonElement={iconButtonElement}>
-          <MenuItem>Add Friend</MenuItem>
+          <MenuItem
+          onTouchTap={this.handleAddFriendOpen.bind(this)}
+          >Add Friend</MenuItem>
           </IconMenu>
           );
       return (
@@ -131,11 +161,6 @@ function mapDispatchToProps(dispatch) {
             icon={<Toys />}
             onTouchTap={() => this.select(0)}
           />
-            <BottomNavigationItem
-              label="Recents"
-              icon={<Restore />}
-              onTouchTap={() => this.select(1)}
-            />
             </BottomNavigation>
             </Drawer>
               <Dialog
@@ -145,10 +170,23 @@ function mapDispatchToProps(dispatch) {
                 open={this.state.open}
                 onRequestClose={this.handleClose}
               >
-                Type in the friends email address and press enter.  <br />
+                Type in the partyname and press enter.  <br />
                 <TextField
                       hintText="Party Name"
                       id="addpartytextbox"
+                />
+              </Dialog>
+              <Dialog
+                title="Add a Friend to the Party"
+                actions={friendactions}
+                modal={false}
+                open={this.state.addfriend_open}
+                onRequestClose={this.handleAddFriendClose}
+              >
+                Type in the friends username and press enter.  <br />
+                <TextField
+                      hintText="Party Name"
+                      id="addfriendtopartytextbox"
                 />
               </Dialog>
             </div>
@@ -160,5 +198,6 @@ Party.propTypes = {
   setChatWindow: React.PropTypes.func,
   setNewListener: React.PropTypes.func,
   addParty: React.PropTypes.func,
+  addFriendToParty: React.PropTypes.func,
   getPartyList: React.PropTypes.func,
 };

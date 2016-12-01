@@ -3,6 +3,7 @@
 
 import React from 'react';
 import Paper from 'material-ui/Paper';
+import { browserHistory } from 'react-router';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actionCreators from '../actions/data';
@@ -43,6 +44,7 @@ export default class ProfileView extends React.Component {
                             <h2>Profile</h2>
                             <p>{this.props.userName}!</p>
                             <p>{this.props.data.data.email}</p>
+                            <p onClick={() =>browserHistory.push('/main')}> Back to chat </p>
                           </div>
                     }
                     </div>

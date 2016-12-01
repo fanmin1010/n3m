@@ -31,6 +31,7 @@ import {
          friendlistCall,
          friendHistoryCall,
          addFriendCall,
+         addFriendToPartyCall,
          addPartyCall,
          partylistCall,
        } from '../utils/http_functions';
@@ -351,6 +352,26 @@ export function addParty(partyname) {
     });
   };
 }
+
+
+
+
+export function addFriendToParty(friend, partyid) {
+  return function (dispatch) {
+    const token = localStorage.getItem('token');
+    console.log('inside of the addFriendToParty action');
+    console.log(friend, partyid);
+    return addFriendToPartyCall(friend, partyid, token, () => {
+      try {
+        console.log('inside of add friend to the party success callback');
+      } catch (e) {
+        console.log('There was an error while adding a friend to the party');
+        console.dir(e);
+      }
+    });
+  };
+}
+
 
 export function callUber(addr) {
   return function (dispatch) {

@@ -173,11 +173,6 @@ export class Header extends Component {
                       icon={<People />}
                       onTouchTap={() => this.select(0)}
                                />
-										<BottomNavigationItem
-                      label="Recents"
-                      icon={<Restore />}
-                      onTouchTap={() => this.select(1)}
-                              />
 									</BottomNavigation>
                </div>
               </LeftNav>

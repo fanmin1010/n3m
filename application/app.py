@@ -18,6 +18,7 @@ from random import randint
 import constants
 
 
+socketio = SocketIO(app)
 
 @app.route('/', methods=['GET'])
 def index():
@@ -305,7 +306,6 @@ def call_opentable(rest_id, guest_count, res_time):
     return jsonify(timeList)
 
 
-socketio = SocketIO(app)
 
 
 @socketio.on('party_message')
@@ -316,7 +316,7 @@ def party_message(message):
     now = datetime.datetime.now().strftime('%H:%M:%S')
     partyId = message['partyId']
     print('This is the time: ' + str(now), file=sys.stderr)
-    socketio.emit(message['partyname'] + str(partyId),
+    socketio.emit(message['partyname'],
                   {'username': message['username'],
                    'text': message['msgtext'],
                    'avatar': avatar,
@@ -358,7 +358,6 @@ def opentable_message(message, lat, lon):
         return reply_text
     except:
         return 'Could not find any restaurants close to that.'
-
 
 
 def uber_message(message, lat, lon):
@@ -422,15 +421,14 @@ def user2user_message(message):
         print("Something happend with error in the database.")
 
 
-
 @app.route("/api/friendhistory", methods=["POST"])
 @requires_auth
 def get_friend_msg_his():
-    '''get message history between current user and submitted friend'''
     current_user = g.current_user['username']
     incoming = request.get_json()
     friend = incoming["friend"]
     # both current_user and friend are the usernames that you want to retrieve
     # the message history of
-    msg_list = FriendMessage.getFriendMessages(curr_user, friend)
-    pass
+    msg_list = FriendMessage.getFriendMessages(current_user, friend)
+    print(msg_list)
+    return jsonify(msg_list)
