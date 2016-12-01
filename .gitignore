@@ -4,6 +4,5 @@ venv
 git/
 n3m_docker/dotfiles/.vim/
 static/dist/out/
-htmlcov/
 npm-debug.log
 .DS_Store
