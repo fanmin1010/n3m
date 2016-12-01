@@ -224,7 +224,7 @@ def add_to_party():
         db.session.commit()
     except IntegrityError:
         return jsonify(message="Party user relation already exists."), 409
-
+    socketio.emit(incoming["username"] + '_newparty', {})
     return jsonify(status="success", avatar=user.avatar,
                    email=user.email, name=user.username)
 

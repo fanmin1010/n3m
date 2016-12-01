@@ -141,6 +141,14 @@ export function setNewListener(partyname, isParty, receiver) {
   };
 }
 
+export function addNewPartyListener(username) {
+  return function (dispatch) {
+    socket.on(username + '_newparty', () => {
+        dispatch(getPartyList());
+    })
+  }
+}
+
 export function setGeoListener(username){
   return function(dispatch) {
     socket.on(username+'__geo', (data) => {
