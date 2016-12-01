@@ -37,8 +37,8 @@ export function validateEmail(email) {
  */
 export function validateUsername(username) {
   const re = /(?=^.{3,20}$)^[a-zA-Z][a-zA-Z0-9]*[._-]?[a-zA-Z0-9]+$/;
-  function usernameAlreadyUsed(username) {
-    return typeof username === 'undefined';
+  function usernameAlreadyUsed(uname) {
+    return typeof uname === 'undefined';
   }
   if (usernameAlreadyUsed(username)) {
     return false;

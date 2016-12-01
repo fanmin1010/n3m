@@ -25,7 +25,7 @@ export function create_user(username, email, password, pgp_key) {
 
 export function addFriendCall(email, token, cb) {
   return axios.post('api/user_add_friend', {
-    email: email, 
+    email,
   }, tokenConfig(token))
   .then(cb)
   .catch((error) => {
@@ -36,7 +36,7 @@ export function addFriendCall(email, token, cb) {
 export function addFriendToPartyCall(friend, party_id, token, cb) {
   return axios.post('api/add_users_to_party', {
     username: friend,
-    party_id: party_id
+    party_id,
   }, tokenConfig(token))
   .then(cb)
   .catch((error) => {
@@ -46,7 +46,7 @@ export function addFriendToPartyCall(friend, party_id, token, cb) {
 
 export function addPartyCall(party_name, token, cb) {
   return axios.post('api/createparty', {
-    party_name: party_name, 
+    party_name,
   }, tokenConfig(token))
   .then(cb)
   .catch((error) => {
@@ -75,7 +75,7 @@ export function friendlistCall(token, cb) {
 
 export function friendHistoryCall(friendName, token, cb) {
   return axios.post('api/friendhistory', {
-      'friend': friendName
+      friend: friendName,
     }, tokenConfig(token))
             .then(cb)
             .catch((error) => {
@@ -85,7 +85,7 @@ export function friendHistoryCall(friendName, token, cb) {
 
 export function partyHistoryCall(party_id, token, cb) {
   return axios.post('api/partyhistory', {
-      'party_id': party_id
+      party_id,
     }, tokenConfig(token))
             .then(cb)
             .catch((error) => {
@@ -106,7 +106,7 @@ export function socket_party_msg(msg, party_name, party_id, username, cb) {
   console.log(party_id);
   console.log(username);
   console.log(cb);
-  socket.emit('party_message', { msgtext: msg, party_name: party_name, party_id: party_id, username: username }, cb);
+  socket.emit('party_message', { msgtext: msg, party_name, party_id, username }, cb);
 }
 
 
@@ -127,17 +127,17 @@ export function partylistCall(token, cb) {
  **/
 export function socket_msg(msg, party_name, receiver, sender, cb) {
   console.log('inside socket_msg');
-  console.log('Party: ' + party_name);
-  console.log('From: ' + sender);
-  console.log('To: ' + receiver);
-  console.log('Body: ' + msg);
-  socket.emit('user2user_message', { msgtext: msg, party_name: party_name, receiver: receiver, sender: sender }, cb);
+  console.log(`Party: ${party_name}`);
+  console.log(`From: ${sender}`);
+  console.log(`To: ${receiver}`);
+  console.log(`Body: ${msg}`);
+  socket.emit('user2user_message', { msgtext: msg, party_name, receiver, sender }, cb);
 }
 
 
 export function callUberCall(addr) {
-  return axios.post('api/calluber',{
-    'end_address': addr
+  return axios.post('api/calluber', {
+    end_address: addr,
   });
 }
 

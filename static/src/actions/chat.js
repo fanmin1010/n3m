@@ -26,7 +26,7 @@ import {
 } from '../constants/index';
 
 import { parseJSON } from '../utils/misc';
-import { 
+import {
         socket_msg,
         socket_party_msg,
          callUberCall,
@@ -94,12 +94,12 @@ export function send_party_chat(msg, party_name, party_id, uname) {
 
 export function setChatWindow(party_name, party_id) {
   console.log(party_name);
-  var party_id = party_id || -1
+  var party_id = party_id || -1;
   return {
     type: NEW_CHAT_CHANNEL,
     payload: {
-      party_name: party_name,
-      party_id: party_id,
+      party_name,
+      party_id,
     },
   };
 }
@@ -109,8 +109,8 @@ export function addMessage(party_name, message) {
   return {
     type: ADD_MESSAGE,
     payload: {
-      message: message,
-      party_name: party_name,
+      message,
+      party_name,
     },
   };
 }
@@ -119,14 +119,14 @@ export function setIsParty(isParty, receiver) {
   return {
     type: SET_IS_PARTY,
     payload: {
-      isParty: isParty,
-      receiver: receiver,
-    }
+      isParty,
+      receiver,
+    },
   };
 }
 
 /**
- * @param party_name {string} in this case the party_name field is used for either one-on-one chats or party chats. 
+ * @param party_name {string} in this case the party_name field is used for either one-on-one chats or party chats.
  * @param isParty {boolean} tells us if this is a party or one-on-one chat.
  * @param receiver {receiver} the username of the user receiving one-on-one chat.
  **/
@@ -134,7 +134,7 @@ export function setNewListener(party_name, isParty, receiver) {
   return function (dispatch) {
     dispatch(setIsParty(isParty, receiver));
     socket.removeAllListeners();
-    console.log('setting up listener on ' + party_name);
+    console.log(`setting up listener on ${party_name}`);
     console.log(party_name);
     socket.on(party_name, (data) => {
       console.log('received message from server');
@@ -147,21 +147,21 @@ export function setNewListener(party_name, isParty, receiver) {
 
 export function addNewPartyListener(username) {
   return function (dispatch) {
-    socket.on(username + '_newparty', () => {
+    socket.on(`${username}_newparty`, () => {
         dispatch(getPartyList());
-    })
-  }
+    });
+  };
 }
 
-export function setGeoListener(username){
-  return function(dispatch) {
-    socket.on(username+'__geo', (data) => {
+export function setGeoListener(username) {
+  return function (dispatch) {
+    socket.on(`${username}__geo`, (data) => {
       console.log('Inside of the setGeoListener awesome');
       console.dir(data);
-      navigator.geolocation.getCurrentPosition(function(position){
+      navigator.geolocation.getCurrentPosition((position) => {
         console.log('got the position information for user:');
         console.dir(position);
-        socket.emit('geodata', {'party_name': data.party_name, 'receiver': data.receiver, 'msgtext': data.msgtext, 'username': username, 'latitude': position.coords.latitude.toFixed(3), 'longitude': position.coords.longitude.toFixed(3)});
+        socket.emit('geodata', { party_name: data.party_name, receiver: data.receiver, msgtext: data.msgtext, username, latitude: position.coords.latitude.toFixed(3), longitude: position.coords.longitude.toFixed(3) });
       });
     });
   };
@@ -214,8 +214,8 @@ export function friendHistorySuccess(messages, party_name) {
   return {
     type: FRIEND_HISTORY_SUCCESS,
     payload: {
-      messages: messages,
-      party_name: party_name
+      messages,
+      party_name,
     },
   };
 }
@@ -340,8 +340,8 @@ export function partyHistorySuccess(messages, party_name) {
   return {
     type: PARTY_HISTORY_SUCCESS,
     payload: {
-      messages: messages,
-      party_name: party_name
+      messages,
+      party_name,
     },
   };
 }
@@ -411,8 +411,6 @@ export function addParty(party_name) {
     });
   };
 }
-
-
 
 
 export function addFriendToParty(friend, partyid) {

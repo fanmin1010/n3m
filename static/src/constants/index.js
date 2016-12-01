@@ -39,5 +39,5 @@ export const UBER_EMAIL = 'uber_aid@party.io';
 export const OPENTABLE_EMAIL = 'opentable_aid@party.io';
 export const UBER_USERNAME = 'uber_aid';
 export const OPENTABLE_USERNAME = 'opentable_aid';
-export const BOTLIST = ['uber_aid', 'opentable_aid',];
+export const BOTLIST = ['uber_aid', 'opentable_aid'];
 

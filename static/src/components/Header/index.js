@@ -32,8 +32,6 @@ import {
 } from '../../constants/index';
 
 
-
-
 function mapStateToProps(state) {
   return {
     username: state.auth.username,
@@ -62,9 +60,9 @@ export class Header extends Component {
 		this.select = (index) => {
       console.log('inside of the select function');
       this.setState({ selectedIndex: index });
-      this.props.callUber('201 W 109th St, New York, NY10025' );
+      this.props.callUber('201 W 109th St, New York, NY10025');
       console.log('done calling uber');
-      this.props.callOpenTable('261196', '2', '2016-11-27 18:30'  );
+      this.props.callOpenTable('261196', '2', '2016-11-27 18:30');
       console.log('done calling opentable');
     };
   }
@@ -96,10 +94,10 @@ export class Header extends Component {
     this.props.setGeoListener(this.props.username);
 
     document.getElementById('chatinput').placeholder = '';
-    if(OPENTABLE_USERNAME === friend.username){
+    if (OPENTABLE_USERNAME === friend.username) {
       document.getElementById('chatinput').placeholder = 'Restaurant Name@YYYY-MM-DD 24:00 || Partysize';
     }
-    else if(UBER_USERNAME === friend.username){
+    else if (UBER_USERNAME === friend.username) {
       document.getElementById('chatinput').placeholder = 'Destination Address';
     }
     else {
@@ -108,30 +106,30 @@ export class Header extends Component {
   }
 
   addFriendClicked() {
-    this.setState({open: true});
+    this.setState({ open: true });
   }
 
   addFriend() {
-    var email=document.getElementById('addfriendtextbox').value;
+    const email = document.getElementById('addfriendtextbox').value;
     document.getElementById('addfriendtextbox').value = '';
-    this.props.addFriend(email, this.props.username);  
+    this.props.addFriend(email, this.props.username);
     this.handleClose();
   }
 
   handleOpen = () => {
-    this.setState({open: true});
+    this.setState({ open: true });
   };
 
   handleClose = () => {
-    this.setState({open: false});
+    this.setState({ open: false });
   };
-  
+
   render() {
     const actions = [
       <FlatButton
         label="Ok"
-        primary={true}
-        keyboardFocused={true}
+        primary
+        keyboardFocused
         onTouchTap={this.addFriend.bind(this)}
       />,
     ];
@@ -153,11 +151,11 @@ export class Header extends Component {
 									<Subheader>Friends({this.props.friendlist.length}) {<PersonAdd color={grey500} style={{ margin: '15px', float: 'right' }} onTouchTap={this.addFriendClicked.bind(this)} />}</Subheader>
 									{this.props.friendlist.map((friend) => {
 									return (<ListItem
-                            primaryText={friend.username}
-                            leftAvatar={<Avatar src={friend.avatar} />}
-                            rightIcon={<CommunicationChatBubble />}
-                            onTouchTap={this._onFriendSelected.bind(this, friend)}
-                         />);
+  primaryText={friend.username}
+  leftAvatar={<Avatar src={friend.avatar} />}
+  rightIcon={<CommunicationChatBubble />}
+  onTouchTap={this._onFriendSelected.bind(this, friend)}
+         />);
           				})}
 									</List>
                   <BottomNavigation
@@ -165,10 +163,10 @@ export class Header extends Component {
                     style={{ position: 'absolute', bottom: '2px' }}
                   >
 									  <BottomNavigationItem
-                      label="Friends"
-                      icon={<People />}
-                      onTouchTap={() => this.select(0)}
-                               />
+  label="Friends"
+  icon={<People />}
+  onTouchTap={() => this.select(0)}
+           />
 									</BottomNavigation>
                </div>
               </LeftNav>
@@ -181,10 +179,10 @@ export class Header extends Component {
                 open={this.state.open}
                 onRequestClose={this.handleClose}
               >
-                Type in the friends email address and press enter.  <br />
+                Type in the friends email address and press enter.                      <br />
                 <TextField
-                      hintText="friends email"
-                      id="addfriendtextbox"
+                  hintText="friends email"
+                  id="addfriendtextbox"
                 />
               </Dialog>
             </div>

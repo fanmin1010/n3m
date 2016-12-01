@@ -145,7 +145,7 @@ export function registerUser(username, email, password, pgp_key) {
                 response: {
                   status: error.response.status,
                   statusText: error.response.data.message,
-                }
+                },
               }));
             });
   };

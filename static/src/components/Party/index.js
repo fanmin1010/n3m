@@ -53,55 +53,55 @@ function mapDispatchToProps(dispatch) {
 
       this.select = (index) => this.setState({ selectedIndex: index });
     }
-  
+
     componentWillMount() {
       this.props.getPartyList();
       this.props.addNewPartyListener(this.props.username);
     }
 
   _onPartySelected(party) {
-    if(party.party_name === 'Lobby'){
+    if (party.party_name === 'Lobby') {
       this.props.getPartyHistory(party.party_id, party.party_name);
       this.props.setChatWindow(party.party_name, party.party_id);
       this.props.setNewListener(party.party_name, true, null);
     }
     else {
-      this.props.getPartyHistory(party.party_id, party.party_name.replace(' ','') + '' + party.party_id);
-      this.props.setChatWindow(party.party_name.replace(' ','') + '' + party.party_id, party.party_id);
-      this.props.setNewListener(party.party_name.replace(' ','') + '' + party.party_id, true, null);
+      this.props.getPartyHistory(party.party_id, `${party.party_name.replace(' ', '')}${party.party_id}`);
+      this.props.setChatWindow(`${party.party_name.replace(' ', '')}${party.party_id}`, party.party_id);
+      this.props.setNewListener(`${party.party_name.replace(' ', '')}${party.party_id}`, true, null);
     }
   }
 
   handleOpen = () => {
-    this.setState({open: true});
+    this.setState({ open: true });
   };
 
   handleClose = () => {
-    this.setState({open: false});
+    this.setState({ open: false });
   };
 
   handleAddFriendOpen = () => {
-    this.setState({addfriend_open: true});
+    this.setState({ addfriend_open: true });
   };
 
   handleAddFriendClose = () => {
-    this.setState({addfriend_open: false});
+    this.setState({ addfriend_open: false });
   };
 
   addFriend() {
-    var friendname = document.getElementById('addfriendtopartytextbox').value;
-    console.log('Friendname is: ' + friendname);
+    const friendname = document.getElementById('addfriendtopartytextbox').value;
+    console.log(`Friendname is: ${friendname}`);
     document.getElementById('addfriendtopartytextbox').value = '';
     this.props.addFriendToParty(friendname, this.props.party_id);
     this.handleAddFriendClose();
   }
 
   addParty() {
-    var party_name = document.getElementById('addpartytextbox').value;
-    console.log('Partyname is: ' + party_name);
-    //var friends = document.getElementById('').value
+    const party_name = document.getElementById('addpartytextbox').value;
+    console.log(`Partyname is: ${party_name}`);
+    // var friends = document.getElementById('').value
     document.getElementById('addpartytextbox').value = '';
-    this.props.addParty(party_name);  
+    this.props.addParty(party_name);
     this.handleClose();
   }
 
@@ -109,23 +109,23 @@ function mapDispatchToProps(dispatch) {
     const actions = [
       <FlatButton
         label="Ok"
-        primary={true}
-        keyboardFocused={true}
+        primary
+        keyboardFocused
         onTouchTap={this.addParty.bind(this)}
       />,
     ];
-    
+
     const friendactions = [
       <FlatButton
         label="Ok"
-        primary={true}
-        keyboardFocused={true}
+        primary
+        keyboardFocused
         onTouchTap={this.addFriend.bind(this)}
       />,
     ];
       const iconButtonElement = (
           <IconButton
-            touch={true}
+            touch
             tooltip="more"
             tooltipPosition="bottom-left"
           >
@@ -135,13 +135,13 @@ function mapDispatchToProps(dispatch) {
       const leftIconMenu = (
           <IconMenu iconButtonElement={iconButtonElement}>
           <MenuItem
-          onTouchTap={this.handleAddFriendOpen.bind(this)}
+            onTouchTap={this.handleAddFriendOpen.bind(this)}
           >Add Friend</MenuItem>
           </IconMenu>
           );
       return (
           <div>
-          <Drawer open='true' openSecondary>
+          <Drawer open="true" openSecondary>
           <AppBar
             iconElementLeft={<div />}
           />
@@ -180,10 +180,10 @@ function mapDispatchToProps(dispatch) {
                 open={this.state.open}
                 onRequestClose={this.handleClose}
               >
-                Type in the party name and press enter.  <br />
+                Type in the party name and press enter.                      <br />
                 <TextField
-                      hintText="Party Name"
-                      id="addpartytextbox"
+                  hintText="Party Name"
+                  id="addpartytextbox"
                 />
               </Dialog>
               <Dialog
@@ -193,10 +193,10 @@ function mapDispatchToProps(dispatch) {
                 open={this.state.addfriend_open}
                 onRequestClose={this.handleAddFriendClose}
               >
-                Type in the friends username and press enter.  <br />
+                Type in the friends username and press enter.                      <br />
                 <TextField
-                      hintText="Party Name"
-                      id="addfriendtopartytextbox"
+                  hintText="Party Name"
+                  id="addfriendtopartytextbox"
                 />
               </Dialog>
             </div>

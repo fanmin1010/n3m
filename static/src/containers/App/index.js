@@ -35,16 +35,18 @@ class App extends React.Component { // eslint-disable-line react/prefer-stateles
 
   render() {
     return (
-            <MuiThemeProvider muiTheme={getMuiTheme({
-              palette: {
+            <MuiThemeProvider
+              muiTheme={getMuiTheme({
+               palette: {
                 primary1Color: '#778899',
                 primary2Color: '#2173B3',
                 primary3Color: '#A9D2EB',
                 accent1Color: '#ED3B3B',
                 accent2Color: '#ED2B2B',
                 accent3Color: '#F58C8C',
-              },
-            })}>
+               },
+            })}
+            >
                 <section>
                 {
                   !this.props.isAuthenticated ?

@@ -48,7 +48,7 @@ export default class LoginView extends React.Component {
 
   isDisabled() {
     let email_is_valid = false;
-    let password_is_valid = false;
+    const password_is_valid = false;
 
     if (this.state.email === '') {
       this.setState({

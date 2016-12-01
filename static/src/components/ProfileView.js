@@ -44,7 +44,7 @@ export default class ProfileView extends React.Component {
                             <h2>Profile</h2>
                             <p>{this.props.username}!</p>
                             <p>{this.props.data.data.email}</p>
-                            <p onClick={() =>browserHistory.push('/main')}> Back to chat </p>
+                            <p onClick={() => browserHistory.push('/main')}> Back to chat </p>
                           </div>
                     }
                     </div>

@@ -43,7 +43,7 @@ export default class ProtectedView extends React.Component {
                     ? <h1>Loading data...</h1>
                     :
                     <div>
-										  <Chat />
+                      <Chat />
                       <Party />
                     </div>
                 }
