@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { browserHistory } from 'react-router';
 import { connect } from 'react-redux';
 import { List, ListItem } from 'material-ui/List';
 import Paper from 'material-ui/Paper';
@@ -8,7 +7,7 @@ import Avatar from 'material-ui/Avatar';
 import Subheader from 'material-ui/Subheader';
 import Divider from 'material-ui/Divider';
 import { bindActionCreators } from 'redux';
-import { grey400, darkBlack, lightBlack } from 'material-ui/styles/colors';
+import { darkBlack } from 'material-ui/styles/colors';
 
 import * as actionCreators from '../../actions/chat';
 import {
@@ -44,54 +43,14 @@ const style = {
 
 @connect(mapStateToProps, mapDispatchToProps)
 export class Chat extends Component {
-  constructor(props) {
-    super(props);
-  }
-
-  componentDidMount() {
-      document.getElementById('chatinput').placeholder = 'Chat Message';
-  }
 
   componentWillMount() {
     this.props.setChatWindow(this.props.party_name);
     this.props.setNewListener(this.props.party_name, true, null);
   }
 
-  render() {
-    return (
-            <div className="col-md-8 col-md-offset-2" onKeyPress={(e) => this._handleKeyPress(e)}>
-							<Paper style={style} zDepth={5} rounded={false} >
-                <Subheader>{this.props.party_name}</Subheader>
-                <Divider />
-                <List id="messagelist" style={{ zIndex: '1', height: '85%', width: '98%', left: '1%', position: 'relative', overflow: 'scroll' }} >
-                {this.props.messages.map((msg) => {
-                    return (<ListItem
-                      leftAvatar={(msg.username === this.props.username) ? null : <Avatar src={msg.avatar} />}
-                      rightAvatar={(msg.username === this.props.username) ? <Avatar src={msg.avatar} /> : null}
-                      secondaryText={
-                          <h5>
-                            <span style={{ fontSize: '10pt', color: darkBlack }}>{msg.time} </span>--
-                            {msg.username}
-                          </h5>
-                        }
-                      primaryText={
-                        (BOTLIST.includes(msg.username))
-                          ? <pre> {msg.text} </pre>
-                          : <p> {msg.text} </p>
-                       }
-                      secondaryTextLines={1}
-                      style={(msg.username === 'Me') ? { textAlign: 'right' } : {}}
-                    />);
-                  })}
-                </List>
-
-								<TextField
-  id="chatinput"
-  style={{ width: '98%', left: '1%', position: 'relative', backgroundColor: 'white', bottom: '5px', zIndex: '2' }}
-								/>
-							</Paper>
-						</div>
-        );
+  componentDidMount() {
+      document.getElementById('chatinput').placeholder = 'Chat Message';
   }
 
   getMessage() {
@@ -104,30 +63,70 @@ export class Chat extends Component {
       this.props.send_party_chat(msg, this.props.party_name.replace(' ', ''), this.props.party_id, this.props.username);
     } else {
       this.props.send_chat(msg, this.props.party_name.replace(' ', ''), this.props.receiver, this.props.username);
-
     }
     document.getElementById('chatinput').value = '';
     document.getElementById('chatinput').placeholder = '';
     if (OPENTABLE_USERNAME === this.props.receiver) {
       document.getElementById('chatinput').placeholder = 'Restaurant Name@YYYY-MM-DD 24:00 || Partysize';
-    }
-    else if (UBER_USERNAME === this.props.receiver) {
+    } else if (UBER_USERNAME === this.props.receiver) {
       document.getElementById('chatinput').placeholder = 'Destination Address';
-    }
-    else {
+    } else {
       document.getElementById('chatinput').placeholder = 'Chat Message';
     }
   }
 
-  _handleKeyPress(e) {
+  handleKeyPress(e) {
     if (e.key === 'Enter') {
       const message = this.getMessage();
       this.sendMessage(message);
     }
   }
+
+  render() {
+    return (
+            <div className="col-md-8 col-md-offset-2" onKeyPress={(e) => this.handleKeyPress(e)}>
+							<Paper style={style} zDepth={5} rounded={false} >
+                <Subheader>{this.props.party_name}</Subheader>
+                <Divider />
+                <List id="messagelist" style={{ zIndex: '1', height: '85%', width: '98%', left: '1%', position: 'relative', overflow: 'scroll' }} >
+                {this.props.messages.map((msg) => <ListItem
+                  leftAvatar={(msg.username === this.props.username) ? null : <Avatar src={msg.avatar} />}
+                  rightAvatar={(msg.username === this.props.username) ? <Avatar src={msg.avatar} /> : null}
+                  secondaryText={
+                          <h5>
+                            <span style={{ fontSize: '10pt', color: darkBlack }}>{msg.time} </span>--
+                            {msg.username}
+                          </h5>
+                        }
+                  primaryText={
+                        (BOTLIST.includes(msg.username))
+                          ? <pre> {msg.text} </pre>
+                          : <p> {msg.text} </p>
+                       }
+                  secondaryTextLines={1}
+                  style={(msg.username === 'Me') ? { textAlign: 'right' } : {}}
+                />
+                  )}
+                </List>
+
+								<TextField
+  id="chatinput"
+  style={{ width: '98%', left: '1%', position: 'relative', backgroundColor: 'white', bottom: '5px', zIndex: '2' }}
+								/>
+							</Paper>
+						</div>
+        );
+  }
+
 }
 
 Chat.propTypes = {
+  messages: React.PropTypes.arrayOf(React.PropTypes.object),
+  isParty: React.PropTypes.bool,
+  party_id: React.PropTypes.number,
+  party_name: React.PropTypes.string,
+  username: React.PropTypes.string,
+  receiver: React.PropTypes.string,
   send_chat: React.PropTypes.func,
   send_party_chat: React.PropTypes.func,
   setChatWindow: React.PropTypes.func,

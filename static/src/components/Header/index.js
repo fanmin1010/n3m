@@ -9,14 +9,10 @@ import { List, ListItem } from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import MenuItem from 'material-ui/MenuItem';
 import FlatButton from 'material-ui/FlatButton';
-import ChevronLeft from 'material-ui/svg-icons/navigation/chevron-left';
-import MoreVert from 'material-ui/svg-icons/navigation/more-vert';
-import Restore from 'material-ui/svg-icons/action/restore';
 import People from 'material-ui/svg-icons/social/people';
 import PersonAdd from 'material-ui/svg-icons/social/person-add';
 import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
 import Dialog from 'material-ui/Dialog';
-import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 
 import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
@@ -95,11 +91,9 @@ export class Header extends Component {
     document.getElementById('chatinput').placeholder = '';
     if (OPENTABLE_USERNAME === friend.username) {
       document.getElementById('chatinput').placeholder = 'Restaurant Name@YYYY-MM-DD 24:00 || Partysize';
-    }
-    else if (UBER_USERNAME === friend.username) {
+    } else if (UBER_USERNAME === friend.username) {
       document.getElementById('chatinput').placeholder = 'Destination Address';
-    }
-    else {
+    } else {
       document.getElementById('chatinput').placeholder = 'Chat Message';
     }
   }
@@ -146,7 +140,7 @@ export class Header extends Component {
                   <MenuItem onClick={() => this.dispatchNewRoute('/profile')}> Profile </MenuItem>
                   <MenuItem onClick={(e) => this.logout(e)}> Logout </MenuItem>
                   <Divider />
-								  <List>
+                  <List>
 									<Subheader>Friends({this.props.friendlist.length}) {<PersonAdd color={grey500} style={{ margin: '15px', float: 'right' }} onTouchTap={this.addFriendClicked.bind(this)} />}</Subheader>
 									{this.props.friendlist.map((friend) => <ListItem
   primaryText={friend.username}
@@ -191,6 +185,7 @@ export class Header extends Component {
 }
 
 Header.propTypes = {
+  user_id: React.PropTypes.number,
   username: React.PropTypes.string,
   friendlist: React.PropTypes.arrayOf(React.PropTypes.object),
   logoutAndRedirect: React.PropTypes.func,

@@ -1,3 +1,4 @@
+/* global socket */
 import {
     CHAT_MESSAGES_REQUEST,
     CHAT_MESSAGES_SUCCESS,
@@ -62,7 +63,7 @@ export function chatMessagesFailure(error) {
 
 
 export function send_chat(msg, party_name, receiver, sender) {
-  return function (dispatch) {
+  return function send_chat_dispatch(dispatch) {
     dispatch(chatMessagesRequest());
     return socket_msg(msg, party_name, receiver, sender, () => {
       try {
@@ -77,7 +78,7 @@ export function send_chat(msg, party_name, receiver, sender) {
 }
 
 export function send_party_chat(msg, party_name, party_id, uname) {
-  return function (dispatch) {
+  return function send_party_chat_dispatch(dispatch) {
     dispatch(chatMessagesRequest());
     return socket_party_msg(msg, party_name, party_id, uname, () => {
       try {
@@ -93,13 +94,12 @@ export function send_party_chat(msg, party_name, party_id, uname) {
 
 
 export function setChatWindow(party_name, party_id) {
-  console.log(party_name);
-  var party_id = party_id || -1;
+  const partyid = party_id || -1;
   return {
     type: NEW_CHAT_CHANNEL,
     payload: {
       party_name,
-      party_id,
+      partyid,
     },
   };
 }
@@ -131,7 +131,7 @@ export function setIsParty(isParty, receiver) {
  * @param receiver {receiver} the username of the user receiving one-on-one chat.
  **/
 export function setNewListener(party_name, isParty, receiver) {
-  return function (dispatch) {
+  return function setNewListenerDispatch(dispatch) {
     dispatch(setIsParty(isParty, receiver));
     socket.removeAllListeners();
     console.log(`setting up listener on ${party_name}`);
@@ -145,8 +145,49 @@ export function setNewListener(party_name, isParty, receiver) {
   };
 }
 
+export function partyListRequest() {
+  return {
+    type: PARTY_LIST_REQUEST,
+  };
+}
+
+export function partyListSuccess(payload) {
+  return {
+    type: PARTY_LIST_SUCCESS,
+    payload,
+  };
+}
+
+export function partyListFailure(error) {
+  return {
+    type: PARTY_LIST_FAILURE,
+    payload: error,
+  };
+}
+
+export function getPartyList() {
+  return function getPartyListDispatch(dispatch) {
+    console.log('In the getPartyList function');
+    dispatch(partyListRequest());
+    const token = localStorage.getItem('token');
+    return partylistCall(token, (data) => {
+
+      try {
+        console.log('Getting back the partylist');
+        console.log(data);
+        dispatch(partyListSuccess(data));
+      } catch (e) {
+        console.log('There was an error while calling partylist');
+        console.dir(e);
+        dispatch(partyListFailure());
+      }
+    });
+
+  };
+}
+
 export function addNewPartyListener(username) {
-  return function (dispatch) {
+  return function addNewPartyListenerDispatch(dispatch) {
     socket.on(`${username}_newparty`, () => {
         dispatch(getPartyList());
     });
@@ -154,7 +195,7 @@ export function addNewPartyListener(username) {
 }
 
 export function setGeoListener(username) {
-  return function (dispatch) {
+  return function setGeoListenerDispatch() {
     socket.on(`${username}__geo`, (data) => {
       console.log('Inside of the setGeoListener awesome');
       console.dir(data);
@@ -188,7 +229,7 @@ export function friendListFailure(error) {
 }
 
 export function getFriendList() {
-  return function (dispatch) {
+  return function getFriendListDispatch(dispatch) {
     dispatch(friendListRequest());
     const token = localStorage.getItem('token');
     return friendlistCall(token, (data) => {
@@ -228,7 +269,7 @@ export function friendHistoryFailure(error) {
 }
 
 export function getFriendHistory(friendName, party_name) {
-  return function (dispatch) {
+  return function getFriendHistoryDispatch(dispatch) {
     dispatch(friendHistoryRequest());
     const token = localStorage.getItem('token');
     return friendHistoryCall(friendName, token, (data) => {
@@ -255,7 +296,7 @@ export function addFriendRequest() {
   };
 }
 
-export function addFriendSuccess(payload) {
+export function addFriendSuccess() {
   return {
     type: ADD_FRIEND_SUCCESS,
   };
@@ -269,7 +310,7 @@ export function addFriendFailure(error) {
 }
 
 export function addFriend(email) {
-  return function (dispatch) {
+  return function addFriendDispatch(dispatch) {
     dispatch(addFriendRequest());
     const token = localStorage.getItem('token');
     console.log('inside of the addFriend action');
@@ -287,48 +328,6 @@ export function addFriend(email) {
     });
   };
 }
-
-export function partyListRequest() {
-  return {
-    type: PARTY_LIST_REQUEST,
-  };
-}
-
-export function partyListSuccess(payload) {
-  return {
-    type: PARTY_LIST_SUCCESS,
-    payload,
-  };
-}
-
-export function partyListFailure(error) {
-  return {
-    type: PARTY_LIST_FAILURE,
-    payload: error,
-  };
-}
-
-export function getPartyList() {
-  return function (dispatch) {
-    console.log('In the getPartyList function');
-    dispatch(partyListRequest());
-    const token = localStorage.getItem('token');
-    return partylistCall(token, (data) => {
-
-      try {
-        console.log('Getting back the partylist');
-        console.log(data);
-        dispatch(partyListSuccess(data));
-      } catch (e) {
-        console.log('There was an error while calling partylist');
-        console.dir(e);
-        dispatch(partyListFailure());
-      }
-    });
-
-  };
-}
-
 
 export function partyHistoryRequest() {
   return {
@@ -354,7 +353,7 @@ export function partyHistoryFailure(error) {
 }
 
 export function getPartyHistory(party_id, party_name) {
-  return function (dispatch) {
+  return function getPartyHistoryDispatch(dispatch) {
     dispatch(partyHistoryRequest());
     const token = localStorage.getItem('token');
     return partyHistoryCall(party_id, token, (data) => {
@@ -379,7 +378,7 @@ export function addPartyRequest() {
   };
 }
 
-export function addPartySuccess(payload) {
+export function addPartySuccess() {
   return {
     type: ADD_PARTY_SUCCESS,
   };
@@ -393,7 +392,7 @@ export function addPartyFailure(error) {
 }
 
 export function addParty(party_name) {
-  return function (dispatch) {
+  return function addPartyDispatch(dispatch) {
     dispatch(addPartyRequest());
     const token = localStorage.getItem('token');
     console.log('inside of the addParty action');
@@ -414,7 +413,7 @@ export function addParty(party_name) {
 
 
 export function addFriendToParty(friend, partyid) {
-  return function (dispatch) {
+  return function addFriendToPartyDispatch() {
     const token = localStorage.getItem('token');
     console.log('inside of the addFriendToParty action');
     console.log(friend, partyid);
@@ -431,7 +430,7 @@ export function addFriendToParty(friend, partyid) {
 
 
 export function callUber(addr) {
-  return function (dispatch) {
+  return function callUberDispatch() {
     return callUberCall(addr)
             .then(parseJSON)
             .then(response => {
@@ -448,7 +447,7 @@ export function callUber(addr) {
 }
 
 export function callOpenTable(id, covers, datetime) {
-  return function (dispatch) {
+  return function callOpenTableDispatch() {
     return callOpenTableCall(id, covers, datetime)
             .then(parseJSON)
             .then(response => {

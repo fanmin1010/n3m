@@ -64,7 +64,7 @@ export function redirectToRoute(route) {
 }
 
 export function loginUser(email, password) {
-  return function (dispatch) {
+  return function loginUserDispatch(dispatch) {
     dispatch(loginUserRequest());
     return get_token(email, password)
             .then(parseJSON)
@@ -118,7 +118,7 @@ export function registerUserFailure(error) {
 }
 
 export function registerUser(username, email, password, pgp_key) {
-  return function (dispatch) {
+  return function registerUserDispatch(dispatch) {
     dispatch(registerUserRequest());
     return create_user(username, email, password, pgp_key)
             .then(parseJSON)
