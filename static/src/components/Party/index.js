@@ -60,8 +60,14 @@ function mapDispatchToProps(dispatch) {
     }
 
   _onPartySelected(party) {
-    this.props.setChatWindow(party.partyName.replace(' ','') + '' + party.partyID, party.partyID);
-    this.props.setNewListener(party.partyName.replace(' ','') + '' + party.partyID, true, null);
+    if(party.partyName === 'Lobby'){
+      this.props.setChatWindow(party.partyName, party.partyID);
+      this.props.setNewListener(party.partyName, true, null);
+    }
+    else {
+      this.props.setChatWindow(party.partyName.replace(' ','') + '' + party.partyID, party.partyID);
+      this.props.setNewListener(party.partyName.replace(' ','') + '' + party.partyID, true, null);
+    }
   }
 
   handleOpen = () => {
@@ -142,7 +148,7 @@ function mapDispatchToProps(dispatch) {
               primaryText="Lobby"
               rightAvatar={<Avatar src="dist/images/default_team.png" />}
               leftIcon={<CommunicationChatBubble />}
-              onTouchTap={this._onPartySelected.bind(this, { name: 'Lobby' })}
+              onTouchTap={this._onPartySelected.bind(this, { partyName: 'Lobby', partyID: -1 })}
             />
           <Subheader>Parties({this.props.partylist.length}) {<GroupAdd color={grey500} style={{ margin: '15px', float: 'left' }} onTouchTap={this.handleOpen.bind(this)} />}</Subheader>
           {this.props.partylist.map((party) => {

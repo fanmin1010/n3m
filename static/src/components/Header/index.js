@@ -84,17 +84,13 @@ export class Header extends Component {
   }
 
   _onFriendSelected(friend) {
-    this.props.getFriendHistory(friend.username);
     let partyname;
-    if(BOTLIST.includes(friend.username)){
-      console.log('you clicked a bot.');
-      partyname = friend.username;
-    }
-    else if (this.props.userId < friend.id) {
+    if (this.props.userId < friend.id) {
       partyname = `${this.props.userName.replace(' ', '')}-${friend.username.replace(' ', '')}`;
     } else {
       partyname = `${friend.username.replace(' ', '')}-${this.props.userName.replace(' ', '')}`;
     }
+    this.props.getFriendHistory(friend.username, partyname);
     this.props.setChatWindow(partyname);
     this.props.setNewListener(partyname, false, friend.username);
     this.props.setGeoListener(this.props.userName);

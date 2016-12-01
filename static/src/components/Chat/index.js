@@ -54,7 +54,7 @@ export class Chat extends Component {
 
   componentWillMount() {
     this.props.setChatWindow(this.props.partyname);
-    this.props.setNewListener(this.props.partyname);
+    this.props.setNewListener(this.props.partyname, true, null);
   }
 
   render() {

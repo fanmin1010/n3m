@@ -77,12 +77,15 @@ export default createReducer(initialState, {
           friendHistoryStatusText: null,
         }),
   [FRIEND_HISTORY_SUCCESS]: (state, payload) => {
-   console.log('friendhistorysuccess.');
-   console.dir(payload);
-    return Object.assign({}, state, {
-          friendHistoryStatusText: 'friend history retreived successfully.',
-          messages: payload.messages,
-        }); },
+      console.log('friendhistorysuccess.');
+      console.dir(payload);
+      var newstate =  Object.assign({}, state, {
+        allMessages: Object.assign({}, state.allMessages, { [payload.partyname]: state.allMessages[payload.partyname].slice().concat(payload.messages) }),
+        messages: state.allMessages[payload.partyname].slice().concat(payload.messages),
+        friendHistoryStatusText: 'friend history retreived successfully.',
+      }); 
+      return newstate;
+  },
   [FRIEND_HISTORY_FAILURE]: (state, payload) =>
         Object.assign({}, state, {
           friendHistoryStatusText: 'error retreiving friend history.',

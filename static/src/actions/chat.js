@@ -157,7 +157,7 @@ export function setGeoListener(username){
       navigator.geolocation.getCurrentPosition(function(position){
         console.log('got the position information for user:');
         console.dir(position);
-        socket.emit('geodata', {'partyname': data.partyname, 'username': username, 'msgtext': data.msgtext, 'username': username, 'latitude': position.coords.latitude.toFixed(3), 'longitude': position.coords.longitude.toFixed(3)});
+        socket.emit('geodata', {'partyname': data.partyname, 'receiver': data.receiver, 'msgtext': data.msgtext, 'username': username, 'latitude': position.coords.latitude.toFixed(3), 'longitude': position.coords.longitude.toFixed(3)});
       });
     });
   };
@@ -206,11 +206,12 @@ export function friendHistoryRequest() {
   };
 }
 
-export function friendHistorySuccess(messages) {
+export function friendHistorySuccess(messages, partyname) {
   return {
     type: FRIEND_HISTORY_SUCCESS,
     payload: {
-      messages: messages
+      messages: messages,
+      partyname: partyname
     },
   };
 }
@@ -222,7 +223,7 @@ export function friendHistoryFailure(error) {
   };
 }
 
-export function getFriendHistory(friendName) {
+export function getFriendHistory(friendName, partyname) {
   return function (dispatch) {
     dispatch(friendHistoryRequest());
     const token = localStorage.getItem('token');
@@ -230,7 +231,7 @@ export function getFriendHistory(friendName) {
       console.dir('The data in friend History');
       console.dir(data.data);
       try {
-        dispatch(friendHistorySuccess(data.data));
+        dispatch(friendHistorySuccess(data.data, partyname));
         document.getElementById('messagelist').scrollTop = 9999;
       } catch (e) {
         console.log('There was an error while calling friendHistory');

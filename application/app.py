@@ -16,6 +16,9 @@ import sys
 import geocoder
 from random import randint
 import constants
+import difflib
+from OpenTable import restaurants
+
 
 
 socketio = SocketIO(app)
@@ -281,16 +284,13 @@ def call_uber(end_address, lat, lng):
     return reply_text
 
 
-
 def call_opentable(rest_id, guest_count, res_time):
-    '''return opentable response'''
     timeList = []
-    id = incoming["id"]
     url = 'http://www.opentable.com/restaurant/profile/'
-    url = url + id
+    url = url + str(rest_id)
     url = url + '/search'
-    covers = incoming["covers"]
-    dateTime = incoming["datetime"]
+    covers = guest_count
+    dateTime = res_time
     payload = {'covers': covers, 'dateTime': dateTime}
     headers = {'Content-Type': 'application/json; charset=UTF-8'}
     r = requests.post(url, params=payload, headers=headers)
@@ -298,14 +298,13 @@ def call_opentable(rest_id, guest_count, res_time):
 
     for tag in soup.select('.dtp-results-times li'):
         timeList.append(tag.string)
-
+    times = '\nReservation Times: \n'
     for timeSlot in timeList:
-        print(timeSlot)
-
-    print("callopentable from app.py")
-    return jsonify(timeList)
-
-
+        if timeSlot is not None:
+            times = times + timeSlot + '\n'
+    if len(times) <= 22:
+        times = times + 'None available \n'
+    return times
 
 
 @socketio.on('party_message')
@@ -317,8 +316,10 @@ def party_message(message):
     partyId = message['partyId']
     print('This is the time: ' + str(now), file=sys.stderr)
     time = datetime.datetime.now()
-    result=PartyMessage.add_partyMessage(partyId, message['username'], time, message['msgtext'])
-    if result == "success":
+    result = None
+    if message['partyId'] != -1:
+       result=PartyMessage.add_partyMessage(partyId, message['username'], time, message['msgtext'])
+    if result == "success" or message['partyId'] == -1:
         socketio.emit(message['partyname'],
                   {'username': message['username'],
                    'text': message['msgtext'],
@@ -381,18 +382,18 @@ def get_bot_message(botname, message, lat, lon):
 @socketio.on('geodata')
 def bot_message(message):
     '''display api response in chat'''
-    bot_avatar = User.get_avatar_for_username(message['partyname'])
+    bot_avatar = User.get_avatar_for_username(message['receiver'])
     text_reply = get_bot_message(
-        message['partyname'],
+        message['receiver'],
         message['msgtext'],
         message['latitude'],
         message['longitude'])
     bot_now = datetime.datetime.now().strftime('%H:%M:%S')
     result2 = FriendMessage.add_friendMessage(
-        message['partyname'], message['username'], bot_now, text_reply)
+        message['receiver'], message['username'], bot_now, text_reply)
     if result2 == "success":
         socketio.emit(message['partyname'],
-                      {'username': message['partyname'],
+                      {'username': message['receiver'],
                        'text': text_reply,
                        'avatar': bot_avatar,
                        'time': bot_now})
@@ -418,9 +419,10 @@ def user2user_message(message):
     if result == "success":
         socketio.emit(message['partyname'], {'username': sender, 'text': message[
                       'msgtext'], 'avatar': avatar, 'time': now})
-        if message['partyname'] in constants.BOTLIST:
+        if message['receiver'] in constants.BOTLIST:
             socketio.emit(sender + '__geo',
                           {'partyname': message['partyname'],
+                           'receiver': receiver,
                            'msgtext': message['msgtext']})
     else:
         print("Something happend with error in the database.")
