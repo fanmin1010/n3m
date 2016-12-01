@@ -294,7 +294,7 @@ class PartyMessage(db.Model):
         self.partyID = partyID
         self.senderID = senderID
         self.message = message
-        self.timestamp = time
+        self.timestamp = db.func.now()
 
     @staticmethod
     def add_partyMessage(partyID, sender, time, messagetext):

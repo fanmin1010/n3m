@@ -2,7 +2,7 @@
 from __future__ import print_function
 from flask import request, render_template, jsonify, url_for, redirect, g
 from flask_socketio import SocketIO, emit
-from .models import User, Friendship, Party, PartyUser, FriendMessage
+from .models import User, Friendship, Party, PartyUser, FriendMessage, PartyMessage
 from index import app, db
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from .utils.auth import generate_token, requires_auth, verify_token
@@ -316,11 +316,16 @@ def party_message(message):
     now = datetime.datetime.now().strftime('%H:%M:%S')
     partyId = message['partyId']
     print('This is the time: ' + str(now), file=sys.stderr)
-    socketio.emit(message['partyname'],
+    time = datetime.datetime.now()
+    result=PartyMessage.add_partyMessage(partyId, message['username'], time, message['msgtext'])
+    if result == "success":
+        socketio.emit(message['partyname'],
                   {'username': message['username'],
                    'text': message['msgtext'],
                    'avatar': avatar,
                    'time': now})
+    else:
+        print("Something happend with error in the database.")
     # This is where the message should get inserted into database. Remove this
     # line.
 
