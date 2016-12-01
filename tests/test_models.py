@@ -31,22 +31,30 @@ class TestModels(BaseTestConfig):
         )
 
     def test_get_friendship_with_user_ids(self):
+        default_user = User.get_user_with_email_and_password(self.default_user["email"], self.default_user["password"])
+        u_two = User.get_user_with_email_and_password(self.d_user_two["email"], self.d_user_two["password"])
         self.assertTrue(
-            Friendship.get_friendship_with_user_ids(self.default_user["id"], self.d_user_two["id"])
+            Friendship.get_friendship_with_user_ids(default_user.id, u_two.id)
         )
-        self.assertTrue("Friendship" in repr(Friendship.get_friendship_with_user_ids(self.default_user["id"], self.d_user_two["id"])))
+        self.assertTrue("Friendship" in repr(Friendship.get_friendship_with_user_ids(default_user.id, u_two.id)))
         self.assertFalse(
             Friendship.get_friendship_with_user_ids(10101, 10102)
         )
     def test_get_all_friendship_of_user(self):
+        default_user = User.get_user_with_email_and_password(self.default_user["email"], self.default_user["password"])
         self.assertTrue(
-            Friendship.get_all_friendship_of_user(self.default_user["id"])
+            Friendship.get_all_friendship_of_user(default_user.id)
         )
+        u_three = User.get_user_with_email_and_password(self.d_user_three["email"], self.d_user_three["password"])
         self.assertEqual(
-            len(Friendship.get_all_friendship_of_user(self.d_user_three["id"])), 2
+            len(Friendship.get_all_friendship_of_user(u_three.id)), 2
         )
 
     def test_getMyParties(self):
+        default_user = User.get_user_with_email_and_password(self.default_user["email"], self.default_user["password"])
+        u_two = User.get_user_with_email_and_password(self.d_user_two["email"], self.d_user_two["password"])
+        self.default_user["id"]=default_user.id
+        self.d_user_two["id"]=u_two.id
         self.assertTrue(
                 Party.getMyParties(self.default_user["id"])
         )
@@ -59,7 +67,7 @@ class TestModels(BaseTestConfig):
         self.assertFalse(PartyUser.getPartyUsers(10101))
 
     def test_add_and_get_friendMessage(self):
-        now = datetime.datetime.now().strftime('%H:%M:%S')
+        now = datetime.datetime.now()
         sender = self.default_user["username"]
         receiver = self.d_user_two["username"]
         messagetext = "hello"
@@ -73,7 +81,7 @@ class TestModels(BaseTestConfig):
         self.assertTrue(result)
 
     def test_add_and_get_partyMessage(self):
-        now = datetime.datetime.now().strftime('%H:%M:%S')
+        now = datetime.datetime.now()
         sender = self.default_user
         party = self.default_party
         messagetext = "hello"

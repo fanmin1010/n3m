@@ -15,8 +15,7 @@ import sys
 import geocoder
 from random import randint
 import constants
-import difflib
-from OpenTable import restaurants
+
 
 
 @app.route('/', methods=['GET'])
@@ -95,9 +94,9 @@ def create_user():
         if new_user.email in bot_emails:
             return None
         bot = User.query.filter_by(email=botemail).first()
-        print(str(bot))
+        # print(str(bot))
         if bot is not None:
-            print('Bot is not none :)')
+            # print('Bot is not none :)')
             newfriendship = Friendship(new_user.id, bot.id)
             newfriendship2 = Friendship(bot.id, new_user.id)
             db.session.add(newfriendship)
@@ -161,8 +160,8 @@ def add_friendship():
 @requires_auth
 def createParty():
     incoming = request.get_json()
-    print('The partyname is')
-    print(incoming)
+    # print('The partyname is')
+    # print(incoming)
     av_path = "dist/images/team0{}.png".format(randint(0, 9))
     party = Party(
         partyName=incoming["partyName"],
@@ -200,12 +199,11 @@ def get_partylist():
 def add_to_party():
     incoming = request.get_json()
     party = Party.query.filter_by(
-        ownerID=g.current_user["id"],
-        partyName=incoming["partyName"]).first()
+        partyID=incoming["partyID"]).first()
     # print(party)
     if not party:
         return jsonify(message="Party does not exist."), 404
-    user = User.query.filter_by(email=incoming["email"]).first()
+    user = User.query.filter_by(username=incoming["username"]).first()
     if not user:
         return jsonify(message="User does not exist."), 403
     pu = PartyUser(party.partyID, user.id)
@@ -222,8 +220,7 @@ def add_to_party():
 @app.route("/api/get_token", methods=["POST"])
 def get_token():
     incoming = request.get_json()
-    bot_emails = [constants.UBER_EMAIL, constants.OPENTABLE_EMAIL]
-    if incoming["email"] in bot_emails:
+    if incoming["email"]=='uber_aid@party.io' or incoming["email"]=='opentable_aid@party.io':
         return jsonify(error=True), 403
     user = User.get_user_with_email_and_password(
         incoming["email"], incoming["password"])
@@ -268,13 +265,17 @@ def call_uber(end_address, lat, lng):
     return reply_text
 
 
-def call_opentable(rest_id, guest_count, res_time):
+@app.route("/api/callopentable", methods=["POST"])
+def call_opentable():
+    incoming = request.get_json()
+    print(incoming)
     timeList = []
+    id = incoming["id"]
     url = 'http://www.opentable.com/restaurant/profile/'
-    url = url + str(rest_id)
+    url = url + id
     url = url + '/search'
-    covers = guest_count
-    dateTime = res_time
+    covers = incoming["covers"]
+    dateTime = incoming["datetime"]
     payload = {'covers': covers, 'dateTime': dateTime}
     headers = {'Content-Type': 'application/json; charset=UTF-8'}
     r = requests.post(url, params=payload, headers=headers)
@@ -282,15 +283,14 @@ def call_opentable(rest_id, guest_count, res_time):
 
     for tag in soup.select('.dtp-results-times li'):
         timeList.append(tag.string)
-    times = '\nReservation Times: \n'
-    for timeSlot in timeList:
-        if timeSlot is not None:
-            times = times + timeSlot + '\n'
-    if len(times) <= 22:
-        times = times + 'None available \n'
-    return times
 
-"""
+    for timeSlot in timeList:
+        print(timeSlot)
+
+    print("callopentable from app.py")
+    return jsonify(timeList)
+
+
 @app.route("/api/saveride", methods=["POST"])
 @requires_auth
 def saveride():
@@ -315,7 +315,7 @@ def saveride():
     return jsonify(
         rideID=new_ride.id, rideDisplay=new_ride.__repr__
     )
-"""
+
 
 socketio = SocketIO(app)
 
@@ -343,33 +343,15 @@ def get_party_msg_his(partyID):
     pass
 
 def opentable_message(message, lat, lon):
-    keylist = restaurants.keys()
-    restname, resv_info = message.split('@')
-    resv_time, partysize = resv_info.split('||')
-    print('^^^^^^^^')
-    print(restname)
-    print(time)
-    print(partysize)
-    print('$$$$$$$$$')
-    mtch = difflib.get_close_matches(restname.strip(), keylist, 1, 0.1)
-    try:
-        print(str(mtch))
-        reply_text = ''
-        if message != mtch[0]:
-            reply_text = '\nCould not find ' + restname + '. Showing results for closest match: \n' + mtch[0] 
-        rest_id = restaurants[mtch[0]]['Id']
-        reply_text = '\n' + reply_text + mtch[0] + ' in ' + restaurants[mtch[0]]['Neighborhood']['Name'] + ', ' + restaurants[mtch[0]]['Region']['Name']  
-        reply_text = reply_text + call_opentable(rest_id, partysize.strip(), resv_time)
-        return reply_text
-    except:
-        return 'Could not find any restaurants close to that.'
+    return 'opentable message: lat: ' + lat + ', lon: ' + lon
+
 
 def uber_message(message, lat, lon):
     return call_uber(message, lat, lon)
 
 def get_bot_message(botname, message, lat, lon):
     if botname == constants.UBER_USERNAME:
-        return uber_message(message, lat, lon)    
+        return uber_message(message, lat, lon)
     elif botname == constants.OPENTABLE_USERNAME:
         return opentable_message(message, lat, lon)
 
@@ -396,8 +378,9 @@ def user2user_message(message):
     # socketio.emit(message['partyname'], {'username': sender, 'text': message['msgtext'], 'avatar': avatar, 'time': now})
     # This is where the message should get inserted into database. Remove this
     # line.
+    time = datetime.datetime.now()
     result = FriendMessage.add_friendMessage(
-        sender, receiver, now, message['msgtext'])
+        sender, receiver, time, message['msgtext'])
     if result == "success":
         socketio.emit(message['partyname'], {'username': sender, 'text': message['msgtext'], 'avatar': avatar, 'time': now})
         if message['partyname'] in constants.BOTLIST:
@@ -406,14 +389,8 @@ def user2user_message(message):
         print("Something happend with error in the database.")
 
 
-@app.route("/api/friendhistory", methods=["POST"])
-@requires_auth
-def get_friend_msg_his():
-    current_user = g.current_user['username']
-    incoming = request.get_json()
-    friend = incoming["friend"]
-    # both current_user and friend are the usernames that you want to retrieve
+def get_friend_msg_his(curr_user, friend):
+    # both curr_user and friend are the usernames that you want to retrieve
     # the message history of
-    msg_list = FriendMessage.getFriendMessages(current_user, friend)
-    print(msg_list)
-    return jsonify(msg_list)
+    msg_list = FriendMessage.getFriendMessages(curr_user, friend)
+    pass

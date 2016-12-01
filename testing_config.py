@@ -8,21 +8,18 @@ import application.constants as constants
 
 class BaseTestConfig(TestCase):
     default_user = {
-        "id": 1,
         "username": "thesecond",
         "email": "default@gmail.com",
         "password": "something2",
         "pgp_key": "=Yks1"
     }
     d_user_two = {
-        "id": 2,
         "username": "secuser",
         "email": "default2@gmail.com",
         "password": "something3",
         "pgp_key": " rfhYWBomlwauMHH1Yq+gxqzALf0/JNwGOW+vXbavc7PmaM3GQjZanAE8pdxqqiGl ZQ6y0TK/F6xikLudO/eeSvVlddmgnlh+TA== =Yks1"
     }
     d_user_three = {
-        "id": 3,
         "username": "thirduser",
         "email": "default3@gmail.com",
         "password": "something4",
@@ -33,7 +30,7 @@ class BaseTestConfig(TestCase):
         "partyID": 1,
         "partyName": "My Party"
     }
-    
+
     uber_user = {
         "username": "uber_aid",
         "email":  constants.UBER_EMAIL,
@@ -84,8 +81,8 @@ class BaseTestConfig(TestCase):
                 data=json.dumps(self.d_user_three),
                 content_type='application/json'
         )
-      
-      
+
+
         headers = {
             'content_type':'application/json',
             'Authorization': self.token
@@ -98,6 +95,7 @@ class BaseTestConfig(TestCase):
                 content_type='application/json'
         )
         self.fs_id = json.loads(f_res.data.decode("utf-8"))["friendship_id"]
+        print(self.fs_id)
         p_res = self.app.post(
             "/api/createParty",
             data=json.dumps(self.default_party),
@@ -107,13 +105,12 @@ class BaseTestConfig(TestCase):
         pu_res = self.app.post(
             "/api/add_users_to_party",
             data=json.dumps({
-                "partyName": "My Party",
-                "email": "default3@gmail.com"
+                "partyID": 1,
+                "username": "thirduser"
             }),
             headers = headers,
             content_type='application/json'
         )
-
 
     def tearDown(self):
         db.session.remove()

@@ -21,7 +21,7 @@ class User(db.Model):
         self.avatar = avatar
 
     def __str__(self):
-        return '''User:::::: 
+        return '''User::::::
         ID: ''' + str(self.id) + '''
         EMAIL: ''' + self.email + '''
         USERNAME: ''' + self.username + '''
@@ -174,15 +174,14 @@ class FriendMessage(db.Model):
         server_default=db.func.now())
     message = db.Column(db.String(65535), nullable=False)
 
-    def __init__(self, fs_id, senderID, message):
+    def __init__(self, fs_id, senderID, time,  message):
         self.fs_id = fs_id
         self.senderID = senderID
         self.message = message
+        self.timestamp = time
 
-    def __str__(self):
-        return '''FriendshipID: ''' + str(self.fs_id) + ''', TimeStamp: ''' + str(self.timestamp)
     @staticmethod
-    def add_friendMessage(sender, receiver, now, messagetext):
+    def add_friendMessage(sender, receiver, time, messagetext):
         senderuser = User.query.filter_by(username=sender).first()
         if senderuser is None:
             return "empty sender user"
@@ -200,7 +199,7 @@ class FriendMessage(db.Model):
         if fs is None:
             return "empty friendship"
         fs_id = fs.fs_id
-        message = FriendMessage(fs_id, senderID, messagetext)
+        message = FriendMessage(fs_id, senderID, time, messagetext)
         db.session.add(message)
         try:
             db.session.commit()
@@ -243,7 +242,6 @@ class FriendMessage(db.Model):
                 else:
                     avatar = receiver_av
                     username = user2
-                print(str(msg))
                 msg_list.append(
                     dict(
                         time=str(msg.timestamp),
@@ -270,18 +268,19 @@ class PartyMessage(db.Model):
         server_default=db.func.now())
     message = db.Column(db.String(65535), nullable=False)
 
-    def __init__(self, partyID, senderID, message):
+    def __init__(self, partyID, senderID, time, message):
         self.partyID = partyID
         self.senderID = senderID
         self.message = message
+        self.timestamp = time
 
     @staticmethod
-    def add_partyMessage(partyID, sender, now, messagetext):
+    def add_partyMessage(partyID, sender, time, messagetext):
         senderuser = User.query.filter_by(username=sender).first()
         if senderuser is None:
             return "empty sender user"
         senderID = senderuser.id
-        message = PartyMessage(partyID, senderID, messagetext)
+        message = PartyMessage(partyID, senderID, time, messagetext)
         db.session.add(message)
         try:
             db.session.commit()
@@ -308,34 +307,3 @@ class PartyMessage(db.Model):
                         avatar=av,
                         username=sender.username))
             return msg_list
-
-
-"""
-class UberRide(db.Model):
-    id = db.Column(db.Integer(), primary_key = True, nullable=False)
-    userID = db.Column(db.Integer(), db.ForeignKey('user.id'), nullable=False)
-    when = db.Column(db.DateTime(), server_default=sa.func.current_timestamp())
-    duration = db.Column('duration', sa.Interval())
-    location = db.Column('location', sa.String(length=255), nullable=False)
-    destination = db.Column('destination', sa.String(length=255), nullable=False)
-    cost = db.Column('cost', sa.Float(), nullable=False)
-
-    def __init__(self, userID, when, duration, location, destination, cost):
-        self.userID = userID
-        self.when = when
-        self.duration = duration
-        self.location = location
-        self.destination = destination
-        self.cost = cost
-
-    def __repr__(self):
-        return '<Uber Ride on %r from %r to %r for %r>' % (self.when, self.location, self.destination, self.cost)
-
-    @staticmethod
-    def getRides(userID):
-        userRides = UberRide.query.filter_by(userID=userID).all()
-        if userRides:
-            return userRides
-        else:
-            return None
-"""
