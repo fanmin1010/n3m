@@ -40,9 +40,7 @@ C:273, 4: Invalid variable name "timeList" (invalid-name)
 C:278, 4: Invalid variable name "dateTime" (invalid-name)
 C:281, 4: Invalid variable name "r" (invalid-name)
 C:287, 8: Invalid variable name "timeSlot" (invalid-name)
-C:297, 0: Missing function docstring (missing-docstring)
-E:300,11: Undefined variable 'UberRide' (undefined-variable)
-E:314,15: Undefined variable 'UberRide' (undefined-variable)
+W:319,-1: String statement has no effect (pointless-string-statement)
 C:321, 0: Invalid constant name "socketio" (invalid-name)
 C:325, 0: Missing function docstring (missing-docstring)
 C:329, 4: Invalid variable name "partyId" (invalid-name)
@@ -174,7 +172,7 @@ C:  2, 0: standard import "from datetime import datetime" comes before "from ind
 
 Report
 ======
-447 statements analysed.
+438 statements analysed.
 
 Statistics by type
 ------------------
@@ -186,9 +184,9 @@ Statistics by type
 +---------+-------+-----------+-----------+------------+---------+
 |class    |6      |6          |=          |0.00        |0.00     |
 +---------+-------+-----------+-----------+------------+---------+
-|method   |21     |20         |+1.00      |42.86       |33.33    |
+|method   |21     |21         |=          |42.86       |33.33    |
 +---------+-------+-----------+-----------+------------+---------+
-|function |23     |18         |+5.00      |0.00        |4.35     |
+|function |22     |23         |-1.00      |0.00        |4.55     |
 +---------+-------+-----------+-----------+------------+---------+
 
 
@@ -219,13 +217,13 @@ Raw metrics
 +----------+-------+------+---------+-----------+
 |type      |number |%     |previous |difference |
 +==========+=======+======+=========+===========+
-|code      |636    |81.54 |550      |+86.00     |
+|code      |641    |82.18 |635      |+6.00      |
 +----------+-------+------+---------+-----------+
-|docstring |25     |3.21  |19       |+6.00      |
+|docstring |25     |3.21  |25       |=          |
 +----------+-------+------+---------+-----------+
-|comment   |23     |2.95  |24       |-1.00      |
+|comment   |21     |2.69  |24       |-3.00      |
 +----------+-------+------+---------+-----------+
-|empty     |96     |12.31 |87       |+9.00      |
+|empty     |93     |11.92 |96       |-3.00      |
 +----------+-------+------+---------+-----------+
 
 
@@ -249,13 +247,13 @@ Messages by category
 +-----------+-------+---------+-----------+
 |type       |number |previous |difference |
 +===========+=======+=========+===========+
-|convention |114    |107      |+7.00      |
+|convention |113    |114      |-1.00      |
 +-----------+-------+---------+-----------+
 |refactor   |4      |4        |=          |
 +-----------+-------+---------+-----------+
-|warning    |21     |17       |+4.00      |
+|warning    |22     |21       |+1.00      |
 +-----------+-------+---------+-----------+
-|error      |25     |24       |+1.00      |
+|error      |23     |25       |-2.00      |
 +-----------+-------+---------+-----------+
 
 
@@ -266,9 +264,9 @@ Messages by category
 +-----------------------+------+--------+---------+-----------+
 |module                 |error |warning |refactor |convention |
 +=======================+======+========+=========+===========+
-|n3m.application.models |64.00 |28.57   |75.00    |53.51      |
+|n3m.application.models |69.57 |27.27   |75.00    |53.98      |
 +-----------------------+------+--------+---------+-----------+
-|n3m.application.app    |36.00 |71.43   |25.00    |46.49      |
+|n3m.application.app    |30.43 |72.73   |25.00    |46.02      |
 +-----------------------+------+--------+---------+-----------+
 
 
@@ -281,7 +279,7 @@ Messages
 +===========================+============+
 |invalid-name               |50          |
 +---------------------------+------------+
-|missing-docstring          |43          |
+|missing-docstring          |42          |
 +---------------------------+------------+
 |no-member                  |20          |
 +---------------------------+------------+
@@ -293,8 +291,6 @@ Messages
 +---------------------------+------------+
 |unused-variable            |3           |
 +---------------------------+------------+
-|undefined-variable         |3           |
-+---------------------------+------------+
 |line-too-long              |3           |
 +---------------------------+------------+
 |bad-continuation           |3           |
@@ -305,20 +301,22 @@ Messages
 +---------------------------+------------+
 |relative-import            |2           |
 +---------------------------+------------+
+|pointless-string-statement |2           |
++---------------------------+------------+
 |import-error               |2           |
 +---------------------------+------------+
 |bare-except                |2           |
 +---------------------------+------------+
+|undefined-variable         |1           |
++---------------------------+------------+
 |too-many-return-statements |1           |
 +---------------------------+------------+
 |too-many-arguments         |1           |
-+---------------------------+------------+
-|pointless-string-statement |1           |
 +---------------------------+------------+
 
 
 
 Global evaluation
 -----------------
-Your code has been rated at 4.09/10 (previous run: 3.56/10, +0.54)
+Your code has been rated at 4.20/10 (previous run: 4.08/10, +0.12)
 
