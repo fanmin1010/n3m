@@ -28,7 +28,6 @@ import * as chatActionCreators from '../../actions/chat';
 import {
     UBER_USERNAME,
     OPENTABLE_USERNAME,
-    BOTLIST,
 } from '../../constants/index';
 
 
@@ -149,24 +148,23 @@ export class Header extends Component {
                   <Divider />
 								  <List>
 									<Subheader>Friends({this.props.friendlist.length}) {<PersonAdd color={grey500} style={{ margin: '15px', float: 'right' }} onTouchTap={this.addFriendClicked.bind(this)} />}</Subheader>
-									{this.props.friendlist.map((friend) => {
-									return (<ListItem
+									{this.props.friendlist.map((friend) => <ListItem
   primaryText={friend.username}
   leftAvatar={<Avatar src={friend.avatar} />}
   rightIcon={<CommunicationChatBubble />}
-  onTouchTap={this._onFriendSelected.bind(this, friend)}
-         />);
-          				})}
+  onTouchTap={this.onFriendSelected.bind(this, friend)}
+         />
+                  )}
 									</List>
                   <BottomNavigation
                     selectedIndex={this.state.selectedIndex}
                     style={{ position: 'absolute', bottom: '2px' }}
                   >
-									  <BottomNavigationItem
-  label="Friends"
-  icon={<People />}
-  onTouchTap={() => this.select(0)}
-           />
+                  <BottomNavigationItem
+                    label="Friends"
+                    icon={<People />}
+                    onTouchTap={() => this.select(0)}
+                  />
 									</BottomNavigation>
                </div>
               </LeftNav>
@@ -179,7 +177,8 @@ export class Header extends Component {
                 open={this.state.open}
                 onRequestClose={this.handleClose}
               >
-                Type in the friends email address and press enter.                                                                                                                                              <br />
+                Type in the friends email address and press enter.
+                <br />
                 <TextField
                   hintText="friends email"
                   id="addfriendtextbox"
@@ -192,6 +191,8 @@ export class Header extends Component {
 }
 
 Header.propTypes = {
+  username: React.PropTypes.string,
+  friendlist: React.PropTypes.arrayOf(React.PropTypes.object),
   logoutAndRedirect: React.PropTypes.func,
   callUber: React.PropTypes.func,
   callOpenTable: React.PropTypes.func,
