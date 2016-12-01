@@ -29,6 +29,7 @@ import * as chatActionCreators from '../../actions/chat';
 
 function mapStateToProps(state) {
   return {
+    userName: state.auth.userName,
     partylist: state.chat.partylist,
     partyname: state.chat.partyname,
     partyId: state.chat.partyId,
@@ -55,6 +56,7 @@ function mapDispatchToProps(dispatch) {
   
     componentWillMount() {
       this.props.getPartyList();
+      this.props.addNewPartyListener(this.props.userName);
     }
 
   _onPartySelected(party) {
@@ -198,6 +200,7 @@ Party.propTypes = {
   setChatWindow: React.PropTypes.func,
   setNewListener: React.PropTypes.func,
   addParty: React.PropTypes.func,
+  addNewPartyListener: React.PropTypes.func,
   addFriendToParty: React.PropTypes.func,
   getPartyList: React.PropTypes.func,
 };
