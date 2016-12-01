@@ -1,3 +1,4 @@
+'''MODEL'''
 from index import db, bcrypt
 from datetime import datetime
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
@@ -5,6 +6,7 @@ from sqlalchemy import desc
 
 
 class User(db.Model):
+    '''User model class to handle all users'''
     id = db.Column(db.Integer(), primary_key=True)
     username = db.Column(db.String(255), unique=True)
     email = db.Column(db.String(255), unique=True)
@@ -29,12 +31,15 @@ class User(db.Model):
         PGP: ''' + self.pgp_key + '''
         AVATAR: ''' + self.avatar + '''
         '''
+
     @staticmethod
     def hashed_password(password):
+        '''encrypt password'''
         return bcrypt.generate_password_hash(password)
 
     @staticmethod
     def get_user_with_email_and_password(email, password):
+        '''load user from login credentials'''
         user = User.query.filter_by(email=email).first()
         if user and bcrypt.check_password_hash(user.password, password):
             return user
@@ -43,6 +48,7 @@ class User(db.Model):
 
     @staticmethod
     def get_avatar_for_useremail(useremail):
+        '''find user avatar based on email'''
         user = User.query.filter_by(email=useremail).first()
         if user:
             return user.avatar
@@ -51,6 +57,7 @@ class User(db.Model):
 
     @staticmethod
     def get_avatar_for_username(uname):
+        '''find user avatar based on username'''
         user = User.query.filter_by(username=uname).first()
         if user:
             return user.avatar
@@ -59,6 +66,7 @@ class User(db.Model):
 
 
 class Friendship(db.Model):
+    '''Friendship model class handles chat between two users'''
     fs_id = db.Column(db.Integer(), primary_key=True, nullable=False)
     friender = db.Column(db.Integer(), db.ForeignKey('user.id'))
     friendee = db.Column(db.Integer(), db.ForeignKey('user.id'))
@@ -83,6 +91,7 @@ class Friendship(db.Model):
 
     @staticmethod
     def get_friendship_with_user_ids(friender_id, friendee_id):
+        '''get firendship instance of two users'''
         f_ship = Friendship.query.filter_by(
             friender=friender_id, friendee=friendee_id).first()
         if f_ship:
@@ -92,6 +101,7 @@ class Friendship(db.Model):
 
     @staticmethod
     def get_all_friendship_of_user(friender_id):
+        '''get all friendship instances for a user'''
         f_ship = Friendship.query.filter_by(friender=friender_id).all()
         if f_ship:
             return f_ship
@@ -100,6 +110,7 @@ class Friendship(db.Model):
 
 
 class Party(db.Model):
+    '''Party model class handles chat between multiple users'''
     partyID = db.Column(db.Integer(), primary_key=True, nullable=False)
     partyName = db.Column(db.String(255), nullable=False)
     ownerID = db.Column(db.Integer(), db.ForeignKey('user.id'), nullable=False)
@@ -121,6 +132,7 @@ class Party(db.Model):
 
     @staticmethod
     def getMyParties(ownerID):
+        '''get all parties created by a specific user'''
         parties = Party.query.filter_by(ownerID=ownerID).all()
         # print(parties)
         if parties:
@@ -130,6 +142,7 @@ class Party(db.Model):
 
 
 class PartyUser(db.Model):
+    '''PartyUser model class handles relationship between a party and users'''
     __tablename__ = 'partyuser'
     puID = db.Column(db.Integer(), primary_key=True, nullable=False)
     partyID = db.Column(
@@ -150,6 +163,7 @@ class PartyUser(db.Model):
 
     @staticmethod
     def getPartyUsers(partyID):
+        '''get all users of a party'''
         partyUsers = PartyUser.query.filter_by(partyID=partyID).first()
         if partyUsers:
             return partyUsers
@@ -158,6 +172,7 @@ class PartyUser(db.Model):
 
 
 class FriendMessage(db.Model):
+    '''FriendMessage model class stores messages of a Friendship chat'''
     __tablename__ = 'friendmessage'
     fmID = db.Column(db.Integer(), primary_key=True, nullable=False)
     fs_id = db.Column(
@@ -180,8 +195,13 @@ class FriendMessage(db.Model):
         self.message = message
         self.timestamp = time
 
+    def __str__(self):
+        return '''FriendshipID: ''' + \
+            str(self.fs_id) + ''', TimeStamp: ''' + str(self.timestamp)
+
     @staticmethod
-    def add_friendMessage(sender, receiver, time, messagetext):
+    def add_friendMessage(sender, receiver, now, messagetext):
+        '''store message from a Friendship chat'''
         senderuser = User.query.filter_by(username=sender).first()
         if senderuser is None:
             return "empty sender user"
@@ -209,6 +229,7 @@ class FriendMessage(db.Model):
 
     @staticmethod
     def getFriendMessages(user1, user2):
+        '''get Friendship message history'''
         senderuser = User.query.filter_by(username=user1).first()
         if senderuser is None:
             return "empty user1"
@@ -252,6 +273,7 @@ class FriendMessage(db.Model):
 
 
 class PartyMessage(db.Model):
+    '''PartyMessage model class stores party chat messages'''
     __tablename__ = 'partymessage'
     pmID = db.Column(db.Integer(), primary_key=True, nullable=False)
     partyID = db.Column(
@@ -275,7 +297,8 @@ class PartyMessage(db.Model):
         self.timestamp = time
 
     @staticmethod
-    def add_partyMessage(partyID, sender, time, messagetext):
+    def add_partyMessage(partyID, sender, now, messagetext):
+        '''store message from party chat'''
         senderuser = User.query.filter_by(username=sender).first()
         if senderuser is None:
             return "empty sender user"
@@ -290,6 +313,7 @@ class PartyMessage(db.Model):
 
     @staticmethod
     def getPartyMessages(partyID):
+        '''get message history for a party'''
         partyMessages = PartyMessage.query.filter_by(
             partyID=partyID).order_by(
             PartyMessage.timestamp).all()
