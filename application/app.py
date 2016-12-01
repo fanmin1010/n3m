@@ -451,4 +451,3 @@ def get_friend_msg_his():
     msg_list = FriendMessage.get_friend_messages(current_user, friend)
     print(msg_list)
     return jsonify(msg_list)
-

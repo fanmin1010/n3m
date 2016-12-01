@@ -217,9 +217,9 @@ class FriendMessage(db.Model):
         # always store the message with one friendship where
         # friender_id<=friendee_id
         friendship = (
-                Friendship.get_friendship_with_user_ids(sender_id, receiver_id) 
-                if sender_id < receiver_id else 
-                Friendship.get_friendship_with_user_ids( receiver_id, sender_id))
+            Friendship.get_friendship_with_user_ids(sender_id, receiver_id)
+            if sender_id < receiver_id else
+            Friendship.get_friendship_with_user_ids(receiver_id, sender_id))
         if friendship is None:
             return "empty friendship"
         else:
