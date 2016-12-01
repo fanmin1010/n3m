@@ -3,7 +3,8 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actionCreators from '../actions/auth';
 
-function mapStateToProps(state) {
+/** takes in state if setting props **/
+function mapStateToProps() {
   return {
   };
 }

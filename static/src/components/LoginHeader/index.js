@@ -3,21 +3,9 @@ import { browserHistory } from 'react-router';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import AppBar from 'material-ui/AppBar';
-import Avatar from 'material-ui/Avatar';
 import LeftNav from 'material-ui/Drawer';
-import { List, ListItem } from 'material-ui/List';
-import Subheader from 'material-ui/Subheader';
 import MenuItem from 'material-ui/MenuItem';
 import FlatButton from 'material-ui/FlatButton';
-import ChevronLeft from 'material-ui/svg-icons/navigation/chevron-left';
-import MoreVert from 'material-ui/svg-icons/navigation/more-vert';
-import Restore from 'material-ui/svg-icons/action/restore';
-import People from 'material-ui/svg-icons/social/people';
-import PersonAdd from 'material-ui/svg-icons/social/person-add';
-import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
-import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
-import Divider from 'material-ui/Divider';
-import { grey500 } from 'material-ui/styles/colors';
 
 import * as actionCreators from '../../actions/auth';
 

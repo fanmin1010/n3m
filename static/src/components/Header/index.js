@@ -179,7 +179,7 @@ export class Header extends Component {
                 open={this.state.open}
                 onRequestClose={this.handleClose}
               >
-                Type in the friends email address and press enter.                      <br />
+                Type in the friends email address and press enter.                                                                                                                                              <br />
                 <TextField
                   hintText="friends email"
                   id="addfriendtextbox"

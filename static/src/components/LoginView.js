@@ -48,7 +48,6 @@ export default class LoginView extends React.Component {
 
   isDisabled() {
     let email_is_valid = false;
-    const password_is_valid = false;
 
     if (this.state.email === '') {
       this.setState({
@@ -66,22 +65,6 @@ export default class LoginView extends React.Component {
       });
     }
 
-//    if (this.state.password === '' || !this.state.password) {
-//      this.setState({
-//        password_error_text: null,
-//      });
-//    } else if (this.state.password.length >= 6) {
-//      password_is_valid = true;
-//      this.setState({
-//        password_error_text: null,
-//      });
-//    } else {
-//      this.setState({
-//        password_error_text: 'Your password must be at least 6 characters',
-//      });
-//
-//    }
-//
     if (email_is_valid) {
       this.setState({
         disabled: false,

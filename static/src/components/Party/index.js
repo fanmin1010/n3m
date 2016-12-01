@@ -10,17 +10,13 @@ import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import FlatButton from 'material-ui/FlatButton';
-import ChevronRight from 'material-ui/svg-icons/navigation/chevron-right';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
-import Restore from 'material-ui/svg-icons/action/restore';
 import Toys from 'material-ui/svg-icons/hardware/toys';
 import GroupAdd from 'material-ui/svg-icons/social/group-add';
 import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
 import { BottomNavigation, BottomNavigationItem } from 'material-ui/BottomNavigation';
-import Divider from 'material-ui/Divider';
 import { grey500 } from 'material-ui/styles/colors';
 import Dialog from 'material-ui/Dialog';
-import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 
 import * as actionCreators from '../../actions/auth';
@@ -59,13 +55,12 @@ function mapDispatchToProps(dispatch) {
       this.props.addNewPartyListener(this.props.username);
     }
 
-  _onPartySelected(party) {
+  onPartySelected(party) {
     if (party.party_name === 'Lobby') {
       this.props.getPartyHistory(party.party_id, party.party_name);
       this.props.setChatWindow(party.party_name, party.party_id);
       this.props.setNewListener(party.party_name, true, null);
-    }
-    else {
+    } else {
       this.props.getPartyHistory(party.party_id, `${party.party_name.replace(' ', '')}${party.party_id}`);
       this.props.setChatWindow(`${party.party_name.replace(' ', '')}${party.party_id}`, party.party_id);
       this.props.setNewListener(`${party.party_name.replace(' ', '')}${party.party_id}`, true, null);
@@ -150,17 +145,16 @@ function mapDispatchToProps(dispatch) {
               primaryText="Lobby"
               rightAvatar={<Avatar src="dist/images/default_team.png" />}
               leftIcon={<CommunicationChatBubble />}
-              onTouchTap={this._onPartySelected.bind(this, { party_name: 'Lobby', party_id: -1 })}
+              onTouchTap={this.onPartySelected.bind(this, { party_name: 'Lobby', party_id: -1 })}
             />
           <Subheader>Parties({this.props.partylist.length}) {<GroupAdd color={grey500} style={{ margin: '15px', float: 'left' }} onTouchTap={this.handleOpen.bind(this)} />}</Subheader>
-          {this.props.partylist.map((party) => {
-                                                     return (<ListItem
-                                                       primaryText={party.party_name}
-                                                       rightAvatar={<Avatar src={party.avatar} />}
-                                                       leftIcon={leftIconMenu}
-                                                       onTouchTap={this._onPartySelected.bind(this, party)}
-                                                     />);
-                                                   })}
+          {this.props.partylist.map((party) => <ListItem
+            primaryText={party.party_name}
+            rightAvatar={<Avatar src={party.avatar} />}
+            leftIcon={leftIconMenu}
+            onTouchTap={this.onPartySelected.bind(this, party)}
+          />
+                                                   )}
           </List>
           <BottomNavigation
             selectedIndex={this.state.selectedIndex}
@@ -180,7 +174,8 @@ function mapDispatchToProps(dispatch) {
                 open={this.state.open}
                 onRequestClose={this.handleClose}
               >
-                Type in the party name and press enter.                      <br />
+                Type in the party name and press enter.
+                <br />
                 <TextField
                   hintText="Party Name"
                   id="addpartytextbox"
@@ -192,8 +187,8 @@ function mapDispatchToProps(dispatch) {
                 modal={false}
                 open={this.state.addfriend_open}
                 onRequestClose={this.handleAddFriendClose}
-              >
-                Type in the friends username and press enter.                      <br />
+              >Type in the friends username and press enter.
+                <br />
                 <TextField
                   hintText="Party Name"
                   id="addfriendtopartytextbox"
@@ -205,6 +200,9 @@ function mapDispatchToProps(dispatch) {
   }
 
 Party.propTypes = {
+  party_id: React.PropTypes.number,
+  username: React.PropTypes.string,
+  partylist: React.PropTypes.arrayOf(React.PropTypes.object),
   setChatWindow: React.PropTypes.func,
   setNewListener: React.PropTypes.func,
   addParty: React.PropTypes.func,
