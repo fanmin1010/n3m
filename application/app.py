@@ -331,12 +331,14 @@ def party_message(message):
     # line.
 
 
-def get_party_msg_his(partyID):
-    '''get history for a party'''
-    # both curr_user and friend are the usernames that you want to retrieve
-    # the message history of
+@app.route("/api/partyhistory", methods=["POST"])
+@requires_auth
+def get_party_msg_his():
+    current_user = g.current_user['username']
+    incoming = request.get_json()
+    partyID = incoming["partyID"]
     msg_list = PartyMessage.getPartyMessages(partyID)
-    pass
+    return jsonify(msg_list)
 
 
 def opentable_message(message, lat, lon):

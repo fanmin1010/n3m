@@ -82,6 +82,16 @@ export function friendHistoryCall(friendName, token, cb) {
               console.log(error);
             });
 }
+
+export function partyHistoryCall(partyID, token, cb) {
+  return axios.post('api/partyhistory', {
+      'partyID': partyID
+    }, tokenConfig(token))
+            .then(cb)
+            .catch((error) => {
+              console.log(error);
+            });
+}
 /**
  * @param msg {string} message text of chat
  * @param pname {string} party name

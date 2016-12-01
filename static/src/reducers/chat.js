@@ -20,6 +20,9 @@ import {
     PARTY_LIST_SUCCESS,
     PARTY_LIST_FAILURE,
     PARTY_LIST_REQUEST,
+    PARTY_HISTORY_REQUEST,
+    PARTY_HISTORY_SUCCESS,
+    PARTY_HISTORY_FAILURE,
     ADD_PARTY_SUCCESS,
     ADD_PARTY_FAILURE,
     ADD_PARTY_REQUEST,
@@ -151,6 +154,24 @@ export default createReducer(initialState, {
   [PARTY_LIST_FAILURE]: (state, payload) =>
         Object.assign({}, state, {
           partyListStatusText: 'error retreiving partylist.',
+        }),
+  [PARTY_HISTORY_REQUEST]: (state, payload) =>
+        Object.assign({}, state, {
+          partyHistoryStatusText: null,
+        }),
+  [PARTY_HISTORY_SUCCESS]: (state, payload) => {
+      console.log('partyhistorysuccess.');
+      console.dir(payload);
+      var newstate =  Object.assign({}, state, {
+        allMessages: Object.assign({}, state.allMessages, { [payload.partyname]: state.allMessages[payload.partyname].slice().concat(payload.messages) }),
+        messages: state.allMessages[payload.partyname].slice().concat(payload.messages),
+        partyHistoryStatusText: 'party history retreived successfully.',
+      }); 
+      return newstate;
+  },
+  [PARTY_HISTORY_FAILURE]: (state, payload) =>
+        Object.assign({}, state, {
+          partyHistoryStatusText: 'error retreiving party history.',
         }),
   [ADD_PARTY_REQUEST]: (state, payload) =>
         Object.assign({}, state, {

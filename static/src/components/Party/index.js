@@ -61,10 +61,12 @@ function mapDispatchToProps(dispatch) {
 
   _onPartySelected(party) {
     if(party.partyName === 'Lobby'){
+      this.props.getPartyHistory(party.partyID, party.partyName);
       this.props.setChatWindow(party.partyName, party.partyID);
       this.props.setNewListener(party.partyName, true, null);
     }
     else {
+      this.props.getPartyHistory(party.partyID, party.partyName.replace(' ','') + '' + party.partyID);
       this.props.setChatWindow(party.partyName.replace(' ','') + '' + party.partyID, party.partyID);
       this.props.setNewListener(party.partyName.replace(' ','') + '' + party.partyID, true, null);
     }
@@ -209,4 +211,5 @@ Party.propTypes = {
   addNewPartyListener: React.PropTypes.func,
   addFriendToParty: React.PropTypes.func,
   getPartyList: React.PropTypes.func,
+  getPartyHistory: React.PropTypes.func,
 };

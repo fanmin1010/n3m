@@ -17,6 +17,9 @@ import {
     PARTY_LIST_REQUEST,
     PARTY_LIST_SUCCESS,
     PARTY_LIST_FAILURE,
+    PARTY_HISTORY_REQUEST,
+    PARTY_HISTORY_SUCCESS,
+    PARTY_HISTORY_FAILURE,
     ADD_PARTY_REQUEST,
     ADD_PARTY_SUCCESS,
     ADD_PARTY_FAILURE,
@@ -34,6 +37,7 @@ import {
          addFriendToPartyCall,
          addPartyCall,
          partylistCall,
+         partyHistoryCall,
        } from '../utils/http_functions';
 
 
@@ -231,6 +235,8 @@ export function getFriendHistory(friendName, partyname) {
       console.dir('The data in friend History');
       console.dir(data.data);
       try {
+        console.log('Getting the party history back:::::::');
+        console.dir(data);
         dispatch(friendHistorySuccess(data.data, partyname));
         document.getElementById('messagelist').scrollTop = 9999;
       } catch (e) {
@@ -317,6 +323,50 @@ export function getPartyList() {
         console.log('There was an error while calling partylist');
         console.dir(e);
         dispatch(partyListFailure());
+      }
+    });
+
+  };
+}
+
+
+export function partyHistoryRequest() {
+  return {
+    type: PARTY_HISTORY_REQUEST,
+  };
+}
+
+export function partyHistorySuccess(messages, partyname) {
+  return {
+    type: PARTY_HISTORY_SUCCESS,
+    payload: {
+      messages: messages,
+      partyname: partyname
+    },
+  };
+}
+
+export function partyHistoryFailure(error) {
+  return {
+    type: PARTY_HISTORY_FAILURE,
+    payload: error,
+  };
+}
+
+export function getPartyHistory(partyID, partyname) {
+  return function (dispatch) {
+    dispatch(partyHistoryRequest());
+    const token = localStorage.getItem('token');
+    return partyHistoryCall(partyID, token, (data) => {
+      console.dir('The data in party History');
+      console.dir(data.data);
+      try {
+        dispatch(partyHistorySuccess(data.data, partyname));
+        document.getElementById('messagelist').scrollTop = 9999;
+      } catch (e) {
+        console.log('There was an error while calling partyHistory');
+        console.dir(e);
+        dispatch(partyHistoryFailure());
       }
     });
 
