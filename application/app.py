@@ -255,7 +255,7 @@ def call_uber(end_address, lat, lng):
         'start_latitude': lat,
         'start_longitude': lng,
         'end_latitude': endlat,
-        'end_longitude': endlong }
+        'end_longitude': endlong}
     headers = {
         'Authorization': 'Token x4maHB7QT8tWJqKfkfPVyzWfpbp7g5QmehniOIf5',
         'Content-Type': 'application/json',
@@ -264,7 +264,8 @@ def call_uber(end_address, lat, lng):
     json_data = json.loads(r.text)
     reply_text = '\n'
     for p in json_data['prices']:
-        reply_text = reply_text + p['display_name'] + ': ' + p['estimate'] + '\n'
+        reply_text = reply_text + \
+            p['display_name'] + ': ' + p['estimate'] + '\n'
     return reply_text
 
 
@@ -342,6 +343,7 @@ def get_party_msg_his(partyID):
     msg_list = PartyMessage.getPartyMessages(partyID)
     pass
 
+
 def opentable_message(message, lat, lon):
     keylist = restaurants.keys()
     restname, resv_info = message.split('@')
@@ -356,31 +358,46 @@ def opentable_message(message, lat, lon):
         print(str(mtch))
         reply_text = ''
         if message != mtch[0]:
-            reply_text = '\nCould not find ' + restname + '. Showing results for closest match: \n' + mtch[0] 
+            reply_text = '\nCould not find ' + restname + \
+                '. Showing results for closest match: \n' + mtch[0]
         rest_id = restaurants[mtch[0]]['Id']
-        reply_text = '\n' + reply_text + mtch[0] + ' in ' + restaurants[mtch[0]]['Neighborhood']['Name'] + ', ' + restaurants[mtch[0]]['Region']['Name']  
-        reply_text = reply_text + call_opentable(rest_id, partysize.strip(), resv_time)
+        reply_text = '\n' + reply_text + mtch[0] + ' in ' + restaurants[mtch[0]][
+            'Neighborhood']['Name'] + ', ' + restaurants[mtch[0]]['Region']['Name']
+        reply_text = reply_text + \
+            call_opentable(rest_id, partysize.strip(), resv_time)
         return reply_text
     except:
         return 'Could not find any restaurants close to that.'
 
+
 def uber_message(message, lat, lon):
     return call_uber(message, lat, lon)
 
+
 def get_bot_message(botname, message, lat, lon):
     if botname == constants.UBER_USERNAME:
-        return uber_message(message, lat, lon)    
+        return uber_message(message, lat, lon)
     elif botname == constants.OPENTABLE_USERNAME:
         return opentable_message(message, lat, lon)
+
 
 @socketio.on('geodata')
 def bot_message(message):
     bot_avatar = User.get_avatar_for_username(message['partyname'])
-    text_reply = get_bot_message(message['partyname'], message['msgtext'], message['latitude'], message['longitude'])
+    text_reply = get_bot_message(
+        message['partyname'],
+        message['msgtext'],
+        message['latitude'],
+        message['longitude'])
     bot_now = datetime.datetime.now().strftime('%H:%M:%S')
-    result2 = FriendMessage.add_friendMessage(message['partyname'], message['username'], bot_now, text_reply)
+    result2 = FriendMessage.add_friendMessage(
+        message['partyname'], message['username'], bot_now, text_reply)
     if result2 == "success":
-        socketio.emit(message['partyname'], {'username': message['partyname'], 'text': text_reply, 'avatar': bot_avatar, 'time': bot_now})
+        socketio.emit(message['partyname'],
+                      {'username': message['partyname'],
+                       'text': text_reply,
+                       'avatar': bot_avatar,
+                       'time': bot_now})
     else:
         print("Something happend with error in the database.")
 
@@ -399,9 +416,12 @@ def user2user_message(message):
     result = FriendMessage.add_friendMessage(
         sender, receiver, now, message['msgtext'])
     if result == "success":
-        socketio.emit(message['partyname'], {'username': sender, 'text': message['msgtext'], 'avatar': avatar, 'time': now})
+        socketio.emit(message['partyname'], {'username': sender, 'text': message[
+                      'msgtext'], 'avatar': avatar, 'time': now})
         if message['partyname'] in constants.BOTLIST:
-            socketio.emit(sender+'__geo', {'partyname':message['partyname'], 'msgtext': message['msgtext']});
+            socketio.emit(sender + '__geo',
+                          {'partyname': message['partyname'],
+                           'msgtext': message['msgtext']})
     else:
         print("Something happend with error in the database.")
 

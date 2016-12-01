@@ -194,7 +194,9 @@ class FriendMessage(db.Model):
         self.message = message
 
     def __str__(self):
-        return '''FriendshipID: ''' + str(self.fs_id) + ''', TimeStamp: ''' + str(self.timestamp)
+        return '''FriendshipID: ''' + \
+            str(self.fs_id) + ''', TimeStamp: ''' + str(self.timestamp)
+
     @staticmethod
     def add_friendMessage(sender, receiver, now, messagetext):
         '''store message from a Friendship chat'''
