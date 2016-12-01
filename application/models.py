@@ -200,7 +200,7 @@ class FriendMessage(db.Model):
             str(self.fs_id) + ''', TimeStamp: ''' + str(self.timestamp)
 
     @staticmethod
-    def add_friendMessage(sender, receiver, now, messagetext):
+    def add_friendMessage(sender, receiver, time, messagetext):
         '''store message from a Friendship chat'''
         senderuser = User.query.filter_by(username=sender).first()
         if senderuser is None:
@@ -297,7 +297,7 @@ class PartyMessage(db.Model):
         self.timestamp = time
 
     @staticmethod
-    def add_partyMessage(partyID, sender, now, messagetext):
+    def add_partyMessage(partyID, sender, time, messagetext):
         '''store message from party chat'''
         senderuser = User.query.filter_by(username=sender).first()
         if senderuser is None:

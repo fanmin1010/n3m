@@ -300,8 +300,8 @@ class TestAPI(BaseTestConfig):
         res = self.app.post(
             "/api/add_users_to_party",
             data=json.dumps({
-                "partyName": "My Party",
-                "email": "default2@gmail.com"
+                "partyID": 1,
+                "username": "secuser"
             }),
             headers = headers,
             content_type='application/json'
@@ -311,8 +311,8 @@ class TestAPI(BaseTestConfig):
         res3 = self.app.post(
             "/api/add_users_to_party",
             data=json.dumps({
-                "partyName": "My",
-                "email": "default2@gmail.com"
+                "partyID": 2,
+                "username": "secuser"
             }),
             headers = headers,
             content_type='application/json'
@@ -321,8 +321,8 @@ class TestAPI(BaseTestConfig):
         res4 = self.app.post(
             "/api/add_users_to_party",
             data=json.dumps({
-                "partyName": "My Party",
-                "email": "fake@gmail.com"
+                "partyID": "1",
+                "username": "fake"
             }),
             headers = headers,
             content_type='application/json'
@@ -331,8 +331,8 @@ class TestAPI(BaseTestConfig):
         res2 = self.app.post(
             "/api/add_users_to_party",
             data=json.dumps({
-                "partyName": "My Party",
-                "email": "default2@gmail.com"
+                "partyID": 1,
+                "username": "secuser"
             }),
             headers = headers,
             content_type='application/json'
