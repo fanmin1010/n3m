@@ -1,3 +1,4 @@
+'''MODEL'''
 from index import db, bcrypt
 from datetime import datetime
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError

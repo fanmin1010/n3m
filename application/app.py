@@ -1,7 +1,8 @@
+'''CONTROLLER'''
 from __future__ import print_function
 from flask import request, render_template, jsonify, url_for, redirect, g
 from flask_socketio import SocketIO, emit
-from .models import User, Friendship, Party, PartyUser, FriendMessage  # ,UberRide
+from .models import User, Friendship, Party, PartyUser, FriendMessage 
 from index import app, db
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from .utils.auth import generate_token, requires_auth, verify_token
@@ -21,23 +22,27 @@ from OpenTable import restaurants
 
 @app.route('/', methods=['GET'])
 def index():
+    '''default redirection to index.html'''
     return render_template('index.html')
 
 
 @app.route('/<path:path>', methods=['GET'])
 def any_root_path(path):
+    '''default redirection to index.html'''
     return render_template('index.html')
 
 
 @app.route("/api/user", methods=["GET"])
 @requires_auth
 def get_user():
+    '''return session user'''
     return jsonify(result=g.current_user)
 
 
 @app.route("/api/friendlist", methods=["GET"])
 @requires_auth
 def get_friendlist():
+    '''get firends of current user'''
     current_user = g.current_user
     result = db.engine.execute(
         'select u.id, u.avatar, u.username from friendship f join "user" u  on f.friendee=u.id where f.friender = ' +
@@ -49,6 +54,7 @@ def get_friendlist():
 
 @app.route("/api/create_user", methods=["POST"])
 def create_user():
+    '''create a new user based on passed info and link to api bots'''
     incoming = request.get_json()
     uname = incoming["username"]
     eml = incoming["email"]
@@ -92,6 +98,7 @@ def create_user():
     new_user = User.query.filter_by(email=incoming["email"]).first()
 
     def mk_friend(botemail):
+        '''create friendship between user and api bots to be able to display api responses in chat'''
         if new_user.email in bot_emails:
             return None
         bot = User.query.filter_by(email=botemail).first()
@@ -118,6 +125,7 @@ def create_user():
 @app.route("/api/user_add_friend", methods=["POST"])
 @requires_auth
 def add_friendship():
+    '''create firendship between current user and passed friend'''
     incoming = request.get_json()
     # friendemail refers to the email to be added email->friendemail
     db.session.commit()
@@ -160,6 +168,7 @@ def add_friendship():
 @app.route("/api/createParty", methods=["POST"])
 @requires_auth
 def createParty():
+    '''create a new party for a given user/owner'''
     incoming = request.get_json()
     print('The partyname is')
     print(incoming)
@@ -184,6 +193,7 @@ def createParty():
 @app.route("/api/partylist", methods=["GET"])
 @requires_auth
 def get_partylist():
+    '''retrieve all parties for a user'''
     current_user = g.current_user
     result = db.engine.execute(
         'select * from party where "ownerID" = {} UNION select p."partyID", p."partyName", p."ownerID", p."avatar" from party p join partyuser pu on p."partyID"=pu."partyID" where pu."userID" ={}'.format(
@@ -198,6 +208,7 @@ def get_partylist():
 @app.route("/api/add_users_to_party", methods=["POST"])
 @requires_auth
 def add_to_party():
+    ''' add user to a party'''
     incoming = request.get_json()
     party = Party.query.filter_by(
         ownerID=g.current_user["id"],
@@ -221,6 +232,7 @@ def add_to_party():
 
 @app.route("/api/get_token", methods=["POST"])
 def get_token():
+    '''create token for new user or retrieve existing'''
     incoming = request.get_json()
     bot_emails = [constants.UBER_EMAIL, constants.OPENTABLE_EMAIL]
     if incoming["email"] in bot_emails:
@@ -234,6 +246,7 @@ def get_token():
 
 @app.route("/api/is_token_valid", methods=["POST"])
 def is_token_valid():
+    '''validate passed token'''
     incoming = request.get_json()
     is_valid = verify_token(incoming["token"])
 
@@ -244,6 +257,7 @@ def is_token_valid():
 
 
 def call_uber(end_address, lat, lng):
+    ''' call uber api with destination and position'''
     try:
         endgeo = geocoder.google(end_address)
         endlat = endgeo.latlng[0]
@@ -270,6 +284,7 @@ def call_uber(end_address, lat, lng):
 
 
 def call_opentable(rest_id, guest_count, res_time):
+    '''return opentable response'''
     timeList = []
     url = 'http://www.opentable.com/restaurant/profile/'
     url = url + str(rest_id)
@@ -291,38 +306,13 @@ def call_opentable(rest_id, guest_count, res_time):
         times = times + 'None available \n'
     return times
 
-"""
-@app.route("/api/saveride", methods=["POST"])
-@requires_auth
-def saveride():
-    incoming = request.get_json()
-    #now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    ride = UberRide(
-        userID=g.current_user["id"],
-        when=incoming["when"],
-        duration=incoming["duration"],
-        location=incoming["location"],
-        destination=incoming["destination"],
-        cost=incoming["cost"]
-    )
-    db.session.add(ride)
-    try:
-        db.session.commit()
-    except IntegrityError:
-        return jsonify(message="Ride already existed."), 409
-
-    new_ride = UberRide.query.filter_by(userID=incoming["userID"]).first()
-    # print(new_ride)
-    return jsonify(
-        rideID=new_ride.id, rideDisplay=new_ride.__repr__
-    )
-"""
 
 socketio = SocketIO(app)
 
 
 @socketio.on('party_message')
 def party_message(message):
+    '''display party message in chat'''
     print('There was a party message: ' + str(message), file=sys.stderr)
     avatar = User.get_avatar_for_username(message['username'])
     now = datetime.datetime.now().strftime('%H:%M:%S')
@@ -338,6 +328,7 @@ def party_message(message):
 
 
 def get_party_msg_his(partyID):
+    '''get history for a party'''
     # both curr_user and friend are the usernames that you want to retrieve
     # the message history of
     msg_list = PartyMessage.getPartyMessages(partyID)
@@ -345,6 +336,7 @@ def get_party_msg_his(partyID):
 
 
 def opentable_message(message, lat, lon):
+    '''call opentable api and return response'''
     keylist = restaurants.keys()
     restname, resv_info = message.split('@')
     resv_time, partysize = resv_info.split('||')
@@ -371,10 +363,12 @@ def opentable_message(message, lat, lon):
 
 
 def uber_message(message, lat, lon):
+    '''forward uber api response from uber'''
     return call_uber(message, lat, lon)
 
 
 def get_bot_message(botname, message, lat, lon):
+    '''call api based on userbot and forward response'''
     if botname == constants.UBER_USERNAME:
         return uber_message(message, lat, lon)
     elif botname == constants.OPENTABLE_USERNAME:
@@ -383,6 +377,7 @@ def get_bot_message(botname, message, lat, lon):
 
 @socketio.on('geodata')
 def bot_message(message):
+    '''display api response in chat'''
     bot_avatar = User.get_avatar_for_username(message['partyname'])
     text_reply = get_bot_message(
         message['partyname'],
@@ -404,6 +399,7 @@ def bot_message(message):
 
 @socketio.on('user2user_message')
 def user2user_message(message):
+    '''send message between two friends'''
     print('There was a user2user message: ' + str(message), file=sys.stderr)
     avatar = User.get_avatar_for_username(message['sender'])
     now = datetime.datetime.now().strftime('%H:%M:%S')
@@ -429,6 +425,7 @@ def user2user_message(message):
 @app.route("/api/friendhistory", methods=["POST"])
 @requires_auth
 def get_friend_msg_his():
+    '''get message history between current user and submitted friend'''
     current_user = g.current_user['username']
     incoming = request.get_json()
     friend = incoming["friend"]
