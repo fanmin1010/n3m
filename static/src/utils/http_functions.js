@@ -33,10 +33,10 @@ export function addFriendCall(email, token, cb) {
   });
 }
 
-export function addFriendToPartyCall(friend, partyid, token, cb) {
+export function addFriendToPartyCall(friend, party_id, token, cb) {
   return axios.post('api/add_users_to_party', {
     username: friend,
-    partyID: partyid
+    party_id: party_id
   }, tokenConfig(token))
   .then(cb)
   .catch((error) => {
@@ -44,9 +44,9 @@ export function addFriendToPartyCall(friend, partyid, token, cb) {
   });
 }
 
-export function addPartyCall(partyName, token, cb) {
+export function addPartyCall(party_name, token, cb) {
   return axios.post('api/createparty', {
-    partyName: partyName, 
+    party_name: party_name, 
   }, tokenConfig(token))
   .then(cb)
   .catch((error) => {
@@ -83,9 +83,9 @@ export function friendHistoryCall(friendName, token, cb) {
             });
 }
 
-export function partyHistoryCall(partyID, token, cb) {
+export function partyHistoryCall(party_id, token, cb) {
   return axios.post('api/partyhistory', {
-      'partyID': partyID
+      'party_id': party_id
     }, tokenConfig(token))
             .then(cb)
             .catch((error) => {
@@ -94,19 +94,19 @@ export function partyHistoryCall(partyID, token, cb) {
 }
 /**
  * @param msg {string} message text of chat
- * @param pname {string} party name
- * @param pid {string} party id
- * @param uname {string} user name
+ * @param party_name {string} party name
+ * @param party_id {string} party id
+ * @param username {string} user name
  * @param cb {Funtion} call back function
  **/
-export function socket_party_msg(msg, pname, pid, uname, cb) {
+export function socket_party_msg(msg, party_name, party_id, username, cb) {
   console.log('inside socket_party_msg');
   console.log(msg);
-  console.log(pname);
-  console.log(pid);
-  console.log(uname);
+  console.log(party_name);
+  console.log(party_id);
+  console.log(username);
   console.log(cb);
-  socket.emit('party_message', { msgtext: msg, partyname: pname, partyId: pid, username: uname }, cb);
+  socket.emit('party_message', { msgtext: msg, party_name: party_name, party_id: party_id, username: username }, cb);
 }
 
 
@@ -120,18 +120,18 @@ export function partylistCall(token, cb) {
 
 /**
  * @param msg {string} message text of chat
- * @param pname {string} party name
+ * @param party_name {string} party name
  * @param receiver {string} the username to whome the message is being directed.
  * @param sender {string} user name
  * @param cb {Funtion} call back function
  **/
-export function socket_msg(msg, pname, receiver, sender, cb) {
+export function socket_msg(msg, party_name, receiver, sender, cb) {
   console.log('inside socket_msg');
-  console.log('Party: ' + pname);
+  console.log('Party: ' + party_name);
   console.log('From: ' + sender);
   console.log('To: ' + receiver);
   console.log('Body: ' + msg);
-  socket.emit('user2user_message', { msgtext: msg, partyname: pname, receiver: receiver, sender: sender }, cb);
+  socket.emit('user2user_message', { msgtext: msg, party_name: party_name, receiver: receiver, sender: sender }, cb);
 }
 
 
@@ -141,10 +141,3 @@ export function callUberCall(addr) {
   });
 }
 
-export function callOpenTableCall(id, covers, datetime) {
-  return axios.post('api/callopentable',{
-    'id': id,
-    'covers': covers,
-    'datetime': datetime
-  });
-}

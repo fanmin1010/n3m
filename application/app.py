@@ -330,7 +330,7 @@ def party_message(message):
         result = PartyMessage.add_party_message(
             party_id, message['username'], message['msgtext'])
     if result == "success" or message['party_id'] == -1:
-        socketio.emit(message['partyname'],
+        socketio.emit(message['party_name'],
                       {'username': message['username'],
                        'text': message['msgtext'],
                        'avatar': avatar,
@@ -404,7 +404,7 @@ def bot_message(message):
     result2 = FriendMessage.add_friend_message(
         message['receiver'], message['username'], text_reply)
     if result2 == "success":
-        socketio.emit(message['partyname'],
+        socketio.emit(message['party_name'],
                       {'username': message['receiver'],
                        'text': text_reply,
                        'avatar': bot_avatar,
@@ -425,14 +425,14 @@ def user2user_message(message):
     result = FriendMessage.add_friend_message(
         sender, receiver, message['msgtext'])
     if result == "success":
-        socketio.emit(message['partyname'],
+        socketio.emit(message['party_name'],
                       {'username': sender,
                        'text': message['msgtext'],
                        'avatar': avatar,
                        'time': now})
         if message['receiver'] in constants.BOTLIST:
             socketio.emit(sender + '__geo',
-                          {'partyname': message['partyname'],
+                          {'party_name': message['party_name'],
                            'receiver': receiver,
                            'msgtext': message['msgtext']})
     else:
@@ -451,3 +451,4 @@ def get_friend_msg_his():
     msg_list = FriendMessage.get_friend_messages(current_user, friend)
     print(msg_list)
     return jsonify(msg_list)
+

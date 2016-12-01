@@ -61,10 +61,10 @@ export function chatMessagesFailure(error) {
 }
 
 
-export function send_chat(msg, partyname, receiver, sender) {
+export function send_chat(msg, party_name, receiver, sender) {
   return function (dispatch) {
     dispatch(chatMessagesRequest());
-    return socket_msg(msg, partyname, receiver, sender, () => {
+    return socket_msg(msg, party_name, receiver, sender, () => {
       try {
         dispatch(chatMessagesSuccess());
       } catch (e) {
@@ -76,10 +76,10 @@ export function send_chat(msg, partyname, receiver, sender) {
   };
 }
 
-export function send_party_chat(msg, partyname, partyId, uname) {
+export function send_party_chat(msg, party_name, party_id, uname) {
   return function (dispatch) {
     dispatch(chatMessagesRequest());
-    return socket_party_msg(msg, partyname, partyId, uname, () => {
+    return socket_party_msg(msg, party_name, party_id, uname, () => {
       try {
         dispatch(chatMessagesSuccess());
       } catch (e) {
@@ -92,25 +92,25 @@ export function send_party_chat(msg, partyname, partyId, uname) {
 }
 
 
-export function setChatWindow(partyname, partyId) {
-  console.log(partyname);
-  var partyId = partyId || -1
+export function setChatWindow(party_name, party_id) {
+  console.log(party_name);
+  var party_id = party_id || -1
   return {
     type: NEW_CHAT_CHANNEL,
     payload: {
-      partyname: partyname,
-      partyId: partyId,
+      party_name: party_name,
+      party_id: party_id,
     },
   };
 }
 
 
-export function addMessage(partyname, message) {
+export function addMessage(party_name, message) {
   return {
     type: ADD_MESSAGE,
     payload: {
       message: message,
-      partyname: partyname,
+      party_name: party_name,
     },
   };
 }
@@ -126,20 +126,20 @@ export function setIsParty(isParty, receiver) {
 }
 
 /**
- * @param partyname {string} in this case the partyname field is used for either one-on-one chats or party chats. 
+ * @param party_name {string} in this case the party_name field is used for either one-on-one chats or party chats. 
  * @param isParty {boolean} tells us if this is a party or one-on-one chat.
  * @param receiver {receiver} the username of the user receiving one-on-one chat.
  **/
-export function setNewListener(partyname, isParty, receiver) {
+export function setNewListener(party_name, isParty, receiver) {
   return function (dispatch) {
     dispatch(setIsParty(isParty, receiver));
     socket.removeAllListeners();
-    console.log('setting up listener on ' + partyname);
-    console.log(partyname);
-    socket.on(partyname, (data) => {
+    console.log('setting up listener on ' + party_name);
+    console.log(party_name);
+    socket.on(party_name, (data) => {
       console.log('received message from server');
       console.log(data);
-      dispatch(addMessage(partyname, data));
+      dispatch(addMessage(party_name, data));
       document.getElementById('messagelist').scrollTop = 9999;
     });
   };
@@ -161,7 +161,7 @@ export function setGeoListener(username){
       navigator.geolocation.getCurrentPosition(function(position){
         console.log('got the position information for user:');
         console.dir(position);
-        socket.emit('geodata', {'partyname': data.partyname, 'receiver': data.receiver, 'msgtext': data.msgtext, 'username': username, 'latitude': position.coords.latitude.toFixed(3), 'longitude': position.coords.longitude.toFixed(3)});
+        socket.emit('geodata', {'party_name': data.party_name, 'receiver': data.receiver, 'msgtext': data.msgtext, 'username': username, 'latitude': position.coords.latitude.toFixed(3), 'longitude': position.coords.longitude.toFixed(3)});
       });
     });
   };
@@ -210,12 +210,12 @@ export function friendHistoryRequest() {
   };
 }
 
-export function friendHistorySuccess(messages, partyname) {
+export function friendHistorySuccess(messages, party_name) {
   return {
     type: FRIEND_HISTORY_SUCCESS,
     payload: {
       messages: messages,
-      partyname: partyname
+      party_name: party_name
     },
   };
 }
@@ -227,7 +227,7 @@ export function friendHistoryFailure(error) {
   };
 }
 
-export function getFriendHistory(friendName, partyname) {
+export function getFriendHistory(friendName, party_name) {
   return function (dispatch) {
     dispatch(friendHistoryRequest());
     const token = localStorage.getItem('token');
@@ -237,7 +237,7 @@ export function getFriendHistory(friendName, partyname) {
       try {
         console.log('Getting the party history back:::::::');
         console.dir(data);
-        dispatch(friendHistorySuccess(data.data, partyname));
+        dispatch(friendHistorySuccess(data.data, party_name));
         document.getElementById('messagelist').scrollTop = 9999;
       } catch (e) {
         console.log('There was an error while calling friendHistory');
@@ -336,12 +336,12 @@ export function partyHistoryRequest() {
   };
 }
 
-export function partyHistorySuccess(messages, partyname) {
+export function partyHistorySuccess(messages, party_name) {
   return {
     type: PARTY_HISTORY_SUCCESS,
     payload: {
       messages: messages,
-      partyname: partyname
+      party_name: party_name
     },
   };
 }
@@ -353,15 +353,15 @@ export function partyHistoryFailure(error) {
   };
 }
 
-export function getPartyHistory(partyID, partyname) {
+export function getPartyHistory(party_id, party_name) {
   return function (dispatch) {
     dispatch(partyHistoryRequest());
     const token = localStorage.getItem('token');
-    return partyHistoryCall(partyID, token, (data) => {
+    return partyHistoryCall(party_id, token, (data) => {
       console.dir('The data in party History');
       console.dir(data.data);
       try {
-        dispatch(partyHistorySuccess(data.data, partyname));
+        dispatch(partyHistorySuccess(data.data, party_name));
         document.getElementById('messagelist').scrollTop = 9999;
       } catch (e) {
         console.log('There was an error while calling partyHistory');
@@ -392,13 +392,13 @@ export function addPartyFailure(error) {
   };
 }
 
-export function addParty(partyname) {
+export function addParty(party_name) {
   return function (dispatch) {
     dispatch(addPartyRequest());
     const token = localStorage.getItem('token');
     console.log('inside of the addParty action');
-    console.log(partyname);
-    return addPartyCall(partyname, token, () => {
+    console.log(party_name);
+    return addPartyCall(party_name, token, () => {
       try {
         dispatch(addPartySuccess());
         console.log('inside of add party and about to call getpartylist');

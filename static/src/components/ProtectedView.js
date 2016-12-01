@@ -55,7 +55,7 @@ export default class ProtectedView extends React.Component {
 ProtectedView.propTypes = {
   fetchProtectedData: React.PropTypes.func,
   loaded: React.PropTypes.bool,
-  userName: React.PropTypes.string,
+  username: React.PropTypes.string,
   data: React.PropTypes.any,
   token: React.PropTypes.string,
 };

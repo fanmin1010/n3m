@@ -29,8 +29,8 @@ import {
 } from '../constants/index';
 
 const initialState = {
-  partyname: 'Lobby',
-  partyId: -1,
+  party_name: 'Lobby',
+  party_id: -1,
   receiver: null,
   friendlist: [],
   friendListStatusText: null,
@@ -83,8 +83,8 @@ export default createReducer(initialState, {
       console.log('friendhistorysuccess.');
       console.dir(payload);
       var newstate =  Object.assign({}, state, {
-        allMessages: Object.assign({}, state.allMessages, { [payload.partyname]: state.allMessages[payload.partyname].slice().concat(payload.messages) }),
-        messages: state.allMessages[payload.partyname].slice().concat(payload.messages),
+        allMessages: Object.assign({}, state.allMessages, { [payload.party_name]: state.allMessages[payload.party_name].slice().concat(payload.messages) }),
+        messages: state.allMessages[payload.party_name].slice().concat(payload.messages),
         friendHistoryStatusText: 'friend history retreived successfully.',
       }); 
       return newstate;
@@ -96,15 +96,15 @@ export default createReducer(initialState, {
   [NEW_CHAT_CHANNEL]: (state, payload) => {
       console.log('In NEW_CHAT_CHANNEL reducer');
       console.dir(payload);
-      var updatedAllMessages =  Object.assign({}, ({ [payload.partyname]: [] }), state.allMessages);
+      var updatedAllMessages =  Object.assign({}, ({ [payload.party_name]: [] }), state.allMessages);
       //console.log('allmessages: ');
       //console.dir(updatedAllMessages);
-      var updatedMessages = updatedAllMessages[payload.partyname].slice();
+      var updatedMessages = updatedAllMessages[payload.party_name].slice();
       //console.log('messages: ');
       //console.dir(updatedMessages);
       var newstate =  Object.assign({}, state, {
-          partyname: payload.partyname,
-          partyId: payload.partyId,
+          party_name: payload.party_name,
+          party_id: payload.party_id,
           allMessages: updatedAllMessages,
           messages: updatedMessages,
           messagesStatusText: null,
@@ -118,8 +118,8 @@ export default createReducer(initialState, {
     console.log('In ADD_MESSAGE reducer');
     console.dir(payload);
     return Object.assign({}, state, {
-          allMessages: Object.assign({}, state.allMessages, { [payload.partyname]: state.allMessages[payload.partyname].slice().concat([payload.message]) }),
-          messages: state.allMessages[payload.partyname].slice().concat([payload.message]),
+          allMessages: Object.assign({}, state.allMessages, { [payload.party_name]: state.allMessages[payload.party_name].slice().concat([payload.message]) }),
+          messages: state.allMessages[payload.party_name].slice().concat([payload.message]),
           messagesStatusText: null,
         }); },
   [ADD_FRIEND_REQUEST]: (state, payload) =>
@@ -163,8 +163,8 @@ export default createReducer(initialState, {
       console.log('partyhistorysuccess.');
       console.dir(payload);
       var newstate =  Object.assign({}, state, {
-        allMessages: Object.assign({}, state.allMessages, { [payload.partyname]: state.allMessages[payload.partyname].slice().concat(payload.messages) }),
-        messages: state.allMessages[payload.partyname].slice().concat(payload.messages),
+        allMessages: Object.assign({}, state.allMessages, { [payload.party_name]: state.allMessages[payload.party_name].slice().concat(payload.messages) }),
+        messages: state.allMessages[payload.party_name].slice().concat(payload.messages),
         partyHistoryStatusText: 'party history retreived successfully.',
       }); 
       return newstate;

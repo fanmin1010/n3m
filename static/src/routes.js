@@ -14,7 +14,6 @@ import ProtectedView from './components/ProtectedView';
 import About from './components/About';
 import Chat from './components/Chat';
 import ProfileView from './components/ProfileView';
-import addFriend from './components/addFriend';
 
 import { DetermineAuth } from './components/DetermineAuth';
 import { requireNoAuthentication } from './components/notAuthenticatedComponent';

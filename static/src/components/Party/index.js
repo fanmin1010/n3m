@@ -29,10 +29,10 @@ import * as chatActionCreators from '../../actions/chat';
 
 function mapStateToProps(state) {
   return {
-    userName: state.auth.userName,
+    username: state.auth.username,
     partylist: state.chat.partylist,
-    partyname: state.chat.partyname,
-    partyId: state.chat.partyId,
+    party_name: state.chat.party_name,
+    party_id: state.chat.party_id,
   };
 }
 
@@ -56,19 +56,19 @@ function mapDispatchToProps(dispatch) {
   
     componentWillMount() {
       this.props.getPartyList();
-      this.props.addNewPartyListener(this.props.userName);
+      this.props.addNewPartyListener(this.props.username);
     }
 
   _onPartySelected(party) {
-    if(party.partyName === 'Lobby'){
-      this.props.getPartyHistory(party.partyID, party.partyName);
-      this.props.setChatWindow(party.partyName, party.partyID);
-      this.props.setNewListener(party.partyName, true, null);
+    if(party.party_name === 'Lobby'){
+      this.props.getPartyHistory(party.party_id, party.party_name);
+      this.props.setChatWindow(party.party_name, party.party_id);
+      this.props.setNewListener(party.party_name, true, null);
     }
     else {
-      this.props.getPartyHistory(party.partyID, party.partyName.replace(' ','') + '' + party.partyID);
-      this.props.setChatWindow(party.partyName.replace(' ','') + '' + party.partyID, party.partyID);
-      this.props.setNewListener(party.partyName.replace(' ','') + '' + party.partyID, true, null);
+      this.props.getPartyHistory(party.party_id, party.party_name.replace(' ','') + '' + party.party_id);
+      this.props.setChatWindow(party.party_name.replace(' ','') + '' + party.party_id, party.party_id);
+      this.props.setNewListener(party.party_name.replace(' ','') + '' + party.party_id, true, null);
     }
   }
 
@@ -92,16 +92,16 @@ function mapDispatchToProps(dispatch) {
     var friendname = document.getElementById('addfriendtopartytextbox').value;
     console.log('Friendname is: ' + friendname);
     document.getElementById('addfriendtopartytextbox').value = '';
-    this.props.addFriendToParty(friendname, this.props.partyId);
+    this.props.addFriendToParty(friendname, this.props.party_id);
     this.handleAddFriendClose();
   }
 
   addParty() {
-    var partyname = document.getElementById('addpartytextbox').value;
-    console.log('Partyname is: ' + partyname);
+    var party_name = document.getElementById('addpartytextbox').value;
+    console.log('Partyname is: ' + party_name);
     //var friends = document.getElementById('').value
     document.getElementById('addpartytextbox').value = '';
-    this.props.addParty(partyname);  
+    this.props.addParty(party_name);  
     this.handleClose();
   }
 
@@ -150,12 +150,12 @@ function mapDispatchToProps(dispatch) {
               primaryText="Lobby"
               rightAvatar={<Avatar src="dist/images/default_team.png" />}
               leftIcon={<CommunicationChatBubble />}
-              onTouchTap={this._onPartySelected.bind(this, { partyName: 'Lobby', partyID: -1 })}
+              onTouchTap={this._onPartySelected.bind(this, { party_name: 'Lobby', party_id: -1 })}
             />
           <Subheader>Parties({this.props.partylist.length}) {<GroupAdd color={grey500} style={{ margin: '15px', float: 'left' }} onTouchTap={this.handleOpen.bind(this)} />}</Subheader>
           {this.props.partylist.map((party) => {
                                                      return (<ListItem
-                                                       primaryText={party.partyName}
+                                                       primaryText={party.party_name}
                                                        rightAvatar={<Avatar src={party.avatar} />}
                                                        leftIcon={leftIconMenu}
                                                        onTouchTap={this._onPartySelected.bind(this, party)}
@@ -180,7 +180,7 @@ function mapDispatchToProps(dispatch) {
                 open={this.state.open}
                 onRequestClose={this.handleClose}
               >
-                Type in the partyname and press enter.  <br />
+                Type in the party name and press enter.  <br />
                 <TextField
                       hintText="Party Name"
                       id="addpartytextbox"

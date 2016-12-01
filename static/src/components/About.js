@@ -5,8 +5,6 @@ import * as actionCreators from '../actions/auth';
 
 function mapStateToProps(state) {
   return {
-    isRegistering: state.auth.isRegistering,
-    registerStatusText: state.auth.registerStatusText,
   };
 }
 

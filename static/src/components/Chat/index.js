@@ -21,13 +21,13 @@ function mapStateToProps(state) {
   console.log(state);
   return {
     token: state.auth.token,
-    userName: state.auth.userName,
+    username: state.auth.username,
     isParty: state.chat.isParty,
     receiver: state.chat.receiver,
     avatar: state.auth.avatar,
     isAuthenticated: state.auth.isAuthenticated,
-    partyname: state.chat.partyname,
-    partyId: state.chat.partyId,
+    party_name: state.chat.party_name,
+    party_id: state.chat.party_id,
     messages: state.chat.messages,
     allMessages: state.chat.allMessages,
   };
@@ -53,21 +53,21 @@ export class Chat extends Component {
   }
 
   componentWillMount() {
-    this.props.setChatWindow(this.props.partyname);
-    this.props.setNewListener(this.props.partyname, true, null);
+    this.props.setChatWindow(this.props.party_name);
+    this.props.setNewListener(this.props.party_name, true, null);
   }
 
   render() {
     return (
             <div className="col-md-8 col-md-offset-2" onKeyPress={(e) => this._handleKeyPress(e)}>
 							<Paper style={style} zDepth={5} rounded={false} >
-                <Subheader>{this.props.partyname}</Subheader>
+                <Subheader>{this.props.party_name}</Subheader>
                 <Divider />
                 <List id="messagelist" style={{ zIndex: '1', height: '85%', width: '98%', left: '1%', position: 'relative', overflow: 'scroll' }} >
                 {this.props.messages.map((msg) => {
                     return (<ListItem
-                      leftAvatar={(msg.username === this.props.userName) ? null : <Avatar src={msg.avatar} />}
-                      rightAvatar={(msg.username === this.props.userName) ? <Avatar src={msg.avatar} /> : null}
+                      leftAvatar={(msg.username === this.props.username) ? null : <Avatar src={msg.avatar} />}
+                      rightAvatar={(msg.username === this.props.username) ? <Avatar src={msg.avatar} /> : null}
                       secondaryText={
                           <h5>
                             <span style={{ fontSize: '10pt', color: darkBlack }}>{msg.time} </span>--
@@ -101,17 +101,17 @@ export class Chat extends Component {
 
   sendMessage(msg) {
     if(this.props.isParty) {
-      this.props.send_party_chat(msg, this.props.partyname.replace(' ', ''), this.props.partyId, this.props.userName);
+      this.props.send_party_chat(msg, this.props.party_name.replace(' ', ''), this.props.party_id, this.props.username);
     } else {
-      this.props.send_chat(msg, this.props.partyname.replace(' ', ''), this.props.receiver, this.props.userName);
+      this.props.send_chat(msg, this.props.party_name.replace(' ', ''), this.props.receiver, this.props.username);
       
     }
     document.getElementById('chatinput').value = '';
     document.getElementById('chatinput').placeholder = '';
-    if(OPENTABLE_USERNAME === this.props.partyname){
+    if(OPENTABLE_USERNAME === this.props.receiver){
       document.getElementById('chatinput').placeholder = 'Restaurant Name@YYYY-MM-DD 24:00 || Partysize';
     }
-    else if(UBER_USERNAME === this.props.partyname){
+    else if(UBER_USERNAME === this.props.receiver){
       document.getElementById('chatinput').placeholder = 'Destination Address';
     }
     else {

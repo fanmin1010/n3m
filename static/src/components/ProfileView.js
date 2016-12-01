@@ -42,7 +42,7 @@ export default class ProfileView extends React.Component {
                         :
                           <div>
                             <h2>Profile</h2>
-                            <p>{this.props.userName}!</p>
+                            <p>{this.props.username}!</p>
                             <p>{this.props.data.data.email}</p>
                             <p onClick={() =>browserHistory.push('/main')}> Back to chat </p>
                           </div>
@@ -55,7 +55,7 @@ export default class ProfileView extends React.Component {
 }
 
 ProfileView.propTypes = {
-  userName: React.PropTypes.string.isRequired,
+  username: React.PropTypes.string.isRequired,
   loaded: React.PropTypes.bool,
   data: React.PropTypes.object,
 };

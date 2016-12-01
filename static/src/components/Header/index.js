@@ -36,8 +36,8 @@ import {
 
 function mapStateToProps(state) {
   return {
-    userName: state.auth.userName,
-    userId: state.auth.userId,
+    username: state.auth.username,
+    user_id: state.auth.user_id,
     friendlist: state.chat.friendlist,
   };
 }
@@ -69,8 +69,8 @@ export class Header extends Component {
     };
   }
   componentWillMount() {
-    this.props.getFriendList(this.props.userName);
-    this.props.setGeoListener(this.props.userName);
+    this.props.getFriendList(this.props.username);
+    this.props.setGeoListener(this.props.username);
   }
 
   dispatchNewRoute(route) {
@@ -84,22 +84,22 @@ export class Header extends Component {
   }
 
   _onFriendSelected(friend) {
-    let partyname;
-    if (this.props.userId < friend.id) {
-      partyname = `${this.props.userName.replace(' ', '')}-${friend.username.replace(' ', '')}`;
+    let party_name;
+    if (this.props.user_id < friend.id) {
+      party_name = `${this.props.username.replace(' ', '')}-${friend.username.replace(' ', '')}`;
     } else {
-      partyname = `${friend.username.replace(' ', '')}-${this.props.userName.replace(' ', '')}`;
+      party_name = `${friend.username.replace(' ', '')}-${this.props.username.replace(' ', '')}`;
     }
-    this.props.getFriendHistory(friend.username, partyname);
-    this.props.setChatWindow(partyname);
-    this.props.setNewListener(partyname, false, friend.username);
-    this.props.setGeoListener(this.props.userName);
+    this.props.getFriendHistory(friend.username, party_name);
+    this.props.setChatWindow(party_name);
+    this.props.setNewListener(party_name, false, friend.username);
+    this.props.setGeoListener(this.props.username);
 
     document.getElementById('chatinput').placeholder = '';
-    if(OPENTABLE_USERNAME === partyname){
+    if(OPENTABLE_USERNAME === friend.username){
       document.getElementById('chatinput').placeholder = 'Restaurant Name@YYYY-MM-DD 24:00 || Partysize';
     }
-    else if(UBER_USERNAME === partyname){
+    else if(UBER_USERNAME === friend.username){
       document.getElementById('chatinput').placeholder = 'Destination Address';
     }
     else {
@@ -114,7 +114,7 @@ export class Header extends Component {
   addFriend() {
     var email=document.getElementById('addfriendtextbox').value;
     document.getElementById('addfriendtextbox').value = '';
-    this.props.addFriend(email, this.props.userName);  
+    this.props.addFriend(email, this.props.username);  
     this.handleClose();
   }
 
