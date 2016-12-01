@@ -16,10 +16,10 @@ import sqlalchemy as sa
 
 def upgrade():
     op.create_table('partyuser',
-    sa.Column('puID', sa.Integer(), nullable=False),
-    sa.Column('partyID', sa.Integer(), sa.ForeignKey('party.partyID'), nullable=False),
-    sa.Column('userID', sa.Integer(), sa.ForeignKey('user.id'), nullable=False),
-    sa.PrimaryKeyConstraint('puID')
+    sa.Column('pu_id', sa.Integer(), nullable=False),
+    sa.Column('party_id', sa.Integer(), sa.ForeignKey('party.party_id'), nullable=False),
+    sa.Column('user_id', sa.Integer(), sa.ForeignKey('user.user_id'), nullable=False),
+    sa.PrimaryKeyConstraint('pu_id')
     )
 
 

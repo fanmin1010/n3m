@@ -1,13 +1,11 @@
 '''MODEL'''
 from index import db, bcrypt
-from datetime import datetime
-from sqlalchemy.exc import IntegrityError, SQLAlchemyError
-from sqlalchemy import desc
+from sqlalchemy.exc import IntegrityError
 
 
 class User(db.Model):
     '''User model class to handle all users'''
-    id = db.Column(db.Integer(), primary_key=True)
+    user_id = db.Column(db.Integer(), primary_key=True)
     username = db.Column(db.String(255), unique=True)
     email = db.Column(db.String(255), unique=True)
     password = db.Column(db.String(255))
@@ -24,7 +22,7 @@ class User(db.Model):
 
     def __str__(self):
         return '''User::::::
-        ID: ''' + str(self.id) + '''
+        USERID: ''' + str(self.user_id) + '''
         EMAIL: ''' + self.email + '''
         USERNAME: ''' + self.username + '''
         PASSWORD: ''' + self.password + '''
@@ -38,7 +36,7 @@ class User(db.Model):
         return bcrypt.generate_password_hash(password)
 
     @staticmethod
-    def get_user_with_email_and_password(email, password):
+    def get_user(email, password):
         '''load user from login credentials'''
         user = User.query.filter_by(email=email).first()
         if user and bcrypt.check_password_hash(user.password, password):
@@ -68,8 +66,8 @@ class User(db.Model):
 class Friendship(db.Model):
     '''Friendship model class handles chat between two users'''
     fs_id = db.Column(db.Integer(), primary_key=True, nullable=False)
-    friender = db.Column(db.Integer(), db.ForeignKey('user.id'))
-    friendee = db.Column(db.Integer(), db.ForeignKey('user.id'))
+    friender = db.Column(db.Integer(), db.ForeignKey('user.user_id'))
+    friendee = db.Column(db.Integer(), db.ForeignKey('user.user_id'))
     est_time = db.Column(
         db.DateTime(),
         nullable=False,
@@ -111,29 +109,32 @@ class Friendship(db.Model):
 
 class Party(db.Model):
     '''Party model class handles chat between multiple users'''
-    partyID = db.Column(db.Integer(), primary_key=True, nullable=False)
-    partyName = db.Column(db.String(255), nullable=False)
-    ownerID = db.Column(db.Integer(), db.ForeignKey('user.id'), nullable=False)
+    party_id = db.Column(db.Integer(), primary_key=True, nullable=False)
+    party_name = db.Column(db.String(255), nullable=False)
+    owner_id = db.Column(
+        db.Integer(),
+        db.ForeignKey('user.user_id'),
+        nullable=False)
     avatar = db.Column(db.String(128), unique=False)
     __table_args__ = (
         db.UniqueConstraint(
-            'partyName',
-            'ownerID',
+            'party_name',
+            'owner_id',
             name='unique_pname_with_owner'),
     )
 
-    def __init__(self, partyName, ownerID, avatar):
-        self.partyName = partyName
-        self.ownerID = ownerID
+    def __init__(self, party_name, owner_id, avatar):
+        self.party_name = party_name
+        self.owner_id = owner_id
         self.avatar = avatar
 
     def __repr__(self):
-        return '<Party %r owned by %r>' % (self.partyName, self.ownerID)
+        return '<Party %r owned by %r>' % (self.party_name, self.owner_id)
 
     @staticmethod
-    def getMyParties(ownerID):
+    def get_my_parties(owner_id):
         '''get all parties created by a specific user'''
-        parties = Party.query.filter_by(ownerID=ownerID).all()
+        parties = Party.query.filter_by(owner_id=owner_id).all()
         # print(parties)
         if parties:
             return parties
@@ -144,29 +145,32 @@ class Party(db.Model):
 class PartyUser(db.Model):
     '''PartyUser model class handles relationship between a party and users'''
     __tablename__ = 'partyuser'
-    puID = db.Column(db.Integer(), primary_key=True, nullable=False)
-    partyID = db.Column(
+    pu_id = db.Column(db.Integer(), primary_key=True, nullable=False)
+    party_id = db.Column(
         db.Integer(),
-        db.ForeignKey('party.partyID'),
+        db.ForeignKey('party.party_id'),
         nullable=False)
-    userID = db.Column(db.Integer(), db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(
+        db.Integer(),
+        db.ForeignKey('user.user_id'),
+        nullable=False)
     __table_args__ = (
         db.UniqueConstraint(
-            'partyID',
-            'userID',
+            'party_id',
+            'user_id',
             name='unique_pid_with_user'),
     )
 
-    def __init__(self, partyID, userID):
-        self.partyID = partyID
-        self.userID = userID
+    def __init__(self, party_id, user_id):
+        self.party_id = party_id
+        self.user_id = user_id
 
     @staticmethod
-    def getPartyUsers(partyID):
+    def get_party_users(party_id):
         '''get all users of a party'''
-        partyUsers = PartyUser.query.filter_by(partyID=partyID).first()
-        if partyUsers:
-            return partyUsers
+        party_users = PartyUser.query.filter_by(party_id=party_id).first()
+        if party_users:
+            return party_users
         else:
             return None
 
@@ -174,14 +178,14 @@ class PartyUser(db.Model):
 class FriendMessage(db.Model):
     '''FriendMessage model class stores messages of a Friendship chat'''
     __tablename__ = 'friendmessage'
-    fmID = db.Column(db.Integer(), primary_key=True, nullable=False)
+    fm_id = db.Column(db.Integer(), primary_key=True, nullable=False)
     fs_id = db.Column(
         db.Integer(),
         db.ForeignKey('friendship.fs_id'),
         nullable=False)
-    senderID = db.Column(
+    sender_id = db.Column(
         db.Integer(),
-        db.ForeignKey('user.id'),
+        db.ForeignKey('user.user_id'),
         nullable=False)
     timestamp = db.Column(
         db.DateTime(),
@@ -189,9 +193,9 @@ class FriendMessage(db.Model):
         server_default=db.func.now())
     message = db.Column(db.String(65535), nullable=False)
 
-    def __init__(self, fs_id, senderID, time,  message):
+    def __init__(self, fs_id, sender_id, message):
         self.fs_id = fs_id
-        self.senderID = senderID
+        self.sender_id = sender_id
         self.message = message
         self.timestamp = db.func.now()
 
@@ -200,64 +204,69 @@ class FriendMessage(db.Model):
             str(self.fs_id) + ''', TimeStamp: ''' + str(self.timestamp)
 
     @staticmethod
-    def add_friendMessage(sender, receiver, time, messagetext):
+    def add_friend_message(sender, receiver, messagetext):
         '''store message from a Friendship chat'''
         senderuser = User.query.filter_by(username=sender).first()
         if senderuser is None:
             return "empty sender user"
-        senderID = senderuser.id
+        sender_id = senderuser.user_id
         receiveruser = User.query.filter_by(username=receiver).first()
         if receiveruser is None:
             return "empty receiver user"
-        receiverID = receiveruser.id
+        receiver_id = receiveruser.user_id
         # always store the message with one friendship where
         # friender_id<=friendee_id
-        if senderID < receiverID:
-            fs = Friendship.get_friendship_with_user_ids(senderID, receiverID)
-        else:
-            fs = Friendship.get_friendship_with_user_ids(receiverID, senderID)
-        if fs is None:
+        friendship = (
+                Friendship.get_friendship_with_user_ids(sender_id, receiver_id) 
+                if sender_id < receiver_id else 
+                Friendship.get_friendship_with_user_ids( receiver_id, sender_id))
+        if friendship is None:
             return "empty friendship"
-        fs_id = fs.fs_id
-        message = FriendMessage(fs_id, senderID, time, messagetext)
-        db.session.add(message)
-        try:
-            db.session.commit()
-        except IntegrityError:
-            return "database error"
-        return "success"
+        else:
+            fs_id = friendship.fs_id
+            message = FriendMessage(fs_id, sender_id, messagetext)
+            db.session.add(message)
+            try:
+                db.session.commit()
+            except IntegrityError:
+                return "database error"
+            return "success"
 
     @staticmethod
-    def getFriendMessages(user1, user2):
+    def get_friend_messages(user1, user2):
         '''get Friendship message history'''
         senderuser = User.query.filter_by(username=user1).first()
         if senderuser is None:
             return "empty user1"
-        senderID = senderuser.id
+        sender_id = senderuser.user_id
         receiveruser = User.query.filter_by(username=user2).first()
         if receiveruser is None:
             return "empty user2"
-        receiverID = receiveruser.id
+        receiver_id = receiveruser.user_id
         # always store the message with one friendship where
         # friender_id<=friendee_id
-        if senderID < receiverID:
-            fs = Friendship.get_friendship_with_user_ids(senderID, receiverID)
+        if sender_id < receiver_id:
+            friendship = Friendship.get_friendship_with_user_ids(
+                sender_id, receiver_id)
         else:
-            fs = Friendship.get_friendship_with_user_ids(receiverID, senderID)
-        if fs is None:
+            friendship = Friendship.get_friendship_with_user_ids(
+                receiver_id, sender_id)
+        if friendship is None:
             return "empty friendship"
-        fs_id = fs.fs_id
-        friendMessages = FriendMessage.query.filter_by(
-            fs_id=fs_id).order_by(
-            FriendMessage.timestamp).all()
+        fs_id = friendship.fs_id
+        friend_messages = (FriendMessage
+                           .query
+                           .filter_by(fs_id=fs_id)
+                           .order_by(FriendMessage.timestamp)
+                           .all())
         sender_av = User.get_avatar_for_username(user1)
         receiver_av = User.get_avatar_for_username(user2)
-        if friendMessages is None:
+        if friend_messages is None:
             return None
         else:
             msg_list = []
-            for msg in friendMessages:
-                if msg.senderID == senderID:
+            for msg in friend_messages:
+                if msg.sender_id == sender_id:
                     avatar = sender_av
                     username = user1
                 else:
@@ -275,14 +284,14 @@ class FriendMessage(db.Model):
 class PartyMessage(db.Model):
     '''PartyMessage model class stores party chat messages'''
     __tablename__ = 'partymessage'
-    pmID = db.Column(db.Integer(), primary_key=True, nullable=False)
-    partyID = db.Column(
+    pm_id = db.Column(db.Integer(), primary_key=True, nullable=False)
+    party_id = db.Column(
         db.Integer(),
-        db.ForeignKey('party.partyID'),
+        db.ForeignKey('party.party_id'),
         nullable=False)
-    senderID = db.Column(
+    sender_id = db.Column(
         db.Integer(),
-        db.ForeignKey('user.id'),
+        db.ForeignKey('user.user_id'),
         nullable=False)
     timestamp = db.Column(
         db.DateTime(),
@@ -290,20 +299,20 @@ class PartyMessage(db.Model):
         server_default=db.func.now())
     message = db.Column(db.String(65535), nullable=False)
 
-    def __init__(self, partyID, senderID, time, message):
-        self.partyID = partyID
-        self.senderID = senderID
+    def __init__(self, party_id, sender_id, message):
+        self.party_id = party_id
+        self.sender_id = sender_id
         self.message = message
         self.timestamp = db.func.now()
 
     @staticmethod
-    def add_partyMessage(partyID, sender, time, messagetext):
+    def add_party_message(party_id, sender, messagetext):
         '''store message from party chat'''
         senderuser = User.query.filter_by(username=sender).first()
         if senderuser is None:
             return "empty sender user"
-        senderID = senderuser.id
-        message = PartyMessage(partyID, senderID, time, messagetext)
+        sender_id = senderuser.user_id
+        message = PartyMessage(party_id, sender_id, messagetext)
         db.session.add(message)
         try:
             db.session.commit()
@@ -312,22 +321,24 @@ class PartyMessage(db.Model):
         return "success"
 
     @staticmethod
-    def getPartyMessages(partyID):
+    def get_party_messages(party_id):
         '''get message history for a party'''
-        partyMessages = PartyMessage.query.filter_by(
-            partyID=partyID).order_by(
-            PartyMessage.timestamp).all()
-        if partyMessages is None:
+        party_messages = (PartyMessage
+                          .query
+                          .filter_by(party_id=party_id)
+                          .order_by(PartyMessage.timestamp)
+                          .all())
+        if party_messages is None:
             return None
         else:
             msg_list = []
-            for msg in partyMessages:
-                sender = User.query.filter_by(id=msg.senderID).first()
-                av = sender.avatar
+            for msg in party_messages:
+                sender = User.query.filter_by(user_id=msg.sender_id).first()
+                sender_avatar = sender.avatar
                 msg_list.append(
                     dict(
                         time=str(msg.timestamp),
                         text=msg.message,
-                        avatar=av,
+                        avatar=sender_avatar,
                         username=sender.username))
             return msg_list

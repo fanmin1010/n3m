@@ -45,7 +45,7 @@ export function addFriendToPartyCall(friend, partyid, token, cb) {
 }
 
 export function addPartyCall(partyName, token, cb) {
-  return axios.post('api/createParty', {
+  return axios.post('api/createparty', {
     partyName: partyName, 
   }, tokenConfig(token))
   .then(cb)

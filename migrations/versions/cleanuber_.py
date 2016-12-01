@@ -28,24 +28,24 @@ def upgrade():
 
 def downgrade():
     op.create_table('uber',
-    sa.Column('id', sa.Integer(), primary_key=True),
-    sa.Column('userID', sa.Integer(), sa.ForeignKey('user.id'), nullable=False),
+    sa.Column('uber_id', sa.Integer(), primary_key=True),
+    sa.Column('user_id', sa.Integer(), sa.ForeignKey('user.id'), nullable=False),
     sa.Column('timestamp', sa.DateTime, server_default=sa.func.current_timestamp()),
     sa.Column('duration', sa.Interval()),
     sa.Column('location', sa.String(length=255), nullable=False),
     sa.Column('destination', sa.String(length=255), nullable=False),
     sa.Column('cost', sa.Float(), nullable=False),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('uber_id')
     )
     op.create_table('opentable',
-    sa.Column('id', sa.Integer(), primary_key=True),
-    sa.Column('userID', sa.Integer(), sa.ForeignKey('user.id'), nullable=False),
+    sa.Column('opentable_id', sa.Integer(), primary_key=True),
+    sa.Column('user_id', sa.Integer(), sa.ForeignKey('user.id'), nullable=False),
     sa.Column('timestamp', sa.DateTime, server_default=sa.func.current_timestamp()),
     sa.Column('date', sa.Date()),
     sa.Column('timeslot', sa.String(length=255), nullable=False),
     sa.Column('destination', sa.String(length=255), nullable=False),
     sa.Column('partysize', sa.Integer(), nullable=False),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('opentable_id')
     )
     op.execute("""
         delete from "user" where email = 'opentable_aid@party.io' or email = 'uber_aid@party.io'

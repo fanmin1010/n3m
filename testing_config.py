@@ -27,8 +27,8 @@ class BaseTestConfig(TestCase):
     }
 
     default_party = {
-        "partyID": 1,
-        "partyName": "My Party"
+        "party_id": 1,
+        "party_name": "My Party"
     }
 
     uber_user = {
@@ -97,7 +97,7 @@ class BaseTestConfig(TestCase):
         self.fs_id = json.loads(f_res.data.decode("utf-8"))["friendship_id"]
         print(self.fs_id)
         p_res = self.app.post(
-            "/api/createParty",
+            "/api/createparty",
             data=json.dumps(self.default_party),
             headers = headers,
             content_type='application/json'
@@ -105,7 +105,7 @@ class BaseTestConfig(TestCase):
         pu_res = self.app.post(
             "/api/add_users_to_party",
             data=json.dumps({
-                "partyID": 1,
+                "party_id": 1,
                 "username": "thirduser"
             }),
             headers = headers,

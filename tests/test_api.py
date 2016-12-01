@@ -6,14 +6,14 @@ from application.utils import auth
 
 class TestAPI(BaseTestConfig):
     some_user = {
-        "id": 6,
+        "user_id": 6,
         "username": "theone",
         "email": "one@gmail.com",
         "password": "something1",
         "pgp_key": "nJCzzlSEZT1u+qS1Mrj9MNqmNlL pdW5YJJ2aRsaspz1mCR3+NUP78a2iDnTHPaCh+jRK+P5IORJ4Qtpv6CITRz8St7z Z2j3TMtywQgAsZUVKLPujiO9/V9bNp2xjN23JS8CwT3GPlvR1HeJfVDuiE2njNlj enu6ZrU3z5E6gyMmUjUHEsgS3ZGv1+FdUCYYT5ry8js/kcly49tziI0WC6hrQBpC i7tiBXmT/9TYJhJdsQaQptjloQQDwObO7g7L2UOwLTuzLDh3xnnWuvfO90yz/1hu LlpEkNvJh02G7iL7bZPNPKzp16e9Xk8PfxhW3pjh09W3PBx8MpNOkjWN27/Q+Khm rfhYWBomlwauMHH1Yq+gxqzALf0/JNwGOW+vXbavc7PmaM3GQjZanAE8pdxqqiGl ZQ6y0TK/F6xikLudO/eeSvVlddmgnlh+TA== =Yks1"
     }
     another_user = {
-        "id": 7,
+        "user_id": 7,
         "username": "Aria",
         "email": "starks@gmail.com",
         "password": "assassin10",
@@ -26,7 +26,7 @@ class TestAPI(BaseTestConfig):
         "email": "999@gmail.com"
     }
     party1 = {
-        "partyName": "Awesome Fellas"
+        "party_name": "Awesome Fellas"
     }
 
     def test_get_spa_from_index(self):
@@ -278,14 +278,14 @@ class TestAPI(BaseTestConfig):
             'Authorization': self.token
         }
         res = self.app.post(
-                "/api/createParty",
+                "/api/createparty",
                 data=json.dumps(self.party1),
                 headers = headers,
                 content_type='application/json'
         )
         self.assertEqual(res.status_code, 200)
         res2 = self.app.post(
-                "/api/createParty",
+                "/api/createparty",
                 data=json.dumps(self.party1),
                 headers = headers,
                 content_type='application/json'
@@ -300,7 +300,7 @@ class TestAPI(BaseTestConfig):
         res = self.app.post(
             "/api/add_users_to_party",
             data=json.dumps({
-                "partyID": 1,
+                "party_id": 1,
                 "username": "secuser"
             }),
             headers = headers,
@@ -311,7 +311,7 @@ class TestAPI(BaseTestConfig):
         res3 = self.app.post(
             "/api/add_users_to_party",
             data=json.dumps({
-                "partyID": 2,
+                "party_id": 2,
                 "username": "secuser"
             }),
             headers = headers,
@@ -321,7 +321,7 @@ class TestAPI(BaseTestConfig):
         res4 = self.app.post(
             "/api/add_users_to_party",
             data=json.dumps({
-                "partyID": "1",
+                "party_id": "1",
                 "username": "fake"
             }),
             headers = headers,
@@ -331,7 +331,7 @@ class TestAPI(BaseTestConfig):
         res2 = self.app.post(
             "/api/add_users_to_party",
             data=json.dumps({
-                "partyID": 1,
+                "party_id": 1,
                 "username": "secuser"
             }),
             headers = headers,

@@ -16,14 +16,14 @@ import sqlalchemy as sa
 
 def upgrade():
     op.create_table('opentable',
-    sa.Column('id', sa.Integer(), primary_key=True),
-    sa.Column('userID', sa.Integer(), sa.ForeignKey('user.id'), nullable=False),
+    sa.Column('opentable_id', sa.Integer(), primary_key=True),
+    sa.Column('user_id', sa.Integer(), sa.ForeignKey('user.user_id'), nullable=False),
     sa.Column('timestamp', sa.DateTime, server_default=sa.func.current_timestamp()),
     sa.Column('date', sa.Date()),
     sa.Column('timeslot', sa.String(length=255), nullable=False),
     sa.Column('destination', sa.String(length=255), nullable=False),
     sa.Column('partysize', sa.Integer(), nullable=False),
-    sa.PrimaryKeyConstraint('id')
+    sa.PrimaryKeyConstraint('opentable_id')
     )
 
 
