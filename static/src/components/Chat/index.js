@@ -59,7 +59,7 @@ export class Chat extends Component {
   }
 
   sendMessage(msg) {
-    if(msg.length>0) {
+    if (msg.length > 0) {
       if (this.props.isParty) {
         this.props.send_party_chat(msg, this.props.party_name.replace(' ', ''), this.props.party_id, this.props.username);
       } else {

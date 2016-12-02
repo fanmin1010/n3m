@@ -78,7 +78,7 @@ export default createReducer(initialState, {
           friendHistoryStatusText: null,
         }),
   [FRIEND_HISTORY_SUCCESS]: (state, payload) => {
-    if(state.allMessages[payload.party_name].length > 1) {return state;}
+    if (state.allMessages[payload.party_name].length > 1) { return state; }
       console.log('friendhistorysuccess.');
       console.dir(payload);
       const newstate = Object.assign({}, state, {
@@ -159,7 +159,7 @@ export default createReducer(initialState, {
           partyHistoryStatusText: null,
         }),
   [PARTY_HISTORY_SUCCESS]: (state, payload) => {
-      if(state.allMessages[payload.party_name].length > 1) {return state;}
+      if (state.allMessages[payload.party_name].length > 1) { return state; }
       console.log('partyhistorysuccess.');
       console.dir(payload);
       const newstate = Object.assign({}, state, {

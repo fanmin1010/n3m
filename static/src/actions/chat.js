@@ -98,7 +98,7 @@ export function setChatWindow(party_name, party_id) {
   return {
     type: NEW_CHAT_CHANNEL,
     payload: {
-      party_name: party_name,
+      party_name,
       party_id: partyid,
     },
   };
@@ -109,8 +109,8 @@ export function addMessage(party_name, message) {
   return {
     type: ADD_MESSAGE,
     payload: {
-      message: message,
-      party_name: party_name,
+      message,
+      party_name,
     },
   };
 }
@@ -119,8 +119,8 @@ export function setIsParty(isParty, receiver) {
   return {
     type: SET_IS_PARTY,
     payload: {
-      isParty: isParty,
-      receiver: receiver,
+      isParty,
+      receiver,
     },
   };
 }
@@ -255,8 +255,8 @@ export function friendHistorySuccess(messages, party_name) {
   return {
     type: FRIEND_HISTORY_SUCCESS,
     payload: {
-      messages:messages,
-      party_name:party_name,
+      messages,
+      party_name,
     },
   };
 }
@@ -339,8 +339,8 @@ export function partyHistorySuccess(messages, party_name) {
   return {
     type: PARTY_HISTORY_SUCCESS,
     payload: {
-      messages:messages,
-      party_name:party_name,
+      messages,
+      party_name,
     },
   };
 }

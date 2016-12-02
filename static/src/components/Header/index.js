@@ -67,16 +67,6 @@ export class Header extends Component {
     this.props.setGeoListener(this.props.username);
   }
 
-  dispatchNewRoute(route) {
-    browserHistory.push(route);
-  }
-
-
-  logout(e) {
-    e.preventDefault();
-    this.props.logoutAndRedirect();
-  }
-
   onFriendSelected(friend) {
     let party_name;
     if (this.props.user_id < friend.id) {
@@ -98,6 +88,17 @@ export class Header extends Component {
       document.getElementById('chatinput').placeholder = 'Chat Message';
     }
   }
+
+  logout(e) {
+    e.preventDefault();
+    this.props.logoutAndRedirect();
+  }
+
+
+  dispatchNewRoute(route) {
+    browserHistory.push(route);
+  }
+
 
   addFriendClicked() {
     this.setState({ open: true });
