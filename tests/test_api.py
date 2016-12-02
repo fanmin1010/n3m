@@ -2,6 +2,7 @@ from testing_config import BaseTestConfig
 from application.models import User, Friendship, Party #, UberRide
 import json
 from application.utils import auth
+from application.app import call_uber, opentable_message
 
 
 class TestAPI(BaseTestConfig):
@@ -28,6 +29,27 @@ class TestAPI(BaseTestConfig):
     party1 = {
         "party_name": "Awesome Fellas"
     }
+
+    def test_opentable_message(self):
+        res = opentable_message("Calle Dao@2016-12-01 08:00 || 4")
+        print(res)
+        self.assertTrue("Calle Dao" in res)
+        res2 = opentable_message("helo")
+        self.assertTrue("Incorrect input" in res2)
+        res3 = opentable_message("helo@")
+        self.assertTrue("Incorrect input" in res3)
+        res4 = opentable_message("helo||")
+        self.assertTrue("Incorrect input" in res4)
+        res5 = opentable_message("l@null||none")
+        self.assertTrue("Incorrect input" in res5)
+        res6 = opentable_message("l@null|| 4")
+        self.assertTrue("Incorrect input" in res6)
+        res7 = opentable_message("l@2016-12-01 08:00 ||none")
+        self.assertTrue("Incorrect input" in res7)
+        res8 = opentable_message("*%^@@2016-12-01 08:00 || 4")
+        self.assertTrue("Incorrect input" in res8)
+        res9 = opentable_message("*%^@2016-12-01 08:00 || 4")
+        self.assertEqual(res9, 'Could not find any restaurants close to that.')
 
     def test_get_spa_from_index(self):
         result = self.app.get("/")
@@ -291,6 +313,15 @@ class TestAPI(BaseTestConfig):
                 content_type='application/json'
         )
         self.assertEqual(res2.status_code, 409)
+        res3 = self.app.post(
+                "/api/createparty",
+                data=json.dumps({
+                    "party_name": ""
+                }),
+                headers = headers,
+                content_type='application/json'
+        )
+        self.assertEqual(res3.status_code, 400)
 
     def test_add_users_to_party(self):
         headers = {
@@ -368,6 +399,12 @@ class TestAPI(BaseTestConfig):
         )
         print(json.loads(res.data.decode("utf-8")))
         self.assertEqual(res.status_code, 200)
+
+    def test_call_uber(self):
+        res = call_uber("Times Square", 40.808, -73.961)
+        self.assertTrue("uberPOOL" in res)
+        res2 = call_uber(None, 0, 0)
+        self.assertTrue("Could not locate" in res2)
 
 """
     def test_getRides(self):

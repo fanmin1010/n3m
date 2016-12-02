@@ -177,6 +177,10 @@ def create_party():
     # print('The partyname is')
     # print(incoming)
     av_path = "dist/images/team0{}.png".format(randint(0, 9))
+    if len(incoming["party_name"]) == 0:
+        return jsonify(
+            error=True, message="Party name cannot be empty."
+        ), 400
     party = Party(
         party_name=incoming["party_name"],
         owner_id=g.current_user["user_id"],
@@ -354,20 +358,31 @@ def get_party_msg_his():
 def opentable_message(message):
     '''call opentable api and return response'''
     keylist = restaurants.keys()
+    if (message.count('@') != 1) or (message.count('||') != 1):
+        return 'Incorrect input for OpenTable reservation.'
     restname, resv_info = message.split('@')
     resv_time, partysize = resv_info.split('||')
+
     print('^^^^^^^^')
     print(restname)
     print(time)
     print(partysize)
     print('$$$$$$$$$')
+    try:
+        resv_time = resv_time.strip()
+        partysize = partysize.strip()
+        datetime.datetime.strptime(resv_time, '%Y-%m-%d %I:%M')
+        int(partysize)
+    except Exception:
+        return 'Incorrect input for OpenTable reservation.'
+
     mtch = difflib.get_close_matches(restname.strip(), keylist, 1, 0.1)
     try:
         print(str(mtch))
         reply_text = ''
         if message != mtch[0]:
             reply_text = '\nCould not find ' + restname + \
-                '. Showing results for closest match: \n'
+                '. Showing results for closest match: \n' + mtch[0]
         rest_id = restaurants[mtch[0]]['Id']
         reply_text = '\n' + reply_text + mtch[0] + ' in ' + restaurants[mtch[0]][
             'Neighborhood']['Name'] + ', ' + restaurants[mtch[0]]['Region']['Name']
