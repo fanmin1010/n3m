@@ -383,14 +383,16 @@ def opentable_message(message):
         reply_text = ''
         if message != mtch[0]:
             reply_text = '\nCould not find ' + restname + \
-                '. Showing results for closest match: \n' + mtch[0]
+                '. Showing results for closest match: \n'
         rest_id = restaurants[mtch[0]]['Id']
-        reply_text = '\n' + reply_text + mtch[0] + ' in ' + restaurants[mtch[0]][
-            'Neighborhood']['Name'] + ', ' + restaurants[mtch[0]]['Region']['Name']
-        reply_text = reply_text + \
-            call_opentable(rest_id, partysize.strip(), resv_time)
+        reply_text = '\n' + reply_text + mtch[0] + ' in '
+        reply_text = reply_text + restaurants[mtch[0]][ 'Neighborhood']['Name']
+        reply_text = reply_text + ', ' + restaurants[mtch[0]]['Region']['Name']
+        reply_text = reply_text + call_opentable(rest_id, partysize.strip(), resv_time)
         return reply_text
-    except:
+    except Exception as e:
+        print(e.__doc__)
+        print(e.message)
         return 'Could not find any restaurants close to that.'
 
 
