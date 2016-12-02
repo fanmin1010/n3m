@@ -255,8 +255,8 @@ export function friendHistorySuccess(messages, party_name) {
   return {
     type: FRIEND_HISTORY_SUCCESS,
     payload: {
-      messages,
-      party_name,
+      messages:messages,
+      party_name:party_name,
     },
   };
 }
@@ -339,8 +339,8 @@ export function partyHistorySuccess(messages, party_name) {
   return {
     type: PARTY_HISTORY_SUCCESS,
     payload: {
-      messages,
-      party_name,
+      messages:messages,
+      party_name:party_name,
     },
   };
 }

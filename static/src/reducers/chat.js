@@ -78,6 +78,7 @@ export default createReducer(initialState, {
           friendHistoryStatusText: null,
         }),
   [FRIEND_HISTORY_SUCCESS]: (state, payload) => {
+    if(state.allMessages[payload.party_name].length > 1) {return state;}
       console.log('friendhistorysuccess.');
       console.dir(payload);
       const newstate = Object.assign({}, state, {
@@ -95,11 +96,11 @@ export default createReducer(initialState, {
       console.log('In NEW_CHAT_CHANNEL reducer');
       console.dir(payload);
       const updatedAllMessages = Object.assign({}, ({ [payload.party_name]: [] }), state.allMessages);
-      // console.log('allmessages: ');
-      // console.dir(updatedAllMessages);
+      console.log('allmessages: ');
+      console.dir(updatedAllMessages);
       const updatedMessages = updatedAllMessages[payload.party_name].slice();
-      // console.log('messages: ');
-      // console.dir(updatedMessages);
+      console.log('messages: ');
+      console.dir(updatedMessages);
       const newstate = Object.assign({}, state, {
           party_name: payload.party_name,
           party_id: payload.party_id,
@@ -158,6 +159,7 @@ export default createReducer(initialState, {
           partyHistoryStatusText: null,
         }),
   [PARTY_HISTORY_SUCCESS]: (state, payload) => {
+      if(state.allMessages[payload.party_name].length > 1) {return state;}
       console.log('partyhistorysuccess.');
       console.dir(payload);
       const newstate = Object.assign({}, state, {

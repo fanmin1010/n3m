@@ -29,6 +29,7 @@ import {
 
 function mapStateToProps(state) {
   return {
+    party_name: state.chat.party_name,
     username: state.auth.username,
     user_id: state.auth.user_id,
     friendlist: state.chat.friendlist,
