@@ -50,6 +50,8 @@ class TestAPI(BaseTestConfig):
         self.assertTrue("Incorrect input" in res8)
         res9 = opentable_message("*%^@2016-12-01 08:00 || 4")
         self.assertEqual(res9, 'Could not find any restaurants close to that.')
+        res10 = opentable_message("Cafe China@2016-12-01 08:00 || 4")
+        self.assertTrue("Calle Dao" in res10)
 
     def test_get_spa_from_index(self):
         result = self.app.get("/")

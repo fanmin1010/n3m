@@ -371,9 +371,10 @@ def opentable_message(message):
     try:
         resv_time = resv_time.strip()
         partysize = partysize.strip()
-        datetime.datetime.strptime(resv_time, '%Y-%m-%d %I:%M')
+        datetime.datetime.strptime(resv_time, '%Y-%m-%d %H:%M')
         int(partysize)
-    except Exception:
+    except Exception, e:
+        print(str(e))
         return 'Incorrect input for OpenTable reservation.'
 
     mtch = difflib.get_close_matches(restname.strip(), keylist, 1, 0.1)
