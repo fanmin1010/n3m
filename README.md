@@ -32,7 +32,9 @@ After that run
 sh server.sh &
 sh web.sh &
 ```
-You should then be able to access the web interface of the app from your local dev machine at http://localhost:5000. Note that you cannot have a running process on your host machine at port 5000.. 
+You should then be able to access the web interface of the app from your local dev machine at http://localhost:5000. Note that you cannot have a running process on your host machine at port 5000..
+
+Make sure you allow your browser to access your geo location for Uber and OpenTable APIs.
 
 ### Checkout out the docs for more information:
 [Documentation](docs/Documentation.md)
