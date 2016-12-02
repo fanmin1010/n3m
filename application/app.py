@@ -365,7 +365,7 @@ def opentable_message(message):
 
     print('^^^^^^^^')
     print(restname)
-    print(time)
+    print(resv_time)
     print(partysize)
     print('$$$$$$$$$')
     try:
@@ -381,7 +381,7 @@ def opentable_message(message):
     try:
         print(str(mtch))
         reply_text = ''
-        if message != mtch[0]:
+        if restname != mtch[0]:
             reply_text = '\nCould not find ' + restname + \
                 '. Showing results for closest match: \n'
         rest_id = restaurants[mtch[0]]['Id']
