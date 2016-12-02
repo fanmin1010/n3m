@@ -59,10 +59,12 @@ export class Chat extends Component {
   }
 
   sendMessage(msg) {
-    if (this.props.isParty) {
-      this.props.send_party_chat(msg, this.props.party_name.replace(' ', ''), this.props.party_id, this.props.username);
-    } else {
-      this.props.send_chat(msg, this.props.party_name.replace(' ', ''), this.props.receiver, this.props.username);
+    if(msg.length>0) {
+      if (this.props.isParty) {
+        this.props.send_party_chat(msg, this.props.party_name.replace(' ', ''), this.props.party_id, this.props.username);
+      } else {
+        this.props.send_chat(msg, this.props.party_name.replace(' ', ''), this.props.receiver, this.props.username);
+      }
     }
     document.getElementById('chatinput').value = '';
     document.getElementById('chatinput').placeholder = '';
