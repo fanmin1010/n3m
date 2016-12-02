@@ -46,7 +46,7 @@ export function requireAuthentication(Component) {
             body: JSON.stringify({ token }),
           })
                         .then(res => {
-                          if (res.status === 200) {
+                          if (res.status === 200 || res.status === 202) {
                             this.props.loginUserSuccess(token);
                             this.setState({
                               loaded_if_needed: true,
