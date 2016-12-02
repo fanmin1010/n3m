@@ -76,7 +76,7 @@ export class Header extends Component {
     this.props.logoutAndRedirect();
   }
 
-  _onFriendSelected(friend) {
+  onFriendSelected(friend) {
     let party_name;
     if (this.props.user_id < friend.id) {
       party_name = `${this.props.username.replace(' ', '')}-${friend.username.replace(' ', '')}`;

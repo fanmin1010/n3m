@@ -98,8 +98,8 @@ export function setChatWindow(party_name, party_id) {
   return {
     type: NEW_CHAT_CHANNEL,
     payload: {
-      party_name,
-      partyid,
+      party_name: party_name,
+      party_id: partyid,
     },
   };
 }
@@ -109,8 +109,8 @@ export function addMessage(party_name, message) {
   return {
     type: ADD_MESSAGE,
     payload: {
-      message,
-      party_name,
+      message: message,
+      party_name: party_name,
     },
   };
 }
@@ -119,8 +119,8 @@ export function setIsParty(isParty, receiver) {
   return {
     type: SET_IS_PARTY,
     payload: {
-      isParty,
-      receiver,
+      isParty: isParty,
+      receiver: receiver,
     },
   };
 }
