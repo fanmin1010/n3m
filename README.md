@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/team-n3m/n3m.png?branch=master)](https://travis-ci.org/team-n3m/n3m)
 [![Coverage Status](https://coveralls.io/repos/github/team-n3m/n3m/badge.svg?branch=master)](https://coveralls.io/github/team-n3m/n3m?branch=master)
 [![Downloads][downloads-image]][downloads-url]
-[![NPM version][npm-image]][npm-url]
+[![Release Tag][tag-image]][tag-url]
 
 # n3m
 The repo for the n3m team app. It is awesome!
@@ -42,7 +42,7 @@ Make sure you allow your browser to access your geo location for Uber and OpenTa
 ### Checkout out the docs for more information:
 [Documentation](docs/Documentation.md)
 
-[npm-image]: https://img.shields.io/npm/v/eslint.svg?style=flat-square
-[npm-url]: https://www.npmjs.com/package/eslint
+[tag-image]: https://img.shields.io/github/tag/team-n3m/n3m.svg
+[tag-url]: https://github.com/team-n3m/n3m/releases/tag/v2.0
 [downloads-image]: https://img.shields.io/github/downloads/team-n3m/n3m/latest/n3m.svg
 [downloads-url]: https://github.com/team-n3m/n3m
