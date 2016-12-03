@@ -11,4 +11,5 @@ install:
 # command to run tests
 script: 
   - python test.py
+  - pylint application/constants.py application/app.py application/models.py --rcfile=./pylintrc
 
