@@ -1,6 +1,7 @@
 [![Build Status](https://travis-ci.org/team-n3m/n3m.png?branch=master)](https://travis-ci.org/team-n3m/n3m)
 [![Coverage Status](https://coveralls.io/repos/github/team-n3m/n3m/badge.svg?branch=master)](https://coveralls.io/github/team-n3m/n3m?branch=master)
-[![Code Climate](https://codeclimate.com/github/team-n3m/n3m.png)](https://codeclimate.com/github/team-n3m/n3m)
+[![Downloads][downloads-image]][downloads-url]
+[![NPM version][npm-image]][npm-url]
 
 # n3m
 The repo for the n3m team app. It is awesome!
