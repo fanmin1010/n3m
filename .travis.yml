@@ -11,7 +11,7 @@ install:
   - python manage.py create_db
 # command to run tests
 script: 
-  - python test.py --cov-report=term-missing  --cov=application/ tests/
+  - coverage run test.py tests/
 after_success:
   - coveralls
 
