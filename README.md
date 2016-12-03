@@ -42,5 +42,7 @@ Make sure you allow your browser to access your geo location for Uber and OpenTa
 ### Checkout out the docs for more information:
 [Documentation](docs/Documentation.md)
 
-### Next Steps
-coming soon.
+[npm-image]: https://img.shields.io/npm/v/eslint.svg?style=flat-square
+[npm-url]: https://www.npmjs.com/package/eslint
+[downloads-image]: https://img.shields.io/npm/dm/eslint.svg?style=flat-square
+[downloads-url]: https://www.npmjs.com/package/eslint
