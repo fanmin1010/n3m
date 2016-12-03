@@ -7,10 +7,11 @@ env:
 # command to install dependencies
 install: 
   - pip install --egg -r requirements.txt
+  - pip install coveralls
   - python manage.py create_db
 # command to run tests
 script: 
-  - python test.py
+  - python test.py --cov-report=term --cov-report=html --cov=application/ tests/
 after_success:
   - coveralls
 
