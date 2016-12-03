@@ -12,7 +12,7 @@
   },
   "rules": {
     "camelcase": 0,
-    "indent": "off",
+    "indent": 0,
     "max-len": "off",
     "global-require": 0,
     "react/jsx-filename-extension": 0,
