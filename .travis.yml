@@ -11,7 +11,7 @@ install:
   - python manage.py create_db
 # command to run tests
 script: 
-  - coverage run test.py tests/
+  - coverage run --include=application/app.py,application/models.py  test.py tests/
 after_success:
   - coveralls
 
