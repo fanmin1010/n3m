@@ -35,3 +35,4 @@ googlemaps
 bs4
 pylint
 autopep8
+python-coveralls
