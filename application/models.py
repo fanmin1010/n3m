@@ -101,10 +101,7 @@ class Friendship(db.Model):
     def get_all_friendship_of_user(friender_id):
         '''get all friendship instances for a user'''
         f_ship = Friendship.query.filter_by(friender=friender_id).all()
-        if f_ship:
-            return f_ship
-        else:
-            return None
+        return f_ship
 
 
 class Party(db.Model):
@@ -199,10 +196,6 @@ class FriendMessage(db.Model):
         self.message = message
         self.timestamp = db.func.now()
 
-    def __str__(self):
-        return '''FriendshipID: ''' + \
-            str(self.fs_id) + ''', TimeStamp: ''' + str(self.timestamp)
-
     @staticmethod
     def add_friend_message(sender, receiver, messagetext):
         '''store message from a Friendship chat'''
@@ -261,8 +254,8 @@ class FriendMessage(db.Model):
                            .all())
         sender_av = User.get_avatar_for_username(user1)
         receiver_av = User.get_avatar_for_username(user2)
-        if friend_messages is None:
-            return None
+        if not friend_messages:
+            return friend_messages
         else:
             msg_list = []
             for msg in friend_messages:
@@ -309,7 +302,7 @@ class PartyMessage(db.Model):
     def add_party_message(party_id, sender, messagetext):
         '''store message from party chat'''
         senderuser = User.query.filter_by(username=sender).first()
-        if senderuser is None:
+        if not senderuser:
             return "empty sender user"
         sender_id = senderuser.user_id
         message = PartyMessage(party_id, sender_id, messagetext)
@@ -328,8 +321,8 @@ class PartyMessage(db.Model):
                           .filter_by(party_id=party_id)
                           .order_by(PartyMessage.timestamp)
                           .all())
-        if party_messages is None:
-            return None
+        if not party_messages:
+            return party_messages
         else:
             msg_list = []
             for msg in party_messages:

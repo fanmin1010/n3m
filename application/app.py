@@ -107,7 +107,8 @@ def create_user():
         if new_user.email in bot_emails:
             return None
         bot = User.query.filter_by(email=botemail).first()
-        # print(str(bot))
+        print('making sure that the bot is defined')
+        print(str(bot))
         if bot is not None:
             # print('Bot is not none :)')
             newfriendship = Friendship(new_user.user_id, bot.user_id)
