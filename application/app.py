@@ -412,7 +412,6 @@ def get_bot_message(botname, message, lat, lon):
         return opentable_message(message)
 
 
-@socketio.on('geodata')
 def bot_message(message):
     '''display api response in chat'''
     bot_avatar = User.get_avatar_for_username(message['receiver'])
@@ -433,9 +432,25 @@ def bot_message(message):
     else:
         print("Something happend with error in the database.")
 
+@socketio.on('geodata')
+def geo_data(message):
+    bot_message(message)
 
-@socketio.on('user2user_message')
-def user2user_message(message):
+
+@app.route("/test/geodata", methods=["POST"])
+@requires_auth
+def test_geo_data():
+    incoming = request.get_json()
+    print('made it to the inside of the test geodata function')
+    print(str(incoming))
+    try:
+        bot_message(incoming)
+        return jsonify(status="success")
+    except:
+        return jsonify(error=True), 403
+
+
+def user2user_internal(message):
     '''send message between two friends'''
     print('There was a user2user message: ' + str(message), file=sys.stderr)
     avatar = User.get_avatar_for_username(message['sender'])
@@ -460,14 +475,33 @@ def user2user_message(message):
         print("Something happend with error in the database.")
 
 
+@socketio.on('user2user_message')
+def user2user_message(message):
+    user2user_internal(message)
+    
+@app.route("/test/user2usermessage", methods=["POST"])
+@requires_auth
+def test_user2user_message():
+    incoming = request.get_json()
+    print('made it toe the inside of the test user2user message function')
+    print(str(incoming))
+    try:
+        user2user_internal(incoming)
+        return jsonify(status="success")
+    except:
+        return jsonify(error=True), 403
+
 @app.route("/test/party_message", methods=["POST"])
 @requires_auth
 def test_party_message():
     incoming = request.get_json()
     print('made it toe the inside of the test party message function')
     print(str(incoming))
-    party_message_internal(incoming)
-    return jsonify(status="success")
+    try:
+        party_message_internal(incoming)
+        return jsonify(status="success")
+    except:
+        return jsonify(error=True), 403
 
 @app.route("/api/friendhistory", methods=["POST"])
 @requires_auth

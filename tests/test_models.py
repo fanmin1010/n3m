@@ -32,6 +32,7 @@ class TestModels(BaseTestConfig):
 
     def test_get_friendship_with_user_ids(self):
         default_user = User.get_user(self.default_user["email"], self.default_user["password"])
+        print('Testing User __str___ : ' + str(default_user))
         u_two = User.get_user(self.d_user_two["email"], self.d_user_two["password"])
         self.assertTrue(
             Friendship.get_friendship_with_user_ids(default_user.user_id, u_two.user_id)

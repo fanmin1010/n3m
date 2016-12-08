@@ -437,6 +437,7 @@ class TestAPI(BaseTestConfig):
                 headers = headers,
                 content_type='application/json'
         )
+        self.assertEqual(res2.status_code, 200)
         
         res3 = self.app.post(
                 "/test/party_message",
@@ -449,6 +450,70 @@ class TestAPI(BaseTestConfig):
                 headers = headers,
                 content_type='application/json'
         )
+        self.assertEqual(res2.status_code, 200)
+        res3 = self.app.post(
+                "/api/partyhistory",
+                data=json.dumps({
+                    'party_id': 2323 
+                    }),
+                headers = headers,
+                content_type='application/json'
+        )
+        print('The party history is being tested.')
+        print(json.loads(res3.data.decode("utf-8")))
+
+
+
+    def test_user2user_msg(self):
+        print('inside the user2user msg test')
+        headers = {
+            'Authorization': self.token,
+        }
+        res2 = self.app.post(
+                "/test/user2usermessage",
+                data=json.dumps({
+                    'party_name': 'socketparty',
+                    'sender': 'theone',
+                    'receiver': 'Aria',
+                    'msgtext': 'oh yeah'
+                    }),
+                headers = headers,
+                content_type='application/json') 
+        self.assertEqual(res2.status_code, 200)
+        
+        res3 = self.app.post(
+                "/test/user2usermessage",
+                data=json.dumps({
+                    'party_name': 'socketparty',
+                    'sender': 'theone',
+                    'receiver': 'uber_aid',
+                    'msgtext': '3333 Broadway, New York, NY 10027'
+                    }),
+                headers = headers,
+                content_type='application/json'
+        )
+        self.assertEqual(res3.status_code, 200)
+    
+    def test_geodata_msg(self):
+        print('inside the geodata msg test')
+        headers = {
+            'Authorization': self.token,
+        }
+        res2 = self.app.post(
+                "/test/geodata",
+                data=json.dumps({
+                    'party_name': 'socketparty',
+                    'username': 'theone',
+                    'receiver': 'Aria',
+                    'msgtext': 'oh yeah',
+                    'latitude': 40.748,
+                    'longitude': -73.985
+                    }),
+                headers = headers,
+                content_type='application/json') 
+        self.assertEqual(res2.status_code, 200)
+        
+
 """
     def test_getRides(self):
         headers = {
