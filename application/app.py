@@ -422,8 +422,11 @@ def bot_message(message):
         message['latitude'],
         message['longitude'])
     bot_now = datetime.datetime.now().strftime('%H:%M:%S')
+    print('got past the get_bot_message_call')
     result2 = FriendMessage.add_friend_message(
         message['receiver'], message['username'], text_reply)
+    print('got result back from adding griend message')
+    print(json.dumps(result2))
     if result2 == "success":
         socketio.emit(message['party_name'],
                       {'username': message['receiver'],

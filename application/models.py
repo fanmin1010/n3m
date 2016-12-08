@@ -1,4 +1,5 @@
 '''MODEL'''
+import sys, os
 from index import db, bcrypt
 from sqlalchemy.exc import IntegrityError
 
@@ -204,10 +205,12 @@ class FriendMessage(db.Model):
     def add_friend_message(sender, receiver, messagetext):
         '''store message from a Friendship chat'''
         senderuser = User.query.filter_by(username=sender).first()
+        print('in add_friend_message')
         if senderuser is None:
             return "empty sender user"
         sender_id = senderuser.user_id
         receiveruser = User.query.filter_by(username=receiver).first()
+        print('got receiveruser')
         if receiveruser is None:
             return "empty receiver user"
         receiver_id = receiveruser.user_id
@@ -217,15 +220,20 @@ class FriendMessage(db.Model):
             Friendship.get_friendship_with_user_ids(sender_id, receiver_id)
             if sender_id < receiver_id else
             Friendship.get_friendship_with_user_ids(receiver_id, sender_id))
+        print('made friendship object')
         if friendship is None:
             return "empty friendship"
         else:
             fs_id = friendship.fs_id
             message = FriendMessage(fs_id, sender_id, messagetext)
+            print('made friendmessage object')
             db.session.add(message)
             try:
                 db.session.commit()
-            except IntegrityError:
+            except Exception as e:
+                exc_type, exc_obj, exc_tb = sys.exc_info()
+                fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                print(exc_type, fname, exc_tb.tb_lineno)
                 return "database error"
             return "success"
 
