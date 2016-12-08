@@ -7,3 +7,5 @@ static/dist/out/
 npm-debug.log
 .DS_Store
 .coverage
+htmlcov
+coverage_html/

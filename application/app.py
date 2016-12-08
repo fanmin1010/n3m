@@ -107,16 +107,13 @@ def create_user():
         if new_user.email in bot_emails:
             return None
         bot = User.query.filter_by(email=botemail).first()
-        print('making sure that the bot is defined')
-        print(str(bot))
-        if bot is not None:
-            # print('Bot is not none :)')
-            newfriendship = Friendship(new_user.user_id, bot.user_id)
-            newfriendship2 = Friendship(bot.user_id, new_user.user_id)
-            db.session.add(newfriendship)
-            db.session.commit()
-            db.session.add(newfriendship2)
-            db.session.commit()
+        newfriendship = Friendship(new_user.user_id, bot.user_id)
+        newfriendship2 = Friendship(bot.user_id, new_user.user_id)
+        db.session.add(newfriendship)
+        db.session.commit()
+        db.session.add(newfriendship2)
+        db.session.commit()
+        return
 
     bot_emails = [constants.UBER_EMAIL, constants.OPENTABLE_EMAIL]
     for email in bot_emails:
@@ -146,6 +143,7 @@ def add_friendship():
 
         friendee_email = friendee.email
         friendee_id = friendee.user_id
+        print('CurrentUserID: ' + str(friender_id) + ', FriendId: ' + str(friendee_id))
         friendee_avatar = friendee.avatar
         newfriendship = Friendship(friender_id, friendee_id)
         # this is for early practice that friendship doesnt need to be
@@ -322,8 +320,7 @@ def call_opentable(rest_id, guest_count, res_time):
     return times
 
 
-@socketio.on('party_message')
-def party_message(message):
+def party_message_internal(message):
     '''display party message in chat'''
     print('There was a party message: ' + str(message), file=sys.stderr)
     avatar = User.get_avatar_for_username(message['username'])
@@ -344,6 +341,11 @@ def party_message(message):
         print("Something happend with error in the database.")
     # This is where the message should get inserted into database. Remove this
     # line.
+
+
+@socketio.on('party_message')
+def party_message(message):
+    party_message_internal(message)
 
 
 @app.route("/api/partyhistory", methods=["POST"])
@@ -457,6 +459,15 @@ def user2user_message(message):
     else:
         print("Something happend with error in the database.")
 
+
+@app.route("/test/party_message", methods=["POST"])
+@requires_auth
+def test_party_message():
+    incoming = request.get_json()
+    print('made it toe the inside of the test party message function')
+    print(str(incoming))
+    party_message_internal(incoming)
+    return jsonify(status="success")
 
 @app.route("/api/friendhistory", methods=["POST"])
 @requires_auth

@@ -403,11 +403,52 @@ class TestAPI(BaseTestConfig):
         self.assertEqual(res.status_code, 200)
 
     def test_call_uber(self):
-        res = call_uber("Times Square", 40.808, -73.961)
+        res = call_uber("3333 Broadway, New York, NY 10027", 40.808, -73.961)
+        print(res)
         self.assertTrue("uberPOOL" in res)
         res2 = call_uber(None, 0, 0)
         self.assertTrue("Could not locate" in res2)
 
+
+    def test_socket_server_msg(self):
+        print('inside the socket_server test')
+        headers = {
+            'Authorization': self.token,
+        }
+        socket_party = {
+            "party_id" : 2323,
+            "party_name": "socketparty"
+        }
+        res = self.app.post(
+                "/api/createparty",
+                data=json.dumps(socket_party),
+                headers = headers,
+                content_type='application/json'
+        )
+        self.assertEqual(res.status_code, 200)
+        res2 = self.app.post(
+                "/test/party_message",
+                data=json.dumps({
+                    'party_id': 2323, 
+                    'party_name': 'socketparty',
+                    'username': 'foobar',
+                    'msgtext': 'oh yeah'
+                    }),
+                headers = headers,
+                content_type='application/json'
+        )
+        
+        res3 = self.app.post(
+                "/test/party_message",
+                data=json.dumps({
+                    'party_id': -1, 
+                    'party_name': 'socket_lobby',
+                    'username': 'foobar',
+                    'msgtext': 'oh yeah'
+                    }),
+                headers = headers,
+                content_type='application/json'
+        )
 """
     def test_getRides(self):
         headers = {
