@@ -26,7 +26,7 @@ export HISTCONTROL=ignoredups:erasedups
 shopt -s histappend
 export PROMPT_COMMAND="history -a; history -n; $PROMPT_COMMAND"
 
-export DATABASE_URL="postgresql:///n3mdb"
+export DATABASE_URL="postgresql:///n3mdb?client_encoding=utf8"
 
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
