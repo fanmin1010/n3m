@@ -5,6 +5,7 @@ import time
 import json
 import re
 import sys
+import os
 import difflib
 from random import randint
 import requests
@@ -454,12 +455,16 @@ def user2user_internal(message):
     '''send message between two friends'''
     print('There was a user2user message: ' + str(message), file=sys.stderr)
     avatar = User.get_avatar_for_username(message['sender'])
+    print('The avatar is: ')
+    print(avatar)
     now = datetime.datetime.now().strftime('%H:%M:%S')
     sender = message['sender']
     receiver = message['receiver']
     print('This is the time: ' + str(now), file=sys.stderr)
     result = FriendMessage.add_friend_message(
         sender, receiver, message['msgtext'])
+    print('Result of adding Friend Message:')
+    print(result)
     if result == "success":
         socketio.emit(message['party_name'],
                       {'username': sender,
@@ -488,7 +493,10 @@ def test_user2user_message():
     try:
         user2user_internal(incoming)
         return jsonify(status="success")
-    except:
+    except Exception as e:
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        print(exc_type, fname, exc_tb.tb_lineno)
         return jsonify(error=True), 403
 
 @app.route("/test/party_message", methods=["POST"])

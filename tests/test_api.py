@@ -11,14 +11,16 @@ class TestAPI(BaseTestConfig):
         "username": "theone",
         "email": "one@gmail.com",
         "password": "something1",
-        "pgp_key": "nJCzzlSEZT1u+qS1Mrj9MNqmNlL pdW5YJJ2aRsaspz1mCR3+NUP78a2iDnTHPaCh+jRK+P5IORJ4Qtpv6CITRz8St7z Z2j3TMtywQgAsZUVKLPujiO9/V9bNp2xjN23JS8CwT3GPlvR1HeJfVDuiE2njNlj enu6ZrU3z5E6gyMmUjUHEsgS3ZGv1+FdUCYYT5ry8js/kcly49tziI0WC6hrQBpC i7tiBXmT/9TYJhJdsQaQptjloQQDwObO7g7L2UOwLTuzLDh3xnnWuvfO90yz/1hu LlpEkNvJh02G7iL7bZPNPKzp16e9Xk8PfxhW3pjh09W3PBx8MpNOkjWN27/Q+Khm rfhYWBomlwauMHH1Yq+gxqzALf0/JNwGOW+vXbavc7PmaM3GQjZanAE8pdxqqiGl ZQ6y0TK/F6xikLudO/eeSvVlddmgnlh+TA== =Yks1"
+        "pgp_key": "nJCzzlSEZT1u+qS1Mrj9MNqmNlL pdW5YJJ2aRsaspz1mCR3+NUP78a2iDnTHPaCh+jRK+P5IORJ4Qtpv6CITRz8St7z Z2j3TMtywQgAsZUVKLPujiO9/V9bNp2xjN23JS8CwT3GPlvR1HeJfVDuiE2njNlj enu6ZrU3z5E6gyMmUjUHEsgS3ZGv1+FdUCYYT5ry8js/kcly49tziI0WC6hrQBpC i7tiBXmT/9TYJhJdsQaQptjloQQDwObO7g7L2UOwLTuzLDh3xnnWuvfO90yz/1hu LlpEkNvJh02G7iL7bZPNPKzp16e9Xk8PfxhW3pjh09W3PBx8MpNOkjWN27/Q+Khm rfhYWBomlwauMHH1Yq+gxqzALf0/JNwGOW+vXbavc7PmaM3GQjZanAE8pdxqqiGl ZQ6y0TK/F6xikLudO/eeSvVlddmgnlh+TA== =Yks1",
+        "avatar": "dist/images/avatar01"
     }
     another_user = {
         "user_id": 7,
         "username": "Aria",
         "email": "starks@gmail.com",
         "password": "assassin10",
-        "pgp_key": " A7G9oJkhLyI3vWhIDnZXvKCkDtTJJjvWCJsUUh4vCY7behNqex5AVcGADs6V0ngn HC1O42TIBUyVXriNBFIhxbQBBADMnyH4Pwh/79SrAEuh88eXl0JLA+9JLcDfQWtC YMsx89R1zLvVJHEdLVCuX2U5ES01b6o1MXi8CEdPHJcWALqmbz0Q4TS//f9qwRKC TPtzy0gGlBZde5J7sk0ksFXgbnE6UODa84aEMh1jB9iJQ4zblRsVOdvmiKlSRC4/ sCRfYwARAQABiQG9BBgBAgAJBQJSIcW0AhsuAKgJEDMnZjdEvIiTnSAEGQECAAYF AlIhxbQACgkQWDaU/OSCATxPZQQAuY+O6Ccc58EkdSXsbT2c72EGWt94pspduUS9 Fs+UO5rfi3aw11xo6jr46gnU7QUvljYrChr1XnJCzzlSEZT1u+qS1Mrj9MNqmNlL pdW5YJJ2aRsaspz1mCR3+NUP78a2iDnTHPaCh+jRK+P5IORJ4Qtpv6CITRz8St7z Z2j3TMtywQgAsZUVKLPujiO9/V9bNp2xjN23JS8CwT3GPlvR1HeJfVDuiE2njNlj enu6ZrU3z5E6gyMmUjUHEsgS3ZGv1+FdUCYYT5ry8js/kcly49tziI0WC6hrQBpC i7tiBXmT/9TYJhJdsQaQptjloQQDwObO7g7L2UOwLTuzLDh3xnnWuvfO90yz/1hu LlpEkNvJh02G7iL7bZPNPKzp16e9Xk8PfxhW3pjh09W3PBx8MpNOkjWN27/Q+Khm rfhYWBomlwauMHH1Yq+gxqzALf0/JNwGOW+vXbavc7PmaM3GQjZanAE8pdxqqiGl ZQ6y0TK/F6xikLudO/eeSvVlddmgnlh+TA== =Yks1"
+        "pgp_key": " A7G9oJkhLyI3vWhIDnZXvKCkDtTJJjvWCJsUUh4vCY7behNqex5AVcGADs6V0ngn HC1O42TIBUyVXriNBFIhxbQBBADMnyH4Pwh/79SrAEuh88eXl0JLA+9JLcDfQWtC YMsx89R1zLvVJHEdLVCuX2U5ES01b6o1MXi8CEdPHJcWALqmbz0Q4TS//f9qwRKC TPtzy0gGlBZde5J7sk0ksFXgbnE6UODa84aEMh1jB9iJQ4zblRsVOdvmiKlSRC4/ sCRfYwARAQABiQG9BBgBAgAJBQJSIcW0AhsuAKgJEDMnZjdEvIiTnSAEGQECAAYF AlIhxbQACgkQWDaU/OSCATxPZQQAuY+O6Ccc58EkdSXsbT2c72EGWt94pspduUS9 Fs+UO5rfi3aw11xo6jr46gnU7QUvljYrChr1XnJCzzlSEZT1u+qS1Mrj9MNqmNlL pdW5YJJ2aRsaspz1mCR3+NUP78a2iDnTHPaCh+jRK+P5IORJ4Qtpv6CITRz8St7z Z2j3TMtywQgAsZUVKLPujiO9/V9bNp2xjN23JS8CwT3GPlvR1HeJfVDuiE2njNlj enu6ZrU3z5E6gyMmUjUHEsgS3ZGv1+FdUCYYT5ry8js/kcly49tziI0WC6hrQBpC i7tiBXmT/9TYJhJdsQaQptjloQQDwObO7g7L2UOwLTuzLDh3xnnWuvfO90yz/1hu LlpEkNvJh02G7iL7bZPNPKzp16e9Xk8PfxhW3pjh09W3PBx8MpNOkjWN27/Q+Khm rfhYWBomlwauMHH1Yq+gxqzALf0/JNwGOW+vXbavc7PmaM3GQjZanAE8pdxqqiGl ZQ6y0TK/F6xikLudO/eeSvVlddmgnlh+TA== =Yks1",
+        "avatar": "dist/images/avatar02"
     }
     friendship = {
         "email": "starks@gmail.com"
@@ -203,6 +205,13 @@ class TestAPI(BaseTestConfig):
 
 
     def test_get_token_and_verify_token(self):
+        res0 = self.app.post(
+                "/api/get_token",
+                data=json.dumps(self.uber_user),
+                content_type='application/json'
+        )
+        self.assertEqual(res0.status_code, 403)
+
         res = self.app.post(
                 "/api/get_token",
                 data=json.dumps(self.default_user),
@@ -295,8 +304,8 @@ class TestAPI(BaseTestConfig):
                 content_type='application/json'
         )
         self.assertEqual(res5.status_code, 409)
-    def test_create_party(self):
 
+    def test_create_party(self):
         headers = {
             'content_type':'application/json',
             'Authorization': self.token
@@ -460,8 +469,8 @@ class TestAPI(BaseTestConfig):
                 content_type='application/json'
         )
         print('The party history is being tested.')
-        print(json.loads(res3.data.decode("utf-8")))
-
+        msgs_returned = json.loads(res3.data.decode("utf-8"))    
+        self.assertFalse(msgs_returned)
 
 
     def test_user2user_msg(self):
@@ -493,6 +502,20 @@ class TestAPI(BaseTestConfig):
                 content_type='application/json'
         )
         self.assertEqual(res3.status_code, 200)
+        res3 = self.app.post(
+                "/api/friendhistory",
+                data=json.dumps({
+                    'username': 'Aria',
+                    'friend': 'theone'
+                    }),
+                headers = headers,
+                content_type='application/json'
+        )
+        print('The party history is being tested.')
+        msgs_returned = json.loads(res3.data.decode("utf-8"))    
+        print('friend history of messages:')
+        print(msgs_returned)
+        self.assertTrue(msgs_returned)
     
     def test_geodata_msg(self):
         print('inside the geodata msg test')
@@ -512,6 +535,32 @@ class TestAPI(BaseTestConfig):
                 headers = headers,
                 content_type='application/json') 
         self.assertEqual(res2.status_code, 200)
+        res3 = self.app.post(
+                "/test/geodata",
+                data=json.dumps({
+                    'party_name': 'socketparty',
+                    'username': 'theone',
+                    'receiver': 'uber_aid',
+                    'msgtext': '3333 Broadway, New York, NY 10027',
+                    'latitude': 40.748,
+                    'longitude': -73.985
+                    }),
+                headers = headers,
+                content_type='application/json') 
+        self.assertEqual(res3.status_code, 200)
+        res4 = self.app.post(
+                "/test/geodata",
+                data=json.dumps({
+                    'party_name': 'socketparty',
+                    'username': 'theone',
+                    'receiver': 'opentable_aid',
+                    'msgtext': '3333 Broadway, New York, NY 10027',
+                    'latitude': 40.748,
+                    'longitude': -73.985
+                    }),
+                headers = headers,
+                content_type='application/json') 
+        self.assertEqual(res4.status_code, 200)
         
 
 """

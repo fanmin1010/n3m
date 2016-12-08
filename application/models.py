@@ -56,12 +56,16 @@ class User(db.Model):
     @staticmethod
     def get_avatar_for_username(uname):
         '''find user avatar based on username'''
-        user = User.query.filter_by(username=uname).first()
-        if user:
-            return user.avatar
-        else:
+        print('inside get avatar for username')
+        print(uname)
+        try:
+            user = User.query.filter_by(username=uname).first()
+            if user:
+                return user.avatar
+            else:
+                return None
+        except sqlalchemy.exc.InvalidRequestError as sqlIRE:
             return None
-
 
 class Friendship(db.Model):
     '''Friendship model class handles chat between two users'''
