@@ -69,13 +69,14 @@ export class Header extends Component {
 
   onFriendSelected(friend) {
     let party_name;
-    if (this.props.user_id < friend.id) {
+    if (this.props.user_id <= friend.user_id) {
       party_name = `${this.props.username.replace(' ', '')}-${friend.username.replace(' ', '')}`;
     } else {
       party_name = `${friend.username.replace(' ', '')}-${this.props.username.replace(' ', '')}`;
     }
     this.props.getFriendHistory(friend.username, party_name);
     this.props.setChatWindow(party_name);
+    console.log('about to set new listener for ' + party_name);
     this.props.setNewListener(party_name, false, friend.username);
     this.props.setGeoListener(this.props.username);
 
