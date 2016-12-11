@@ -279,7 +279,7 @@ class FriendMessage(db.Model):
                     username = user2
                 msg_list.append(
                     dict(
-                        time=str(msg.timestamp),
+                        time=msg.timestamp.strftime('%b %d %H:%M'),
                         text=msg.message,
                         avatar=avatar,
                         username=username))
@@ -342,7 +342,7 @@ class PartyMessage(db.Model):
                 sender_avatar = sender.avatar
                 msg_list.append(
                     dict(
-                        time=str(msg.timestamp),
+                        time=msg.timestamp.strftime('%b %d %H:%M'),
                         text=msg.message,
                         avatar=sender_avatar,
                         username=sender.username))
